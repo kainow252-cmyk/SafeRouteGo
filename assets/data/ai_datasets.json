@@ -1,0 +1,627 @@
+{
+  "meta": {
+    "versao": "1.0.0",
+    "gerado_em": "2026-08-22T14:47:39.136091",
+    "fonte": "SafeRouteGo AI ETL",
+    "d1_database": "saferoute-ai-db",
+    "r2_bucket": "saferoute-ai-data"
+  },
+  "estatisticas": {
+    "total_datasets": 14,
+    "total_modelos": 5,
+    "total_sinistros": 500,
+    "total_premios": 200,
+    "taxa_fraude": 11.2,
+    "premio_medio": 670.97,
+    "tb_hf": 5,
+    "tb_kaggle": 3,
+    "tb_susep": 2,
+    "total_mb": 22776.6
+  },
+  "datasets": [
+    {
+      "id": "hf_001",
+      "nome": "Insurance LLM Chatbot Training Dataset",
+      "fonte": "Hugging Face",
+      "repositorio": "bitext/Bitext-insurance-llm-chatbot-training-dataset",
+      "categoria": "LLM Fine-tuning",
+      "subcategoria": "Chatbot / Customer Support",
+      "tamanho_mb": 12.4,
+      "registros": 27000,
+      "idioma": "Inglês",
+      "licenca": "CC BY 4.0",
+      "url": "https://huggingface.co/datasets/bitext/Bitext-insurance-llm-chatbot-training-dataset",
+      "uso_sadi": "Fine-tuning do assistente de seguros SafeRouteGo para atendimento ao cliente",
+      "formato": "parquet",
+      "campos": [
+        "instruction",
+        "response",
+        "category",
+        "intent",
+        "tags"
+      ],
+      "qualidade": 4.8,
+      "downloads_mensais": 15200,
+      "data_criacao": "2024-03-15",
+      "tags": [
+        "insurance",
+        "chatbot",
+        "llm",
+        "fine-tuning",
+        "customer-service"
+      ]
+    },
+    {
+      "id": "hf_002",
+      "nome": "Actuary Q&A Dataset",
+      "fonte": "Hugging Face",
+      "repositorio": "manuelcaccone/actuary-enough-qa-dataset",
+      "categoria": "Atuarial / Educacional",
+      "subcategoria": "Q&A Técnico Atuarial",
+      "tamanho_mb": 3.8,
+      "registros": 4500,
+      "idioma": "Inglês",
+      "licenca": "MIT",
+      "url": "https://huggingface.co/datasets/manuelcaccone/actuary-enough-qa-dataset",
+      "uso_sadi": "Treinamento do motor SADI para cálculos atuariais e respostas técnicas",
+      "formato": "json",
+      "campos": [
+        "question",
+        "answer",
+        "topic",
+        "difficulty",
+        "exam_type"
+      ],
+      "qualidade": 4.6,
+      "downloads_mensais": 3200,
+      "data_criacao": "2025-09-15",
+      "tags": [
+        "actuarial",
+        "insurance",
+        "exam",
+        "mathematics",
+        "risk"
+      ]
+    },
+    {
+      "id": "hf_003",
+      "nome": "Multi-Turn Insurance Underwriting",
+      "fonte": "Hugging Face",
+      "repositorio": "snorkelai/Multi-Turn-Insurance-Underwriting",
+      "categoria": "Subscrição / Underwriting",
+      "subcategoria": "Multi-turn Dialog",
+      "tamanho_mb": 8.2,
+      "registros": 12000,
+      "idioma": "Inglês",
+      "licenca": "Apache 2.0",
+      "url": "https://huggingface.co/datasets/snorkelai/Multi-Turn-Insurance-Underwriting",
+      "uso_sadi": "Treinamento do SubscritorIA para decisões automáticas de underwriting",
+      "formato": "parquet",
+      "campos": [
+        "conversation",
+        "risk_type",
+        "decision",
+        "reasoning",
+        "subtask"
+      ],
+      "qualidade": 4.9,
+      "downloads_mensais": 8900,
+      "data_criacao": "2024-11-20",
+      "tags": [
+        "underwriting",
+        "insurance",
+        "multi-turn",
+        "risk-assessment",
+        "llm"
+      ]
+    },
+    {
+      "id": "hf_004",
+      "nome": "Insurance Fraud Detection — CiferAI",
+      "fonte": "Hugging Face",
+      "repositorio": "CiferAI/Cifer-Fraud-Detection-Dataset-AF",
+      "categoria": "Antifraude",
+      "subcategoria": "Detecção de Fraude em Sinistros",
+      "tamanho_mb": 45.6,
+      "registros": 850000,
+      "idioma": "Inglês",
+      "licenca": "CC BY-NC 4.0",
+      "url": "https://huggingface.co/datasets/CiferAI/Cifer-Fraud-Detection-Dataset-AF",
+      "uso_sadi": "Treinamento do MotorAntifraude SADI — 99.93% accuracy",
+      "formato": "parquet",
+      "campos": [
+        "claim_id",
+        "amount",
+        "policy_type",
+        "fraud_label",
+        "risk_score",
+        "features"
+      ],
+      "qualidade": 5.0,
+      "downloads_mensais": 42000,
+      "data_criacao": "2025-04-07",
+      "tags": [
+        "fraud-detection",
+        "insurance",
+        "claims",
+        "machine-learning",
+        "high-accuracy"
+      ]
+    },
+    {
+      "id": "hf_005",
+      "nome": "INSURBIAS — LLM Insurance Bias Benchmark",
+      "fonte": "Hugging Face",
+      "repositorio": "feihuangfh/INSURBIAS",
+      "categoria": "Benchmark / Avaliação",
+      "subcategoria": "Bias Detection em LLMs de Seguros",
+      "tamanho_mb": 28.3,
+      "registros": 95000,
+      "idioma": "Inglês",
+      "licenca": "CC BY 4.0",
+      "url": "https://huggingface.co/datasets/feihuangfh/INSURBIAS",
+      "uso_sadi": "Avaliação de viés nos modelos SADI antes de produção",
+      "formato": "csv",
+      "campos": [
+        "model",
+        "condition",
+        "prediction",
+        "bias_score",
+        "category"
+      ],
+      "qualidade": 4.7,
+      "downloads_mensais": 5600,
+      "data_criacao": "2025-08-01",
+      "tags": [
+        "bias",
+        "benchmark",
+        "llm-evaluation",
+        "insurance",
+        "fairness"
+      ]
+    },
+    {
+      "id": "kg_001",
+      "nome": "Auto Insurance Claims Fraud Detection",
+      "fonte": "Kaggle",
+      "repositorio": "mastmustu/insurance-claims-fraud-data",
+      "categoria": "Antifraude",
+      "subcategoria": "Auto Insurance Fraud",
+      "tamanho_mb": 18.7,
+      "registros": 15420,
+      "idioma": "Inglês",
+      "licenca": "Database: Open Database License",
+      "url": "https://www.kaggle.com/datasets/mastmustu/insurance-claims-fraud-data",
+      "uso_sadi": "MotorAntifraude Auto + SubscritorIA para seguros de veículos",
+      "formato": "csv",
+      "campos": [
+        "policy_id",
+        "insured_age",
+        "vehicle_type",
+        "claim_amount",
+        "fraud_reported",
+        "incident_type"
+      ],
+      "qualidade": 4.4,
+      "downloads_mensais": 28000,
+      "data_criacao": "2023-06-10",
+      "tags": [
+        "auto-insurance",
+        "fraud",
+        "claims",
+        "classification",
+        "brazil-relevant"
+      ]
+    },
+    {
+      "id": "kg_002",
+      "nome": "Healthcare Provider Fraud Detection",
+      "fonte": "Kaggle",
+      "repositorio": "rohitrox/healthcare-provider-fraud-detection-analysis",
+      "categoria": "Saúde / Health Insurance",
+      "subcategoria": "Provider Fraud",
+      "tamanho_mb": 67.2,
+      "registros": 1200000,
+      "idioma": "Inglês",
+      "licenca": "CC0: Public Domain",
+      "url": "https://www.kaggle.com/datasets/rohitrox/healthcare-provider-fraud-detection-analysis",
+      "uso_sadi": "Extensão do SADI para ramo de Saúde e prevenção de fraude em prestadores",
+      "formato": "csv",
+      "campos": [
+        "provider",
+        "beneficiary",
+        "claim",
+        "diagnosis_codes",
+        "procedure_codes",
+        "fraud"
+      ],
+      "qualidade": 4.5,
+      "downloads_mensais": 65000,
+      "data_criacao": "2021-09-22",
+      "tags": [
+        "healthcare",
+        "fraud",
+        "providers",
+        "medicare",
+        "insurance"
+      ]
+    },
+    {
+      "id": "kg_003",
+      "nome": "Car Insurance Fraud Graph Dataset",
+      "fonte": "Kaggle",
+      "repositorio": "kaggle/insurance-fraud-graph",
+      "categoria": "Antifraude / Graph Analytics",
+      "subcategoria": "Network Fraud Detection",
+      "tamanho_mb": 34.5,
+      "registros": 385000,
+      "idioma": "Inglês",
+      "licenca": "CC BY-SA 4.0",
+      "url": "https://www.kaggle.com/datasets?tags=16369-Insurance/1000",
+      "uso_sadi": "Análise de redes para detectar anéis de fraude organizados no SADI",
+      "formato": "csv+json",
+      "campos": [
+        "node_id",
+        "edge_type",
+        "claim_amount",
+        "relationship",
+        "fraud_ring_id"
+      ],
+      "qualidade": 4.6,
+      "downloads_mensais": 18500,
+      "data_criacao": "2024-02-14",
+      "tags": [
+        "graph",
+        "network-analysis",
+        "fraud-ring",
+        "auto",
+        "social-network"
+      ]
+    },
+    {
+      "id": "sp_001",
+      "nome": "BR-EMS 2021 Tábua Biométrica Completa",
+      "fonte": "SUSEP/SafeRouteGo",
+      "repositorio": "saferoute/br-ems-2021",
+      "categoria": "Atuarial / Mortalidade",
+      "subcategoria": "Tábua Biométrica Oficial Brasil",
+      "tamanho_mb": 0.8,
+      "registros": 192,
+      "idioma": "Português",
+      "licenca": "SUSEP Open Data",
+      "url": "https://www.susep.gov.br/tabuas/br-ems",
+      "uso_sadi": "Base principal do cálculo atuarial de vida SADI — qx por idade M/F",
+      "formato": "json",
+      "campos": [
+        "idade",
+        "qx_masculino",
+        "qx_feminino",
+        "ex_masculino",
+        "ex_feminino"
+      ],
+      "qualidade": 5.0,
+      "downloads_mensais": null,
+      "data_criacao": "2021-01-01",
+      "tags": [
+        "tabua-mortalidade",
+        "atuarial",
+        "SUSEP",
+        "brasil",
+        "vida"
+      ]
+    },
+    {
+      "id": "sp_002",
+      "nome": "SUSEP Open Data — Estatísticas do Mercado",
+      "fonte": "SUSEP",
+      "repositorio": "susep/estatisticas-mercado",
+      "categoria": "Regulatório / Mercado",
+      "subcategoria": "Dados do Mercado Segurador Brasileiro",
+      "tamanho_mb": 156.0,
+      "registros": 4500000,
+      "idioma": "Português",
+      "licenca": "Lei de Acesso à Informação",
+      "url": "https://www.susep.gov.br/dados/dados-abertos",
+      "uso_sadi": "Calibração das premissas SADI com dados reais do mercado brasileiro",
+      "formato": "csv",
+      "campos": [
+        "seguradora_cnpj",
+        "ramo",
+        "premio_emitido",
+        "sinistro_retido",
+        "periodo"
+      ],
+      "qualidade": 5.0,
+      "downloads_mensais": 12000,
+      "data_criacao": "2020-01-01",
+      "tags": [
+        "SUSEP",
+        "brasil",
+        "seguros",
+        "estatisticas",
+        "open-data"
+      ]
+    },
+    {
+      "id": "sp_003",
+      "nome": "Global Insurance Market Data 2024",
+      "fonte": "SafeRouteGo ETL",
+      "repositorio": "saferoute/global-insurance-db-v3",
+      "categoria": "Inteligência Global",
+      "subcategoria": "239 Seguradoras / 42 Países",
+      "tamanho_mb": 0.7,
+      "registros": 239,
+      "idioma": "Multilíngue",
+      "licenca": "SafeRouteGo Proprietary",
+      "url": "internal://assets/data/seguradoras_mundo.json",
+      "uso_sadi": "Base Intel Global do Admin — seguradoras, reguladores, insurtechs mundiais",
+      "formato": "json",
+      "campos": [
+        "nome",
+        "pais",
+        "regulador",
+        "tipo",
+        "ticker",
+        "premium_usd_bi",
+        "is_insurtech"
+      ],
+      "qualidade": 4.8,
+      "downloads_mensais": null,
+      "data_criacao": "2026-08-22",
+      "tags": [
+        "global",
+        "seguradoras",
+        "insurtech",
+        "inteligencia",
+        "ranking"
+      ]
+    },
+    {
+      "id": "sp_004",
+      "nome": "World Bank Demographic Indicators — 30 Countries",
+      "fonte": "World Bank Open Data + IBGE",
+      "repositorio": "saferoute/demographic-indicators-2024",
+      "categoria": "Demográfico / Atuarial",
+      "subcategoria": "Indicadores Socioeconômicos para Precificação",
+      "tamanho_mb": 0.4,
+      "registros": 240,
+      "idioma": "Multilíngue",
+      "licenca": "World Bank Open License",
+      "url": "internal://assets/data/dados_demograficos.json",
+      "uso_sadi": "Calibração do SADI com expectativa de vida real por país para cálculo de Vida",
+      "formato": "json",
+      "campos": [
+        "pais",
+        "expectativa_vida",
+        "pib_per_capita",
+        "gini",
+        "mortalidade_infantil"
+      ],
+      "qualidade": 4.9,
+      "downloads_mensais": null,
+      "data_criacao": "2026-08-22",
+      "tags": [
+        "world-bank",
+        "demographics",
+        "life-expectancy",
+        "gdp",
+        "brazil"
+      ]
+    },
+    {
+      "id": "sp_005",
+      "nome": "LLM Phi-3 Mini — Insurance Fine-tuned",
+      "fonte": "Hugging Face / Microsoft",
+      "repositorio": "microsoft/Phi-3-mini-4k-instruct",
+      "categoria": "LLM / Modelo de Linguagem",
+      "subcategoria": "Modelo Base para Fine-tuning SADI",
+      "tamanho_mb": 7600.0,
+      "registros": null,
+      "idioma": "Multilíngue",
+      "licenca": "MIT",
+      "url": "https://huggingface.co/microsoft/Phi-3-mini-4k-instruct",
+      "uso_sadi": "Base LLM compacto (3.8B parâmetros) para SADI on-device — edge inference",
+      "formato": "safetensors",
+      "campos": [
+        "model_weights",
+        "tokenizer",
+        "config"
+      ],
+      "qualidade": 4.7,
+      "downloads_mensais": 1200000,
+      "data_criacao": "2024-04-23",
+      "tags": [
+        "llm",
+        "phi-3",
+        "microsoft",
+        "small-language-model",
+        "edge-ai"
+      ]
+    },
+    {
+      "id": "sp_006",
+      "nome": "Mistral 7B — Insurance Instruct",
+      "fonte": "Hugging Face / Mistral AI",
+      "repositorio": "mistralai/Mistral-7B-Instruct-v0.3",
+      "categoria": "LLM / Modelo de Linguagem",
+      "subcategoria": "Modelo Principal para SADI Cloud",
+      "tamanho_mb": 14800.0,
+      "registros": null,
+      "idioma": "Multilíngue",
+      "licenca": "Apache 2.0",
+      "url": "https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3",
+      "uso_sadi": "Motor LLM principal do SADI — 7B parâmetros, melhor custo-benefício",
+      "formato": "safetensors",
+      "campos": [
+        "model_weights",
+        "tokenizer",
+        "config"
+      ],
+      "qualidade": 4.8,
+      "downloads_mensais": 3400000,
+      "data_criacao": "2024-05-22",
+      "tags": [
+        "llm",
+        "mistral",
+        "7b",
+        "instruct",
+        "open-source"
+      ]
+    }
+  ],
+  "modelos_llm": [
+    {
+      "id": "llm_001",
+      "nome": "Phi-3 Mini 4K",
+      "provider": "Microsoft",
+      "parametros_b": 3.8,
+      "licenca": "MIT",
+      "tamanho_gb": 7.6,
+      "contexto_tokens": 4096,
+      "uso_caso": "Edge AI / On-device",
+      "benchmark": 4.7
+    },
+    {
+      "id": "llm_002",
+      "nome": "Mistral 7B Instruct",
+      "provider": "Mistral AI",
+      "parametros_b": 7.0,
+      "licenca": "Apache 2.0",
+      "tamanho_gb": 14.8,
+      "contexto_tokens": 8192,
+      "uso_caso": "Cloud SADI principal",
+      "benchmark": 4.8
+    },
+    {
+      "id": "llm_003",
+      "nome": "Llama 3.1 8B Instruct",
+      "provider": "Meta",
+      "parametros_b": 8.0,
+      "licenca": "Llama 3",
+      "tamanho_gb": 16.0,
+      "contexto_tokens": 128000,
+      "uso_caso": "RAG e documentos",
+      "benchmark": 4.9
+    },
+    {
+      "id": "llm_004",
+      "nome": "Qwen2.5 7B",
+      "provider": "Alibaba",
+      "parametros_b": 7.5,
+      "licenca": "Apache 2.0",
+      "tamanho_gb": 15.2,
+      "contexto_tokens": 32768,
+      "uso_caso": "Multilíngue PT-BR",
+      "benchmark": 4.7
+    },
+    {
+      "id": "llm_005",
+      "nome": "GPT-4o mini API",
+      "provider": "OpenAI",
+      "parametros_b": null,
+      "licenca": "Proprietário",
+      "tamanho_gb": null,
+      "contexto_tokens": 128000,
+      "uso_caso": "Fallback cloud",
+      "benchmark": 4.9
+    }
+  ],
+  "por_categoria": {
+    "LLM Fine-tuning": {
+      "count": 1,
+      "total_mb": 12.4,
+      "datasets": [
+        "hf_001"
+      ]
+    },
+    "Atuarial / Educacional": {
+      "count": 1,
+      "total_mb": 3.8,
+      "datasets": [
+        "hf_002"
+      ]
+    },
+    "Subscrição / Underwriting": {
+      "count": 1,
+      "total_mb": 8.2,
+      "datasets": [
+        "hf_003"
+      ]
+    },
+    "Antifraude": {
+      "count": 2,
+      "total_mb": 64.3,
+      "datasets": [
+        "hf_004",
+        "kg_001"
+      ]
+    },
+    "Benchmark / Avaliação": {
+      "count": 1,
+      "total_mb": 28.3,
+      "datasets": [
+        "hf_005"
+      ]
+    },
+    "Saúde / Health Insurance": {
+      "count": 1,
+      "total_mb": 67.2,
+      "datasets": [
+        "kg_002"
+      ]
+    },
+    "Antifraude / Graph Analytics": {
+      "count": 1,
+      "total_mb": 34.5,
+      "datasets": [
+        "kg_003"
+      ]
+    },
+    "Atuarial / Mortalidade": {
+      "count": 1,
+      "total_mb": 0.8,
+      "datasets": [
+        "sp_001"
+      ]
+    },
+    "Regulatório / Mercado": {
+      "count": 1,
+      "total_mb": 156.0,
+      "datasets": [
+        "sp_002"
+      ]
+    },
+    "Inteligência Global": {
+      "count": 1,
+      "total_mb": 0.7,
+      "datasets": [
+        "sp_003"
+      ]
+    },
+    "Demográfico / Atuarial": {
+      "count": 1,
+      "total_mb": 0.4,
+      "datasets": [
+        "sp_004"
+      ]
+    },
+    "LLM / Modelo de Linguagem": {
+      "count": 2,
+      "total_mb": 22400.0,
+      "datasets": [
+        "sp_005",
+        "sp_006"
+      ]
+    }
+  },
+  "por_fonte": {
+    "Hugging Face": 5,
+    "Kaggle": 3,
+    "SUSEP/SafeRouteGo": 1,
+    "SUSEP": 1,
+    "SafeRouteGo ETL": 1,
+    "World Bank Open Data + IBGE": 1,
+    "Hugging Face / Microsoft": 1,
+    "Hugging Face / Mistral AI": 1
+  }
+}

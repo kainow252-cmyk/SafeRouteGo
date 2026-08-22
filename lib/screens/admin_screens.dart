@@ -14,6 +14,7 @@ import '../services/territorial_risk_intelligence.dart';
 import '../services/insurance_search_engine.dart';
 import '../services/atuario_ia_engine.dart';
 import '../services/seguradoras_globais_service.dart';
+import '../services/ai_datasets_service.dart';
 
 // ─────────────────────────────────────────────────────────────
 // TELA PRINCIPAL DO ADMIN (com tabs)
@@ -36,10 +37,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
   int _bottomIndex = 0;
 
   // Mapeamento: bottomIndex → tabIndex real (para o TabController interno)
-  // 0→0(Geral), 1→1..6(Analytics sub), 2→8..9(Atuário), 3→7(Seguradora), 4→10(Intel)
+  // 0→0(Geral), 1→1..6(Analytics sub), 2→8..9(Atuário), 3→7(Seguradora), 4→10(Intel), 5→11(AI Labs)
   late TabController _tab;
 
-  // Índice real da tab ativa (0-10)
+  // Índice real da tab ativa (0-11)
   int _tabIndex = 0;
 
   // Grupos do BottomNav → lista de tabs
@@ -48,7 +49,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
     [1, 2, 3, 4, 5, 6], // Analytics (Risk, Viagens, Usuários, Preços, Simulador, Inteligência)
     [8, 9],       // Atuário IA + Subscritor
     [7],          // Seguradora
-    [10],         // Intel Global
+    [10, 11],     // Intel Global + AI Labs
   ];
 
   // Sub-índice dentro do grupo Analytics
@@ -58,7 +59,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
   @override
   void initState() {
     super.initState();
-    _tab = TabController(length: 11, vsync: this);
+    _tab = TabController(length: 12, vsync: this);
     _tab.addListener(() => setState(() => _tabIndex = _tab.index));
   }
 
@@ -96,6 +97,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
       case 8: return 'Atuário IA';
       case 9: return 'Subscritor IA';
       case 10: return 'Intel Global';
+      case 11: return '🧠 AI Labs';
       default: return 'Admin';
     }
   }
@@ -143,6 +145,48 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
               ),
             );
           },
+        ),
+      );
+    }
+    if (_bottomIndex == 4) {
+      final labels = ['🌍 Intel Global', '🧠 AI Labs'];
+      return Container(
+        height: 40,
+        color: const Color(0xFF0D1628),
+        child: Row(
+          children: List.generate(labels.length, (i) {
+            final selected = (_tabIndex == _bottomGroups[4][i]);
+            return Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _tab.index = _bottomGroups[4][i];
+                    _tabIndex = _tab.index;
+                  });
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: selected ? AppTheme.accent : Colors.transparent,
+                        width: 2,
+                      ),
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      labels[i],
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
+                        color: selected ? AppTheme.accent : Colors.white38,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }),
         ),
       );
     }
@@ -250,6 +294,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                   _AtuarioIATab(),
                   _SubscritorIATab(),
                   _IntelGlobalTab(),
+                  _AILabsTab(),
                 ],
               ),
             ),
@@ -290,7 +335,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.public_rounded),
-              label: 'Intel Global',
+              label: 'Intel + AI',
             ),
           ],
         ),
@@ -320,12 +365,13 @@ class _AdminDrawer extends StatelessWidget {
     (8, Icons.psychology_rounded, 'Atuário IA', 'Motor SADI v3'),
     (9, Icons.shield_rounded, 'Subscritor IA', 'Underwriting automático'),
     (10, Icons.public_rounded, 'Intel Global', '239 seguradoras, 42 países'),
+    (11, Icons.psychology_alt_rounded, 'AI Labs', 'HF + Kaggle + D1 + R2'),
   ];
 
   static const _colors = [
     Color(0xFF60A5FA), Color(0xFF34D399), Color(0xFF60A5FA), Color(0xFFA78BFA),
     Color(0xFFF59E0B), Color(0xFF60A5FA), Color(0xFF34D399), Color(0xFFF97316),
-    Color(0xFFA78BFA), Color(0xFF34D399), Color(0xFF60A5FA),
+    Color(0xFFA78BFA), Color(0xFF34D399), Color(0xFF60A5FA), Color(0xFFE879F9),
   ];
 
   @override
@@ -7220,5 +7266,880 @@ class _IntelGlobalTabState extends State<_IntelGlobalTab> {
       case 'Oriente Médio & África': return const Color(0xFFEC4899);
       default: return Colors.white38;
     }
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// TAB 12 — 🧠 AI LABS — Hugging Face + Kaggle + D1 + R2
+// ══════════════════════════════════════════════════════════════════════════
+
+class _AILabsTab extends StatefulWidget {
+  @override
+  State<_AILabsTab> createState() => _AILabsTabState();
+}
+
+class _AILabsTabState extends State<_AILabsTab> {
+  final _svc = AIDatasetsService.instance;
+  bool _loading = true;
+  int _abaSel = 0; // 0=Overview 1=Datasets 2=LLMs 3=D1+R2
+  String _filtroFonte = 'Todos';
+  String _buscaQuery = '';
+  final _buscaCtrl = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    await _svc.carregar();
+    if (mounted) setState(() => _loading = false);
+  }
+
+  @override
+  void dispose() {
+    _buscaCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_loading) {
+      return const Center(child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(color: Color(0xFFE879F9)),
+          SizedBox(height: 16),
+          Text('Carregando AI Labs...', style: TextStyle(color: Colors.white54, fontSize: 13)),
+        ],
+      ));
+    }
+
+    return Column(
+      children: [
+        // ── Sub-nav ──
+        Container(
+          color: const Color(0xFF0D1628),
+          child: Row(
+            children: [
+              _aiTab(0, '📊 Overview'),
+              _aiTab(1, '🗂 Datasets'),
+              _aiTab(2, '🤖 LLMs'),
+              _aiTab(3, '☁️ D1 + R2'),
+            ],
+          ),
+        ),
+        // ── Conteúdo ──
+        Expanded(child: _buildConteudo()),
+      ],
+    );
+  }
+
+  Widget _aiTab(int idx, String label) {
+    final sel = _abaSel == idx;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => setState(() => _abaSel = idx),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            border: Border(bottom: BorderSide(
+              color: sel ? const Color(0xFFE879F9) : Colors.transparent,
+              width: 2,
+            )),
+          ),
+          child: Text(label,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: sel ? FontWeight.w700 : FontWeight.w400,
+              color: sel ? const Color(0xFFE879F9) : Colors.white38,
+            )),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildConteudo() {
+    switch (_abaSel) {
+      case 0: return _buildOverview();
+      case 1: return _buildDatasets();
+      case 2: return _buildLLMs();
+      case 3: return _buildInfraCloud();
+      default: return _buildOverview();
+    }
+  }
+
+  // ══ OVERVIEW ═══════════════════════════════════════════════════════════
+
+  Widget _buildOverview() {
+    final stats = _svc.stats;
+    if (stats == null) return const Center(child: Text('Sem dados', style: TextStyle(color: Colors.white38)));
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Cabeçalho
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [const Color(0xFF7C3AED).withValues(alpha: 0.3), const Color(0xFFE879F9).withValues(alpha: 0.1)],
+                begin: Alignment.topLeft, end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: const Color(0xFFE879F9).withValues(alpha: 0.3)),
+            ),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE879F9).withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(Icons.psychology_alt_rounded, color: Color(0xFFE879F9), size: 22),
+                ),
+                const SizedBox(width: 12),
+                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  const Text('SafeRouteGo AI Labs',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: Colors.white)),
+                  const Text('Hugging Face • Kaggle • SUSEP • World Bank',
+                      style: TextStyle(fontSize: 10, color: Colors.white38)),
+                ])),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF34D399).withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Text('LIVE', style: TextStyle(fontSize: 9, color: Color(0xFF34D399), fontWeight: FontWeight.bold)),
+                ),
+              ]),
+              const SizedBox(height: 14),
+              // Stats row
+              Row(children: [
+                _aiStat('${stats.totalDatasets}', 'Datasets', const Color(0xFF60A5FA)),
+                _aiStat('${stats.totalModelos}', 'LLMs', const Color(0xFFE879F9)),
+                _aiStat('${stats.totalSinistros}', 'Sinistros', const Color(0xFF34D399)),
+                _aiStat(stats.totalGBStr, 'Volume', const Color(0xFFF59E0B)),
+              ]),
+            ]),
+          ),
+          const SizedBox(height: 16),
+
+          // Por Fonte
+          _sectionTitle('Fontes de Dados', Icons.source_rounded),
+          const SizedBox(height: 10),
+          ..._svc.distribuicaoPorFonte.entries.map((e) {
+            final total = _svc.datasets.length;
+            final pct = total > 0 ? e.value / total : 0.0;
+            final color = _fonteColor(e.key);
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Row(children: [
+                  _fonteIcon(e.key),
+                  const SizedBox(width: 8),
+                  Text(e.key, style: const TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w600)),
+                  const Spacer(),
+                  Text('${e.value} datasets', style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold)),
+                ]),
+                const SizedBox(height: 6),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: LinearProgressIndicator(
+                    value: pct,
+                    backgroundColor: color.withValues(alpha: 0.1),
+                    valueColor: AlwaysStoppedAnimation<Color>(color),
+                    minHeight: 6,
+                  ),
+                ),
+              ]),
+            );
+          }),
+
+          const SizedBox(height: 16),
+
+          // Por Categoria
+          _sectionTitle('Distribuição por Categoria', Icons.category_rounded),
+          const SizedBox(height: 10),
+          LayoutBuilder(builder: (ctx, box) {
+            return Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: _svc.distribuicaoPorCategoria.entries.map((e) {
+                return Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF0D1628),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: const Color(0xFFE879F9).withValues(alpha: 0.2)),
+                  ),
+                  child: Row(mainAxisSize: MainAxisSize.min, children: [
+                    Container(width: 6, height: 6,
+                        decoration: const BoxDecoration(color: Color(0xFFE879F9), shape: BoxShape.circle)),
+                    const SizedBox(width: 8),
+                    Text(e.key, style: const TextStyle(color: Colors.white70, fontSize: 10)),
+                    const SizedBox(width: 6),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE879F9).withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text('${e.value}',
+                          style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFFE879F9))),
+                    ),
+                  ]),
+                );
+              }).toList(),
+            );
+          }),
+
+          const SizedBox(height: 16),
+
+          // Métricas ML
+          _sectionTitle('Métricas do Motor SADI', Icons.analytics_rounded),
+          const SizedBox(height: 10),
+          Row(children: [
+            Expanded(child: _aiMetricCard('Taxa Fraude Simulada', '${stats.taxaFraude}%', Icons.security_rounded, const Color(0xFFEF4444))),
+            const SizedBox(width: 10),
+            Expanded(child: _aiMetricCard('Prêmio Médio SADI', 'R\$ ${stats.premioMedio.toStringAsFixed(2)}', Icons.attach_money_rounded, const Color(0xFF34D399))),
+          ]),
+          const SizedBox(height: 10),
+          Row(children: [
+            Expanded(child: _aiMetricCard('Sinistros Treinados', '${stats.totalSinistros}', Icons.car_crash_rounded, const Color(0xFFF59E0B))),
+            const SizedBox(width: 10),
+            Expanded(child: _aiMetricCard('Prêmios Simulados', '${stats.totalPremios}', Icons.receipt_rounded, const Color(0xFF60A5FA))),
+          ]),
+
+          const SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
+
+  // ══ DATASETS ═══════════════════════════════════════════════════════════
+
+  Widget _buildDatasets() {
+    final fontes = ['Todos', ..._svc.fontes];
+    var lista = _filtroFonte == 'Todos' ? _svc.datasets : _svc.porFonte(_filtroFonte);
+    if (_buscaQuery.isNotEmpty) lista = _svc.buscar(_buscaQuery);
+
+    return Column(
+      children: [
+        // Filtros
+        Container(
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+          color: const Color(0xFF0D1628),
+          child: Column(children: [
+            // Busca
+            Container(
+              height: 36,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.06),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.white10),
+              ),
+              child: TextField(
+                controller: _buscaCtrl,
+                style: const TextStyle(color: Colors.white, fontSize: 12),
+                decoration: const InputDecoration(
+                  hintText: 'Buscar dataset...',
+                  hintStyle: TextStyle(color: Colors.white30, fontSize: 12),
+                  prefixIcon: Icon(Icons.search_rounded, color: Colors.white30, size: 16),
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.symmetric(vertical: 8),
+                ),
+                onChanged: (v) => setState(() => _buscaQuery = v),
+              ),
+            ),
+            const SizedBox(height: 8),
+            // Chips de fonte
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: fontes.map((f) {
+                  final sel = _filtroFonte == f;
+                  final color = f == 'Todos' ? const Color(0xFFE879F9) : _fonteColor(f);
+                  return GestureDetector(
+                    onTap: () => setState(() { _filtroFonte = f; _buscaQuery = ''; _buscaCtrl.clear(); }),
+                    child: Container(
+                      margin: const EdgeInsets.only(right: 6),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: sel ? color.withValues(alpha: 0.2) : Colors.transparent,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: sel ? color : Colors.white24),
+                      ),
+                      child: Text(f, style: TextStyle(
+                        fontSize: 11, color: sel ? color : Colors.white54,
+                        fontWeight: sel ? FontWeight.w700 : FontWeight.normal,
+                      )),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          ]),
+        ),
+        // Contador
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+          child: Row(children: [
+            Text('${lista.length} dataset(s)', style: const TextStyle(color: Colors.white38, fontSize: 11)),
+            const Spacer(),
+            Text('Volume: ${lista.fold(0.0, (s, d) => s + d.tamanhoMb) >= 1024 ? "${(lista.fold(0.0, (s, d) => s + d.tamanhoMb) / 1024).toStringAsFixed(1)} GB" : "${lista.fold(0.0, (s, d) => s + d.tamanhoMb).toStringAsFixed(0)} MB"}',
+                style: const TextStyle(color: Colors.white24, fontSize: 10)),
+          ]),
+        ),
+        // Lista
+        Expanded(
+          child: lista.isEmpty
+              ? const Center(child: Text('Nenhum dataset encontrado', style: TextStyle(color: Colors.white38)))
+              : ListView.builder(
+                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
+                  itemCount: lista.length,
+                  itemBuilder: (_, i) => _DatasetCard(ds: lista[i]),
+                ),
+        ),
+      ],
+    );
+  }
+
+  // ══ LLMS ═══════════════════════════════════════════════════════════════
+
+  Widget _buildLLMs() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color(0xFF7C3AED).withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: const Color(0xFF7C3AED).withValues(alpha: 0.3)),
+            ),
+            child: Row(children: [
+              const Icon(Icons.info_outline_rounded, color: Color(0xFFA78BFA), size: 16),
+              const SizedBox(width: 10),
+              Expanded(child: Text(
+                'Modelos open-source prontos para fine-tuning no SADI. '
+                'Use o SQL gerado (D1) + R2 para armazenar pesos e datasets.',
+                style: const TextStyle(fontSize: 11, color: Colors.white54),
+              )),
+            ]),
+          ),
+          const SizedBox(height: 16),
+          _sectionTitle('Modelos LLM Recomendados para SADI', Icons.model_training_rounded),
+          const SizedBox(height: 12),
+          ..._svc.modelos.map((m) => _LLMCard(modelo: m)),
+          const SizedBox(height: 16),
+          _sectionTitle('Estratégia de Deploy', Icons.architecture_rounded),
+          const SizedBox(height: 10),
+          _deployCard(
+            'Edge (On-Device)',
+            'Phi-3 Mini 3.8B',
+            'Resposta < 100ms. Ideal para cálculo de prêmio no app sem internet.',
+            Icons.smartphone_rounded,
+            const Color(0xFF34D399),
+          ),
+          const SizedBox(height: 8),
+          _deployCard(
+            'Cloud (Workers AI)',
+            'Mistral 7B / Llama 3.1',
+            'Cloudflare Workers AI — \$0.01/1M tokens. Análise de sinistros complexos.',
+            Icons.cloud_rounded,
+            const Color(0xFF60A5FA),
+          ),
+          const SizedBox(height: 8),
+          _deployCard(
+            'Fallback Premium',
+            'GPT-4o mini API',
+            'Casos extremos de análise legal / compliance. \$0.15/1M tokens.',
+            Icons.stars_rounded,
+            const Color(0xFFE879F9),
+          ),
+          const SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
+
+  // ══ INFRA CLOUD (D1 + R2) ═══════════════════════════════════════════════
+
+  Widget _buildInfraCloud() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // R2 Status
+          _cloudCard(
+            'Cloudflare R2',
+            'saferoute-ai-data',
+            'Object Storage — S3 compatible. \$0/egress.',
+            Icons.storage_rounded,
+            const Color(0xFFF97316),
+            items: const [
+              'datasets/ai_datasets.json',
+              'datasets/seguradoras_mundo.json',
+              'datasets/dados_demograficos.json',
+              'sql/d1_schema_and_seed.sql',
+              'db/saferoute_ai.db',
+            ],
+            status: 'ATIVO',
+          ),
+          const SizedBox(height: 12),
+
+          // D1 instrucoes
+          _cloudCard(
+            'Cloudflare D1',
+            'saferoute-ai-db',
+            'Serverless SQLite na edge — 5 tabelas + 6 índices',
+            Icons.table_chart_rounded,
+            const Color(0xFF60A5FA),
+            items: const [
+              'ai_datasets — 14 datasets catalogados',
+              'modelos_llm — 5 modelos open-source',
+              'sinistros_fraude — 500 registros treinamento',
+              'premios_simulados — 200 cálculos SADI',
+              'r2_uploads — log de arquivos',
+            ],
+            status: 'AGUARDANDO TOKEN',
+          ),
+          const SizedBox(height: 16),
+
+          // Instrução D1
+          Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: const Color(0xFF0D1628),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: const Color(0xFF60A5FA).withValues(alpha: 0.3)),
+            ),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(children: [
+                const Icon(Icons.terminal_rounded, color: Color(0xFF60A5FA), size: 16),
+                const SizedBox(width: 8),
+                const Text('Como criar D1 no Cloudflare Dashboard',
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF60A5FA))),
+              ]),
+              const SizedBox(height: 12),
+              _stepItem('1', 'Acesse: dash.cloudflare.com → Storage & Databases → D1'),
+              _stepItem('2', 'Clique em "Create database" → Nome: saferoute-ai-db'),
+              _stepItem('3', 'Abra o Console SQL da database'),
+              _stepItem('4', 'Cole e execute o conteúdo de: d1_schema_and_seed.sql (está no R2!)'),
+              _stepItem('5', 'Crie um API Token com permissão D1:Edit e adicione ao .wrangler/config'),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.4),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Text(
+                  '# Após criar o token D1:\nwrangler d1 execute saferoute-ai-db \\\n  --file=d1_schema_and_seed.sql',
+                  style: TextStyle(fontFamily: 'monospace', fontSize: 10, color: Color(0xFF34D399)),
+                ),
+              ),
+            ]),
+          ),
+
+          const SizedBox(height: 16),
+
+          // Workers AI
+          _cloudCard(
+            'Cloudflare Workers AI',
+            'Modelos disponíveis grátis',
+            'Inference na edge — sem GPU própria necessária',
+            Icons.smart_toy_rounded,
+            const Color(0xFFE879F9),
+            items: const [
+              '@cf/meta/llama-3.1-8b-instruct',
+              '@cf/mistral/mistral-7b-instruct-v0.2',
+              '@cf/microsoft/phi-2',
+              '@cf/qwen/qwen1.5-7b-chat-awq',
+            ],
+            status: 'DISPONÍVEL',
+          ),
+
+          const SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
+
+  // ── Helpers ─────────────────────────────────────────────────────────────
+
+  Widget _aiStat(String value, String label, Color color) {
+    return Expanded(
+      child: Column(children: [
+        Text(value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: color)),
+        Text(label, style: const TextStyle(fontSize: 9, color: Colors.white38)),
+      ]),
+    );
+  }
+
+  Widget _aiMetricCard(String label, String value, IconData icon, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0D1628),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
+      ),
+      child: Row(children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
+          child: Icon(icon, color: color, size: 16),
+        ),
+        const SizedBox(width: 10),
+        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(label, style: const TextStyle(fontSize: 10, color: Colors.white38)),
+          Text(value, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: color)),
+        ])),
+      ]),
+    );
+  }
+
+  Widget _deployCard(String tier, String modelo, String desc, IconData icon, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0D1628),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withValues(alpha: 0.25)),
+      ),
+      child: Row(children: [
+        Container(
+          width: 40, height: 40,
+          decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(10)),
+          child: Icon(icon, color: color, size: 20),
+        ),
+        const SizedBox(width: 12),
+        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [
+            Text(tier, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: color)),
+            const SizedBox(width: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+              decoration: BoxDecoration(color: color.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(4)),
+              child: Text(modelo, style: TextStyle(fontSize: 9, color: color, fontWeight: FontWeight.w700)),
+            ),
+          ]),
+          const SizedBox(height: 3),
+          Text(desc, style: const TextStyle(fontSize: 10, color: Colors.white38)),
+        ])),
+      ]),
+    );
+  }
+
+  Widget _cloudCard(String title, String name, String desc, IconData icon, Color color,
+      {required List<String> items, required String status}) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0D1628),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
+      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(10)),
+            child: Icon(icon, color: color, size: 18),
+          ),
+          const SizedBox(width: 12),
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(title, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: color)),
+            Text(name, style: const TextStyle(fontSize: 10, color: Colors.white38, fontFamily: 'monospace')),
+          ])),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+            decoration: BoxDecoration(
+              color: (status == 'ATIVO' || status == 'DISPONÍVEL')
+                  ? const Color(0xFF34D399).withValues(alpha: 0.15)
+                  : const Color(0xFFF59E0B).withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Text(status,
+                style: TextStyle(
+                    fontSize: 9, fontWeight: FontWeight.w700,
+                    color: (status == 'ATIVO' || status == 'DISPONÍVEL')
+                        ? const Color(0xFF34D399)
+                        : const Color(0xFFF59E0B))),
+          ),
+        ]),
+        const SizedBox(height: 10),
+        Text(desc, style: const TextStyle(fontSize: 10, color: Colors.white38)),
+        const SizedBox(height: 10),
+        ...items.map((item) => Padding(
+          padding: const EdgeInsets.only(bottom: 4),
+          child: Row(children: [
+            Container(width: 4, height: 4, margin: const EdgeInsets.only(right: 8, top: 1),
+                decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+            Text(item, style: TextStyle(fontSize: 10, color: color.withValues(alpha: 0.8), fontFamily: 'monospace')),
+          ]),
+        )),
+      ]),
+    );
+  }
+
+  Widget _stepItem(String num, String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Container(
+          width: 20, height: 20,
+          margin: const EdgeInsets.only(right: 10, top: 1),
+          decoration: BoxDecoration(
+            color: const Color(0xFF60A5FA).withValues(alpha: 0.15),
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: Center(child: Text(num, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF60A5FA)))),
+        ),
+        Expanded(child: Text(text, style: const TextStyle(fontSize: 11, color: Colors.white60))),
+      ]),
+    );
+  }
+
+  Color _fonteColor(String fonte) {
+    switch (fonte) {
+      case 'Hugging Face': return const Color(0xFFFFD21E);
+      case 'Kaggle': return const Color(0xFF20BEFF);
+      case 'SUSEP': case 'SUSEP/SafeRouteGo': return const Color(0xFF34D399);
+      case 'World Bank Open Data + IBGE': return const Color(0xFF60A5FA);
+      case 'SafeRouteGo ETL': return const Color(0xFFE879F9);
+      default: return Colors.white38;
+    }
+  }
+
+  Widget _fonteIcon(String fonte) {
+    IconData icon;
+    Color color = _fonteColor(fonte);
+    switch (fonte) {
+      case 'Hugging Face': icon = Icons.face_rounded; break;
+      case 'Kaggle': icon = Icons.dataset_rounded; break;
+      case 'SUSEP': case 'SUSEP/SafeRouteGo': icon = Icons.account_balance_rounded; break;
+      default: icon = Icons.storage_rounded;
+    }
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(6)),
+      child: Icon(icon, color: color, size: 12),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// DATASET CARD WIDGET
+// ─────────────────────────────────────────────────────────────────────────
+
+class _DatasetCard extends StatelessWidget {
+  final AIDataset ds;
+  const _DatasetCard({required this.ds});
+
+  Color get _fonteColor {
+    switch (ds.fonte) {
+      case 'Hugging Face': return const Color(0xFFFFD21E);
+      case 'Kaggle': return const Color(0xFF20BEFF);
+      case 'SUSEP/SafeRouteGo': case 'SUSEP': return const Color(0xFF34D399);
+      default: return const Color(0xFFE879F9);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(13),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0D1628),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: _fonteColor.withValues(alpha: 0.15)),
+      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        // Header
+        Row(children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+            decoration: BoxDecoration(
+              color: _fonteColor.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: Text(ds.fonte, style: TextStyle(fontSize: 9, color: _fonteColor, fontWeight: FontWeight.w700)),
+          ),
+          const SizedBox(width: 6),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.05),
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: Text(ds.categoria, style: const TextStyle(fontSize: 9, color: Colors.white38)),
+          ),
+          const Spacer(),
+          // Stars
+          Row(mainAxisSize: MainAxisSize.min, children: [
+            const Icon(Icons.star_rounded, color: Color(0xFFF59E0B), size: 12),
+            const SizedBox(width: 2),
+            Text(ds.qualidade.toStringAsFixed(1), style: const TextStyle(fontSize: 10, color: Color(0xFFF59E0B), fontWeight: FontWeight.bold)),
+          ]),
+        ]),
+        const SizedBox(height: 8),
+        // Nome
+        Text(ds.nome, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Colors.white), maxLines: 2),
+        const SizedBox(height: 4),
+        // Uso SADI
+        Text(ds.usoSadi, style: const TextStyle(fontSize: 10, color: Colors.white38), maxLines: 2, overflow: TextOverflow.ellipsis),
+        const SizedBox(height: 10),
+        // Stats
+        Row(children: [
+          _stat(Icons.storage_rounded, ds.tamanhoFormatado),
+          const SizedBox(width: 12),
+          _stat(Icons.table_rows_rounded, ds.registrosFormatado),
+          const SizedBox(width: 12),
+          _stat(Icons.download_rounded, ds.downloadsFormatado),
+          const Spacer(),
+          // Licença badge
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            decoration: BoxDecoration(
+              color: const Color(0xFF34D399).withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: const Color(0xFF34D399).withValues(alpha: 0.2)),
+            ),
+            child: Text(
+              ds.licenca.length > 12 ? '${ds.licenca.substring(0, 10)}...' : ds.licenca,
+              style: const TextStyle(fontSize: 8, color: Color(0xFF34D399)),
+            ),
+          ),
+        ]),
+        // Tags
+        if (ds.tags.isNotEmpty) ...[
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 4, runSpacing: 4,
+            children: ds.tags.take(4).map((t) => Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: _fonteColor.withValues(alpha: 0.06),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text('#$t', style: TextStyle(fontSize: 8, color: _fonteColor.withValues(alpha: 0.7))),
+            )).toList(),
+          ),
+        ],
+      ]),
+    );
+  }
+
+  Widget _stat(IconData icon, String value) {
+    return Row(mainAxisSize: MainAxisSize.min, children: [
+      Icon(icon, size: 10, color: Colors.white24),
+      const SizedBox(width: 3),
+      Text(value, style: const TextStyle(fontSize: 9, color: Colors.white38)),
+    ]);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// LLM CARD WIDGET
+// ─────────────────────────────────────────────────────────────────────────
+
+class _LLMCard extends StatelessWidget {
+  final ModeloLLM modelo;
+  const _LLMCard({required this.modelo});
+
+  Color get _color {
+    switch (modelo.provider) {
+      case 'Microsoft': return const Color(0xFF60A5FA);
+      case 'Mistral AI': return const Color(0xFFE879F9);
+      case 'Meta': return const Color(0xFF34D399);
+      case 'Alibaba': return const Color(0xFFF97316);
+      case 'OpenAI': return const Color(0xFF10B981);
+      default: return Colors.white38;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0D1628),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: _color.withValues(alpha: 0.25)),
+      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(children: [
+          Container(
+            width: 38, height: 38,
+            decoration: BoxDecoration(color: _color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(10)),
+            child: Icon(Icons.smart_toy_rounded, color: _color, size: 18),
+          ),
+          const SizedBox(width: 12),
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(modelo.nome, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Colors.white)),
+            Text(modelo.provider, style: TextStyle(fontSize: 10, color: _color, fontWeight: FontWeight.w600)),
+          ])),
+          // Benchmark
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF59E0B).withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              const Icon(Icons.star_rounded, color: Color(0xFFF59E0B), size: 12),
+              const SizedBox(width: 3),
+              Text(modelo.benchmark.toStringAsFixed(1),
+                  style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFFF59E0B))),
+            ]),
+          ),
+        ]),
+        const SizedBox(height: 10),
+        Row(children: [
+          _llmStat('Params', modelo.parametrosStr, Icons.memory_rounded),
+          const SizedBox(width: 16),
+          _llmStat('Tamanho', modelo.tamanhoStr, Icons.storage_rounded),
+          const SizedBox(width: 16),
+          _llmStat('Contexto', modelo.contextoStr, Icons.text_fields_rounded),
+        ]),
+        const SizedBox(height: 8),
+        Text(modelo.usoCaso, style: const TextStyle(fontSize: 10, color: Colors.white38)),
+        const SizedBox(height: 6),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+          decoration: BoxDecoration(
+            color: const Color(0xFF34D399).withValues(alpha: 0.08),
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: Text('Licença: ${modelo.licenca}',
+              style: const TextStyle(fontSize: 9, color: Color(0xFF34D399))),
+        ),
+      ]),
+    );
+  }
+
+  Widget _llmStat(String label, String value, IconData icon) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(label, style: const TextStyle(fontSize: 9, color: Colors.white24)),
+      Row(children: [
+        Icon(icon, size: 10, color: Colors.white38),
+        const SizedBox(width: 3),
+        Text(value, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: Colors.white54)),
+      ]),
+    ]);
   }
 }
