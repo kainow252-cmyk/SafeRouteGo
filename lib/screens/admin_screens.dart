@@ -5839,11 +5839,21 @@ class _VidaCalculadorTabState extends State<_VidaCalculadorTab> {
   final _isCtrl = TextEditingController(text: '500000');
   final _idadeCtrl = TextEditingController(text: '35');
   bool _tabagista = false;
+  bool _feminino = false;         // 🆕 gênero M/F para qx diferenciado BR-EMS 2021
   String _profissao = 'geral';
+  String _paisCodigo = 'BR';      // 🆕 país para ajuste internacional World Bank
   CalculoVida? _resultado;
   bool _calculando = false;
 
   static const _profissoes = ['geral', 'ti', 'professor', 'motorista', 'motoboy', 'policial', 'bombeiro', 'construção', 'aviação', 'escritório'];
+
+  // Top países para seleção rápida (por frequência de uso)
+  static const _paises = [
+    ('BR', 'Brasil 🇧🇷'), ('US', 'EUA 🇺🇸'), ('DE', 'Alemanha 🇩🇪'), ('FR', 'França 🇫🇷'),
+    ('GB', 'Reino Unido 🇬🇧'), ('JP', 'Japão 🇯🇵'), ('PT', 'Portugal 🇵🇹'), ('AR', 'Argentina 🇦🇷'),
+    ('MX', 'México 🇲🇽'), ('CO', 'Colômbia 🇨🇴'), ('CL', 'Chile 🇨🇱'), ('CH', 'Suíça 🇨🇭'),
+    ('AU', 'Austrália 🇦🇺'), ('CA', 'Canadá 🇨🇦'), ('NG', 'Nigéria 🇳🇬'), ('ZA', 'África do Sul 🇿🇦'),
+  ];
 
   void _calcular() async {
     setState(() { _calculando = true; });
@@ -5853,6 +5863,8 @@ class _VidaCalculadorTabState extends State<_VidaCalculadorTab> {
       idade: int.tryParse(_idadeCtrl.text) ?? 35,
       tabagista: _tabagista,
       profissao: _profissao,
+      feminino: _feminino,
+      paisCodigo: _paisCodigo,
     );
     setState(() { _resultado = c; _calculando = false; });
   }
@@ -5860,36 +5872,106 @@ class _VidaCalculadorTabState extends State<_VidaCalculadorTab> {
   @override
   void dispose() { _isCtrl.dispose(); _idadeCtrl.dispose(); super.dispose(); }
 
+  Widget _dropdownField(String label, Widget child) => Container(
+    padding: const EdgeInsets.symmetric(horizontal: 10),
+    decoration: BoxDecoration(
+      color: const Color(0xFF0D1628),
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(color: const Color(0xFF1E3A5F)),
+    ),
+    child: child,
+  );
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        _aiHeader('Precificação Vida — Tábua BR-EMS', 'Prêmio Puro = IS × qx  |  Tábua AT-2000 / BR-EMS'),
-        const SizedBox(height: 14),
+        _aiHeader('Precificação Vida — BR-EMS 2021', 'Prêmio Puro = IS × qx  |  IBGE Tabela 7350 + WorldBank 30 países'),
+        // Badge de fonte
+        Container(
+          margin: const EdgeInsets.only(bottom: 14),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          decoration: BoxDecoration(
+            color: const Color(0xFF0D2137),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: const Color(0xFF1E3A5F)),
+          ),
+          child: const Row(children: [
+            Icon(Icons.verified_rounded, color: Color(0xFF34D399), size: 14),
+            SizedBox(width: 6),
+            Expanded(child: Text(
+              'Fonte: IBGE Tábua 7350 BR-EMS 2021 — qx por gênero (M/F) — Calibração: World Bank 30 países',
+              style: TextStyle(color: Color(0xFF60A5FA), fontSize: 11),
+            )),
+          ]),
+        ),
         _iaInputGrid([
           _IaInput('Capital Segurado (R\$)', _isCtrl, Icons.account_balance_rounded),
           _IaInput('Idade Segurado', _idadeCtrl, Icons.person_rounded),
         ]),
         const SizedBox(height: 12),
+        // Row: Gênero + Tabagista
         Row(children: [
+          const Text('Gênero:', style: TextStyle(color: Colors.white60, fontSize: 12)),
+          const SizedBox(width: 8),
+          GestureDetector(
+            onTap: () => setState(() => _feminino = false),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(
+                color: !_feminino ? const Color(0xFF3B82F6).withValues(alpha: 0.3) : Colors.transparent,
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: !_feminino ? const Color(0xFF3B82F6) : const Color(0xFF1E3A5F)),
+              ),
+              child: const Text('♂ Masc', style: TextStyle(color: Colors.white70, fontSize: 11)),
+            ),
+          ),
+          const SizedBox(width: 6),
+          GestureDetector(
+            onTap: () => setState(() => _feminino = true),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(
+                color: _feminino ? const Color(0xFFEC4899).withValues(alpha: 0.3) : Colors.transparent,
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: _feminino ? const Color(0xFFEC4899) : const Color(0xFF1E3A5F)),
+              ),
+              child: const Text('♀ Fem', style: TextStyle(color: Colors.white70, fontSize: 11)),
+            ),
+          ),
+          const Spacer(),
           const Text('Tabagista:', style: TextStyle(color: Colors.white60, fontSize: 12)),
-          const SizedBox(width: 12),
           Switch(value: _tabagista, onChanged: (v) => setState(() => _tabagista = v), activeColor: const Color(0xFFF97316)),
-          const SizedBox(width: 20),
-          const Text('Profissão:', style: TextStyle(color: Colors.white60, fontSize: 12)),
-          const SizedBox(width: 12),
-          Expanded(child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            decoration: BoxDecoration(color: const Color(0xFF0D1628), borderRadius: BorderRadius.circular(8), border: Border.all(color: const Color(0xFF1E3A5F))),
-            child: DropdownButtonHideUnderline(child: DropdownButton<String>(
+        ]),
+        const SizedBox(height: 10),
+        // Row: Profissão + País
+        Row(children: [
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const Text('Profissão', style: TextStyle(color: Colors.white54, fontSize: 10)),
+            const SizedBox(height: 4),
+            _dropdownField('profissão', DropdownButtonHideUnderline(child: DropdownButton<String>(
               value: _profissao,
+              isExpanded: true,
               dropdownColor: const Color(0xFF0D1628),
               style: const TextStyle(color: Colors.white70, fontSize: 12),
               items: _profissoes.map((p) => DropdownMenuItem(value: p, child: Text(p[0].toUpperCase() + p.substring(1)))).toList(),
               onChanged: (v) => setState(() => _profissao = v ?? 'geral'),
-            )),
-          )),
+            ))),
+          ])),
+          const SizedBox(width: 10),
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const Text('País (WorldBank)', style: TextStyle(color: Colors.white54, fontSize: 10)),
+            const SizedBox(height: 4),
+            _dropdownField('país', DropdownButtonHideUnderline(child: DropdownButton<String>(
+              value: _paisCodigo,
+              isExpanded: true,
+              dropdownColor: const Color(0xFF0D1628),
+              style: const TextStyle(color: Colors.white70, fontSize: 12),
+              items: _paises.map((p) => DropdownMenuItem(value: p.$1, child: Text(p.$2, overflow: TextOverflow.ellipsis))).toList(),
+              onChanged: (v) => setState(() => _paisCodigo = v ?? 'BR'),
+            ))),
+          ])),
         ]),
         const SizedBox(height: 16),
         _calcButton(_calculando ? 'Processando...' : '🤖 Calcular Prêmio Vida', _calcular, _calculando),
@@ -5900,15 +5982,32 @@ class _VidaCalculadorTabState extends State<_VidaCalculadorTab> {
   }
 
   Widget _vidaResultado(CalculoVida c) {
+    final dadosPais = DadosDemograficos.getDados(c.paisCodigo);
+    final expVidaPais = dadosPais?['expVida'] as double?;
+    final nomePais = dadosPais?['nome'] as String? ?? c.paisCodigo;
+    final fatorPais = TabuaMortalidade.fatorPais(c.paisCodigo);
+    final isPaisEstrangeiro = c.paisCodigo != 'BR';
+
     return Column(children: [
       _resultCard('PRÊMIO COMERCIAL', [
         _resultRow('Mensal', 'R\$ ${c.premComercialMensal.toStringAsFixed(2)}', AppTheme.accent, big: true),
         _resultRow('Anual', 'R\$ ${c.premComercialAnual.toStringAsFixed(2)}', AppTheme.green),
+        if (isPaisEstrangeiro)
+          _resultRow('País: $nomePais', 'Fator × ${fatorPais.toStringAsFixed(3)}',
+            fatorPais < 1 ? const Color(0xFF34D399) : const Color(0xFFF97316)),
       ]),
       const SizedBox(height: 10),
-      _resultCard('DADOS BIOMÉTRICOS (BR-EMS)', [
+      _resultCard('DADOS BIOMÉTRICOS — BR-EMS 2021 IBGE', [
         _resultRow('Idade', '${c.idade} anos', Colors.white60),
-        _resultRow('Taxa Mortalidade qx', '${(c.qx * 1000).toStringAsFixed(3)}‰', const Color(0xFFF59E0B)),
+        _resultRow('Gênero', c.feminino ? '♀ Feminino' : '♂ Masculino',
+          c.feminino ? const Color(0xFFEC4899) : const Color(0xFF60A5FA)),
+        _resultRow('qx BR-EMS 2021 (${c.feminino ? 'F' : 'M'})', '${(c.qx * 1000).toStringAsFixed(3)}‰', const Color(0xFFF59E0B)),
+        if (isPaisEstrangeiro && expVidaPais != null) ...[
+          _resultRow('Exp. Vida $nomePais', '${expVidaPais.toStringAsFixed(1)} anos', const Color(0xFF60A5FA)),
+          _resultRow('Exp. Vida Brasil', '${DadosDemograficos.expVidaBrGeral} anos', Colors.white54),
+          _resultRow('qx ajustado $nomePais', '${(c.qxInternacional * 1000).toStringAsFixed(3)}‰', const Color(0xFFE879F9)),
+        ],
+        _resultRow('Exp. Vida Residual', '${c.expectativaVidaResidual.toStringAsFixed(1)} anos', const Color(0xFF34D399)),
         _resultRow('Capital Segurado (IS)', 'R\$ ${(c.capitalSegurado / 1000).toStringAsFixed(0)}k', AppTheme.accent),
         _resultRow('Fator Tabagismo', '× ${c.fatorTabagismo.toStringAsFixed(2)}', c.tabagista ? const Color(0xFFF97316) : AppTheme.green),
         _resultRow('Fator Profissão ($_profissao)', '× ${c.fatorProfissao.toStringAsFixed(2)}', Colors.white60),
@@ -5916,6 +6015,22 @@ class _VidaCalculadorTabState extends State<_VidaCalculadorTab> {
         _resultRow('+ Margem Segurança 5%', 'R\$ ${c.carregamentoSeguranca.toStringAsFixed(2)}', const Color(0xFFF59E0B)),
         _resultRow('Prêmio Puro Total', 'R\$ ${c.premPuroTotal.toStringAsFixed(2)}', Colors.white),
       ]),
+      const SizedBox(height: 8),
+      Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: const Color(0xFF0D2137),
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Row(children: [
+          const Icon(Icons.info_outline_rounded, color: Color(0xFF60A5FA), size: 12),
+          const SizedBox(width: 6),
+          Expanded(child: Text(
+            'Fonte: ${TabuaMortalidade.versao} | ${TabuaMortalidade.fonte}',
+            style: const TextStyle(color: Colors.white38, fontSize: 10),
+          )),
+        ]),
+      ),
     ]);
   }
 }
@@ -7680,79 +7795,178 @@ class _AILabsTabState extends State<_AILabsTab> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+
+          // ── Banner de status geral ─────────────────────────────
+          Container(
+            margin: const EdgeInsets.only(bottom: 14),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [const Color(0xFF0D2137), const Color(0xFF0A1628)],
+              ),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: const Color(0xFF1E3A5F)),
+            ),
+            child: Row(children: [
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                const Text('SafeRouteGo Cloud Infrastructure',
+                  style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w700)),
+                const SizedBox(height: 2),
+                const Text('Cloudflare Edge — R2 ✅  D1 ⏳  Workers AI ✅',
+                  style: TextStyle(color: Colors.white54, fontSize: 11)),
+              ]),
+              const Spacer(),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF34D399).withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: const Color(0xFF34D399).withValues(alpha: 0.4)),
+                ),
+                child: const Text('2/3 ATIVO', style: TextStyle(color: Color(0xFF34D399), fontSize: 10, fontWeight: FontWeight.w700)),
+              ),
+            ]),
+          ),
+
           // R2 Status
           _cloudCard(
             'Cloudflare R2',
             'saferoute-ai-data',
-            'Object Storage — S3 compatible. \$0/egress.',
+            'Object Storage — S3 compatible. \$0/egress. 5 arquivos ✅',
             Icons.storage_rounded,
             const Color(0xFFF97316),
             items: const [
-              'datasets/ai_datasets.json',
-              'datasets/seguradoras_mundo.json',
-              'datasets/dados_demograficos.json',
-              'sql/d1_schema_and_seed.sql',
-              'db/saferoute_ai.db',
+              '✅ datasets/ai_datasets.json — 16.6 KB',
+              '✅ datasets/seguradoras_mundo.json — 69.9 KB',
+              '✅ datasets/dados_demograficos.json — 14.3 KB',
+              '✅ sql/d1_schema_and_seed.sql — 16.4 KB',
+              '✅ db/saferoute_ai.db — 160 KB (mirror SQLite)',
             ],
             status: 'ATIVO',
           ),
           const SizedBox(height: 12),
 
-          // D1 instrucoes
+          // D1 status card — aguardando token
           _cloudCard(
             'Cloudflare D1',
-            'saferoute-ai-db',
-            'Serverless SQLite na edge — 5 tabelas + 6 índices',
+            'saferoutego  •  ID: 90327172-d7e6-450a-969e-2cfee5af697a',
+            'Serverless SQLite na edge — schema pronto, aguardando execução',
             Icons.table_chart_rounded,
             const Color(0xFF60A5FA),
             items: const [
-              'ai_datasets — 14 datasets catalogados',
-              'modelos_llm — 5 modelos open-source',
-              'sinistros_fraude — 500 registros treinamento',
-              'premios_simulados — 200 cálculos SADI',
-              'r2_uploads — log de arquivos',
+              '⏳ ai_datasets — 14 datasets catalogados',
+              '⏳ modelos_llm — 5 LLMs open-source',
+              '⏳ sinistros_fraude — 500 registros antifraude',
+              '⏳ premios_simulados — 200 cálculos SADI',
+              '⏳ r2_uploads — log de uploads',
             ],
-            status: 'AGUARDANDO TOKEN',
+            status: 'AGUARDANDO SQL',
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 14),
 
-          // Instrução D1
+          // ── Instrução D1 — 3 opções ────────────────────────────
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
               color: const Color(0xFF0D1628),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFF60A5FA).withValues(alpha: 0.3)),
+              border: Border.all(color: const Color(0xFF60A5FA).withValues(alpha: 0.4)),
             ),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Row(children: [
-                const Icon(Icons.terminal_rounded, color: Color(0xFF60A5FA), size: 16),
+                const Icon(Icons.info_rounded, color: Color(0xFF60A5FA), size: 16),
                 const SizedBox(width: 8),
-                const Text('Como criar D1 no Cloudflare Dashboard',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF60A5FA))),
+                const Expanded(child: Text('3 formas de popular o D1 agora',
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF60A5FA)))),
               ]),
+              const SizedBox(height: 14),
+
+              // Opção A — Dashboard (mais fácil)
+              _d1OptionCard(
+                'A', 'Cloudflare Dashboard Console', const Color(0xFF34D399), true,
+                [
+                  '1. Acesse dash.cloudflare.com',
+                  '2. Workers & Pages → D1 → saferoutego',
+                  '3. Aba "Console" → cole o SQL abaixo',
+                  '4. Clique Execute — pronto em ~3 segundos!',
+                ],
+              ),
+              const SizedBox(height: 10),
+
+              // Opção B — Token API
+              _d1OptionCard(
+                'B', 'Token API com D1:Edit', const Color(0xFF60A5FA), false,
+                [
+                  '1. dash.cloudflare.com/profile/api-tokens',
+                  '2. Create Token → Custom Token',
+                  '3. Account → D1 → Edit',
+                  '4. Forneça o token ao agente → execução automática',
+                ],
+              ),
+              const SizedBox(height: 10),
+
+              // Opção C — Wrangler
+              _d1OptionCard(
+                'C', 'Wrangler CLI (local)', const Color(0xFFE879F9), false,
+                [
+                  'export CLOUDFLARE_API_TOKEN=<token-d1-edit>',
+                  'wrangler d1 execute saferoutego \\',
+                  '  --database-id=90327172-d7e6-450a-969e-2cfee5af697a \\',
+                  '  --file=d1_schema_and_seed.sql --remote',
+                ],
+                isCode: true,
+              ),
               const SizedBox(height: 12),
-              _stepItem('1', 'Acesse: dash.cloudflare.com → Storage & Databases → D1'),
-              _stepItem('2', 'Clique em "Create database" → Nome: saferoute-ai-db'),
-              _stepItem('3', 'Abra o Console SQL da database'),
-              _stepItem('4', 'Cole e execute o conteúdo de: d1_schema_and_seed.sql (está no R2!)'),
-              _stepItem('5', 'Crie um API Token com permissão D1:Edit e adicione ao .wrangler/config'),
-              const SizedBox(height: 12),
+
+              // SQL snippet
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.4),
+                  color: Colors.black.withValues(alpha: 0.6),
                   borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: const Color(0xFF34D399).withValues(alpha: 0.3)),
                 ),
-                child: const Text(
-                  '# Após criar o token D1:\nwrangler d1 execute saferoute-ai-db \\\n  --file=d1_schema_and_seed.sql',
-                  style: TextStyle(fontFamily: 'monospace', fontSize: 10, color: Color(0xFF34D399)),
-                ),
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  const Row(children: [
+                    Icon(Icons.code_rounded, color: Color(0xFF34D399), size: 13),
+                    SizedBox(width: 6),
+                    Text('SQL pronto — copie e cole no D1 Console:',
+                      style: TextStyle(color: Color(0xFF34D399), fontSize: 10, fontWeight: FontWeight.w600)),
+                  ]),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'CREATE TABLE IF NOT EXISTS ai_datasets (\n'
+                    '  id TEXT PRIMARY KEY, nome TEXT NOT NULL,\n'
+                    '  fonte TEXT NOT NULL, categoria TEXT,\n'
+                    '  tamanho_mb REAL, registros INTEGER,\n'
+                    '  url TEXT, uso_sadi TEXT, qualidade REAL,\n'
+                    '  tags TEXT, status TEXT DEFAULT \'catalogado\'\n'
+                    ');\n'
+                    '-- [+4 tabelas + 6 índices + seed data]\n'
+                    '-- SQL completo em R2: sql/d1_schema_and_seed.sql',
+                    style: TextStyle(fontFamily: 'monospace', fontSize: 9.5, color: Color(0xFF94A3B8)),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF34D399).withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: const Color(0xFF34D399).withValues(alpha: 0.3)),
+                    ),
+                    child: const Row(mainAxisSize: MainAxisSize.min, children: [
+                      Icon(Icons.cloud_download_rounded, color: Color(0xFF34D399), size: 12),
+                      SizedBox(width: 6),
+                      Text('SQL completo disponível em R2: saferoute-ai-data/sql/d1_schema_and_seed.sql',
+                        style: TextStyle(color: Color(0xFF34D399), fontSize: 9.5)),
+                    ]),
+                  ),
+                ]),
               ),
             ]),
           ),
 
-          const SizedBox(height: 16),
+          const SizedBox(height: 14),
 
           // Workers AI
           _cloudCard(
@@ -7762,10 +7976,10 @@ class _AILabsTabState extends State<_AILabsTab> {
             Icons.smart_toy_rounded,
             const Color(0xFFE879F9),
             items: const [
-              '@cf/meta/llama-3.1-8b-instruct',
-              '@cf/mistral/mistral-7b-instruct-v0.2',
-              '@cf/microsoft/phi-2',
-              '@cf/qwen/qwen1.5-7b-chat-awq',
+              '✅ @cf/meta/llama-3.1-8b-instruct',
+              '✅ @cf/mistral/mistral-7b-instruct-v0.2',
+              '✅ @cf/microsoft/phi-2',
+              '✅ @cf/qwen/qwen1.5-7b-chat-awq',
             ],
             status: 'DISPONÍVEL',
           ),
@@ -7773,6 +7987,48 @@ class _AILabsTabState extends State<_AILabsTab> {
           const SizedBox(height: 20),
         ],
       ),
+    );
+  }
+
+  // Card para opções D1
+  Widget _d1OptionCard(String letra, String titulo, Color cor, bool recomendado, List<String> itens, {bool isCode = false}) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: cor.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: cor.withValues(alpha: 0.3)),
+      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(children: [
+          Container(
+            width: 22, height: 22,
+            decoration: BoxDecoration(color: cor.withValues(alpha: 0.2), shape: BoxShape.circle),
+            child: Center(child: Text(letra, style: TextStyle(color: cor, fontSize: 11, fontWeight: FontWeight.w700))),
+          ),
+          const SizedBox(width: 8),
+          Expanded(child: Text(titulo, style: TextStyle(color: cor, fontSize: 11, fontWeight: FontWeight.w600))),
+          if (recomendado) Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            decoration: BoxDecoration(
+              color: cor.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text('RECOMENDADO', style: TextStyle(color: cor, fontSize: 8, fontWeight: FontWeight.w700)),
+          ),
+        ]),
+        const SizedBox(height: 8),
+        ...itens.map((item) => Padding(
+          padding: const EdgeInsets.only(bottom: 2),
+          child: Text(item,
+            style: TextStyle(
+              color: Colors.white54,
+              fontSize: 10,
+              fontFamily: isCode ? 'monospace' : null,
+            ),
+          ),
+        )),
+      ]),
     );
   }
 
