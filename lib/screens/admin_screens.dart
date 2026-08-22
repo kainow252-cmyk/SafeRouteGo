@@ -13,6 +13,7 @@ import '../services/route_actuarial_service.dart';
 import '../services/territorial_risk_intelligence.dart';
 import '../services/insurance_search_engine.dart';
 import '../services/atuario_ia_engine.dart';
+import '../services/seguradoras_globais_service.dart';
 
 // ─────────────────────────────────────────────────────────────
 // TELA PRINCIPAL DO ADMIN (com tabs)
@@ -37,7 +38,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
   @override
   void initState() {
     super.initState();
-    _tab = TabController(length: 10, vsync: this);
+    _tab = TabController(length: 11, vsync: this);
     _tab.addListener(() => setState(() => _tabIndex = _tab.index));
   }
 
@@ -69,6 +70,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                 _SeguradoraTab(),
                 _AtuarioIATab(),
                 _SubscritorIATab(),
+                _IntelGlobalTab(),
               ],
             ),
           ),
@@ -270,6 +272,7 @@ class _AdminTabBar extends StatelessWidget {
           Tab(text: '  🏦 Seguradora  '),
           Tab(text: '  🤖 Atuário IA  '),
           Tab(text: '  🛡️ Subscritor IA  '),
+          Tab(text: '  🌍 Intel Global  '),
         ],
       ),
     );
@@ -6008,4 +6011,612 @@ Widget _resultRow(String label, String value, Color color, {bool big = false}) {
       Text(value, style: TextStyle(color: color, fontSize: big ? 16 : 12, fontWeight: big ? FontWeight.bold : FontWeight.w500)),
     ]),
   );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// _IntelGlobalTab — Inteligência Global de Seguradoras (Tab 11)
+// ═══════════════════════════════════════════════════════════════════════════
+class _IntelGlobalTab extends StatefulWidget {
+  @override
+  State<_IntelGlobalTab> createState() => _IntelGlobalTabState();
+}
+
+class _IntelGlobalTabState extends State<_IntelGlobalTab> {
+  final _svc = SeguradorasGlobaisService.instance;
+  final _busca = TextEditingController();
+  bool _loading = true;
+  List<SeguradoraGlobal> _resultados = [];
+  String _filtroPais = '';
+  int _abaSel = 0; // 0=Overview 1=Busca 2=Rankings 3=Fontes
+
+  @override
+  void initState() {
+    super.initState();
+    _init();
+  }
+
+  Future<void> _init() async {
+    await _svc.carregar();
+    if (mounted) setState(() {
+      _loading = false;
+      _resultados = _svc.todas;
+    });
+  }
+
+  void _pesquisar(String q) {
+    setState(() {
+      _resultados = _svc.buscar(q);
+      _filtroPais = '';
+    });
+  }
+
+  void _filtrarPais(String cod) {
+    setState(() {
+      _filtroPais = cod;
+      _busca.clear();
+      _resultados = _svc.paises
+          .firstWhere((p) => p.codigoPais == cod,
+              orElse: () => PaisInsurtech(codigoPais:'', pais:'', totalSeguradoras:0, reguladorPrincipal:'', seguradoras:[]))
+          .seguradoras;
+    });
+  }
+
+  @override
+  void dispose() {
+    _busca.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_loading) {
+      return const Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        CircularProgressIndicator(color: Color(0xFF1A56DB)),
+        SizedBox(height: 16),
+        Text('Carregando base global...', style: TextStyle(color: Colors.white54, fontSize: 13)),
+      ]));
+    }
+
+    return Column(
+      children: [
+        // ── Header SADI ──────────────────────────────────────────────────
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          color: const Color(0xFF0A1628),
+          child: Row(children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(colors: [Color(0xFF1A56DB), Color(0xFF0E3A8C)]),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const Text('🌍 SADI GLOBAL INTELLIGENCE v3.0',
+                  style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800, letterSpacing: 1)),
+            ),
+            const Spacer(),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(color: const Color(0xFF0D2137), borderRadius: BorderRadius.circular(8)),
+              child: Text('${_svc.total} seguradoras · ${_svc.totalPaises} países',
+                  style: const TextStyle(color: Color(0xFF4ADE80), fontSize: 10, fontWeight: FontWeight.w700)),
+            ),
+          ]),
+        ),
+        // ── Sub-tabs ──────────────────────────────────────────────────────
+        Container(
+          color: const Color(0xFF061020),
+          child: Row(
+            children: [
+              for (final item in [
+                (0, '📊 Overview'),
+                (1, '🔍 Buscar'),
+                (2, '🏆 Rankings'),
+                (3, '📡 Fontes'),
+              ]) ...[
+                InkWell(
+                  onTap: () => setState(() => _abaSel = item.$1),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                    decoration: BoxDecoration(
+                      border: Border(bottom: BorderSide(
+                        color: _abaSel == item.$1 ? const Color(0xFF1A56DB) : Colors.transparent,
+                        width: 2.5,
+                      )),
+                    ),
+                    child: Text(item.$2, style: TextStyle(
+                      color: _abaSel == item.$1 ? const Color(0xFF60A5FA) : Colors.white38,
+                      fontSize: 11, fontWeight: FontWeight.w600,
+                    )),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+        // ── Conteúdo ──────────────────────────────────────────────────────
+        Expanded(child: _buildAba()),
+      ],
+    );
+  }
+
+  Widget _buildAba() {
+    switch (_abaSel) {
+      case 0: return _buildOverview();
+      case 1: return _buildBusca();
+      case 2: return _buildRankings();
+      case 3: return _buildFontes();
+      default: return _buildOverview();
+    }
+  }
+
+  // ─── Overview ──────────────────────────────────────────────────────────
+  Widget _buildOverview() {
+    final regiao = _svc.distribuicaoPorRegiao();
+    final topPaises = _svc.topPaises(n: 15);
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        // KPIs globais
+        _glHeader('📊 VISÃO GLOBAL DO MERCADO SEGURADOR'),
+        const SizedBox(height: 12),
+        GridView.count(
+          crossAxisCount: 4, shrinkWrap: true, physics: const NeverScrollableScrollPhysics(),
+          crossAxisSpacing: 8, mainAxisSpacing: 8, childAspectRatio: 1.8,
+          children: [
+            _glKpi('🏢', 'Total Seguradoras', '${_svc.total}', const Color(0xFF1A56DB)),
+            _glKpi('🌍', 'Países Cobertos', '${_svc.totalPaises}', const Color(0xFF059669)),
+            _glKpi('📈', 'Com Ticker Bolsa', '${_svc.totalComTicker}', const Color(0xFFF59E0B)),
+            _glKpi('🤖', 'InsurTechs', '${_svc.totalInsurTechs}', const Color(0xFF7C3AED)),
+            _glKpi('🔄', 'Resseguradoras', '${_svc.totalResseguradoras}', const Color(0xFFEC4899)),
+            _glKpi('📋', 'Reguladores', '${_svc.estatisticasPorRegulador().length}', const Color(0xFF0891B2)),
+            _glKpi('🇧🇷', 'Brasileiras (SUSEP)', '42', const Color(0xFF059669)),
+            _glKpi('🇺🇸', 'Americanas (NAIC)', '42', const Color(0xFF1A56DB)),
+          ],
+        ),
+
+        const SizedBox(height: 24),
+        _glHeader('🌐 DISTRIBUIÇÃO POR REGIÃO'),
+        const SizedBox(height: 12),
+
+        ...regiao.entries.map((e) {
+          final pct = _svc.total > 0 ? (e.value / _svc.total * 100).toStringAsFixed(1) : '0';
+          final frac = _svc.total > 0 ? e.value / _svc.total : 0.0;
+          final cor = _corRegiao(e.key);
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(children: [
+                Text(e.key, style: const TextStyle(color: Colors.white70, fontSize: 12)),
+                const Spacer(),
+                Text('${e.value} seguradoras ($pct%)',
+                    style: TextStyle(color: cor, fontSize: 11, fontWeight: FontWeight.w700)),
+              ]),
+              const SizedBox(height: 4),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: LinearProgressIndicator(
+                  value: frac.toDouble(),
+                  backgroundColor: const Color(0xFF0D1628),
+                  valueColor: AlwaysStoppedAnimation<Color>(cor),
+                  minHeight: 8,
+                ),
+              ),
+            ]),
+          );
+        }),
+
+        const SizedBox(height: 24),
+        _glHeader('🗺️ TOP 15 PAÍSES POR NÚMERO DE SEGURADORAS'),
+        const SizedBox(height: 12),
+
+        ...topPaises.asMap().entries.map((entry) {
+          final i = entry.key;
+          final p = entry.value;
+          final emoji = _svc.emojiPais(p.codigoPais);
+          final frac = _svc.total > 0 ? p.totalSeguradoras / _svc.total : 0.0;
+          return InkWell(
+            onTap: () { _filtrarPais(p.codigoPais); setState(() => _abaSel = 1); },
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: const Color(0xFF0A1628),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xFF1E3A5F)),
+              ),
+              child: Row(children: [
+                SizedBox(width: 24, child: Text('${i+1}', style: const TextStyle(color: Colors.white38, fontSize: 11))),
+                Text('$emoji ', style: const TextStyle(fontSize: 16)),
+                Expanded(child: Text(p.pais, style: const TextStyle(color: Colors.white, fontSize: 12))),
+                Text(p.reguladorPrincipal, style: const TextStyle(color: Colors.white38, fontSize: 10)),
+                const SizedBox(width: 8),
+                SizedBox(
+                  width: 80,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: LinearProgressIndicator(
+                      value: frac.toDouble(),
+                      backgroundColor: const Color(0xFF0D1628),
+                      valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF1A56DB)),
+                      minHeight: 6,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text('${p.totalSeguradoras}', style: const TextStyle(color: Color(0xFF60A5FA), fontSize: 12, fontWeight: FontWeight.w700)),
+              ]),
+            ),
+          );
+        }),
+      ]),
+    );
+  }
+
+  // ─── Busca ─────────────────────────────────────────────────────────────
+  Widget _buildBusca() {
+    return Column(children: [
+      // Barra de busca
+      Padding(
+        padding: const EdgeInsets.all(12),
+        child: TextField(
+          controller: _busca,
+          onChanged: _pesquisar,
+          style: const TextStyle(color: Colors.white, fontSize: 13),
+          decoration: InputDecoration(
+            hintText: 'Buscar seguradora, ticker, regulador...',
+            hintStyle: const TextStyle(color: Colors.white38, fontSize: 12),
+            prefixIcon: const Icon(Icons.search, color: Colors.white38, size: 18),
+            suffixIcon: _busca.text.isNotEmpty
+                ? IconButton(
+                    icon: const Icon(Icons.clear, color: Colors.white38, size: 16),
+                    onPressed: () { _busca.clear(); _pesquisar(''); })
+                : null,
+            filled: true, fillColor: const Color(0xFF0A1628),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: Color(0xFF1E3A5F)),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: Color(0xFF1E3A5F)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: Color(0xFF1A56DB)),
+            ),
+          ),
+        ),
+      ),
+      // Chips de países top
+      SizedBox(
+        height: 36,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          children: [
+            _glChip('Todos', _filtroPais.isEmpty, () {
+              setState(() { _filtroPais = ''; _busca.clear(); _resultados = _svc.todas; });
+            }),
+            ..._svc.topPaises(n: 12).map((p) =>
+              _glChip('${_svc.emojiPais(p.codigoPais)} ${p.pais}', _filtroPais == p.codigoPais,
+                  () => _filtrarPais(p.codigoPais))
+            ),
+          ],
+        ),
+      ),
+      // Contador
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+        child: Row(children: [
+          Text('${_resultados.length} seguradoras',
+              style: const TextStyle(color: Colors.white38, fontSize: 11)),
+          if (_filtroPais.isNotEmpty) ...[
+            const SizedBox(width: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1A56DB).withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text('Filtro: $_filtroPais',
+                  style: const TextStyle(color: Color(0xFF60A5FA), fontSize: 10)),
+            ),
+          ],
+        ]),
+      ),
+      // Lista
+      Expanded(
+        child: ListView.builder(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          itemCount: _resultados.length,
+          itemBuilder: (ctx, i) {
+            final s = _resultados[i];
+            return Container(
+              margin: const EdgeInsets.only(bottom: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              decoration: BoxDecoration(
+                color: const Color(0xFF0A1628),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xFF1E3A5F)),
+              ),
+              child: Row(children: [
+                Container(
+                  width: 32, height: 32,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1A56DB).withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Center(child: Text(
+                    s.isInsurTech ? '🤖' : s.isResseguradora ? '🔄' : '🏢',
+                    style: const TextStyle(fontSize: 14),
+                  )),
+                ),
+                const SizedBox(width: 10),
+                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(s.nome, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600)),
+                  const SizedBox(height: 2),
+                  Row(children: [
+                    if (s.anoFundacao.isNotEmpty && s.anoFundacao != 'null') ...[
+                      Text('Est. ${s.anoFundacao}', style: const TextStyle(color: Colors.white38, fontSize: 10)),
+                      const Text(' · ', style: TextStyle(color: Colors.white24)),
+                    ],
+                    Text(s.regulador, style: const TextStyle(color: Color(0xFF60A5FA), fontSize: 10)),
+                  ]),
+                ])),
+                Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                  if (s.temTicker)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF59E0B).withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(s.tickerBolsa, style: const TextStyle(color: Color(0xFFF59E0B), fontSize: 9, fontWeight: FontWeight.w700)),
+                    ),
+                  if (s.temWebsite) ...[
+                    const SizedBox(height: 4),
+                    const Icon(Icons.language, size: 14, color: Colors.white24),
+                  ],
+                ]),
+              ]),
+            );
+          },
+        ),
+      ),
+    ]);
+  }
+
+  // ─── Rankings ──────────────────────────────────────────────────────────
+  Widget _buildRankings() {
+    final reguladores = _svc.estatisticasPorRegulador();
+    final topPaises = _svc.topPaises(n: 20);
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        _glHeader('🏆 TOP PAÍSES POR COBERTURA'),
+        const SizedBox(height: 12),
+        ...topPaises.asMap().entries.map((entry) {
+          final i = entry.key;
+          final p = entry.value;
+          final emoji = _svc.emojiPais(p.codigoPais);
+          final cores = [
+            const Color(0xFFFFD700), const Color(0xFFC0C0C0), const Color(0xFFCD7F32),
+          ];
+          final cor = i < 3 ? cores[i] : const Color(0xFF60A5FA);
+          return Container(
+            margin: const EdgeInsets.only(bottom: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            decoration: BoxDecoration(
+              color: i < 3 ? cor.withValues(alpha: 0.08) : const Color(0xFF0A1628),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: i < 3 ? cor.withValues(alpha: 0.3) : const Color(0xFF1E3A5F)),
+            ),
+            child: Row(children: [
+              SizedBox(width: 28, child: Text('#${i+1}',
+                  style: TextStyle(color: cor, fontSize: 12, fontWeight: FontWeight.w800))),
+              Text('$emoji ', style: const TextStyle(fontSize: 16)),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(p.pais, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600)),
+                Text(p.reguladorPrincipal, style: const TextStyle(color: Colors.white38, fontSize: 10)),
+              ])),
+              Text('${p.totalSeguradoras}',
+                  style: TextStyle(color: cor, fontSize: 18, fontWeight: FontWeight.w900)),
+            ]),
+          );
+        }),
+
+        const SizedBox(height: 28),
+        _glHeader('📋 REGULADORES GLOBAIS'),
+        const SizedBox(height: 12),
+        ...reguladores.entries.map((e) {
+          final frac = _svc.total > 0 ? e.value / _svc.total : 0.0;
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Row(children: [
+              SizedBox(width: 100, child: Text(e.key,
+                  style: const TextStyle(color: Colors.white70, fontSize: 11), overflow: TextOverflow.ellipsis)),
+              const SizedBox(width: 8),
+              Expanded(child: ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: LinearProgressIndicator(
+                  value: frac.toDouble(),
+                  backgroundColor: const Color(0xFF0D1628),
+                  valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF1A56DB)),
+                  minHeight: 10,
+                ),
+              )),
+              const SizedBox(width: 8),
+              SizedBox(width: 30, child: Text('${e.value}',
+                  style: const TextStyle(color: Color(0xFF60A5FA), fontSize: 11, fontWeight: FontWeight.w700),
+                  textAlign: TextAlign.right)),
+            ]),
+          );
+        }),
+      ]),
+    );
+  }
+
+  // ─── Fontes ────────────────────────────────────────────────────────────
+  Widget _buildFontes() {
+    final fontes = _svc.meta?.fontes ?? [];
+    final fonteIcons = {
+      'Wikidata': '📖',
+      'SUSEP': '🇧🇷',
+      'EIOPA': '🇪🇺',
+      'NAIC': '🇺🇸',
+      'IRDAI': '🇮🇳',
+      'CBIRC': '🇨🇳',
+      'APRA': '🇦🇺',
+      'FSB': '🇿🇦',
+      'SAMA': '🇸🇦',
+      'BMA': '🏝️',
+      'InsurTech': '🤖',
+      'Curadoria': '✨',
+    };
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        _glHeader('📡 FONTES DE DADOS OFICIAIS'),
+        const SizedBox(height: 8),
+        Text(
+          'Base construída via ETL automatizado consultando reguladores oficiais '
+          'e repositórios públicos globais. Atualização: ${_svc.meta?.dataAtualizacao ?? ""}',
+          style: const TextStyle(color: Colors.white38, fontSize: 11),
+        ),
+        const SizedBox(height: 16),
+        ...fontes.map((f) {
+          String icon = '🔗';
+          for (final entry in fonteIcons.entries) {
+            if (f.contains(entry.key)) { icon = entry.value; break; }
+          }
+          return Container(
+            margin: const EdgeInsets.only(bottom: 8),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color(0xFF0A1628),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: const Color(0xFF1E3A5F)),
+            ),
+            child: Row(children: [
+              Text(icon, style: const TextStyle(fontSize: 20)),
+              const SizedBox(width: 12),
+              Expanded(child: Text(f, style: const TextStyle(color: Colors.white70, fontSize: 12))),
+            ]),
+          );
+        }),
+
+        const SizedBox(height: 24),
+        _glHeader('🔧 PIPELINE ETL'),
+        const SizedBox(height: 12),
+        Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: const Color(0xFF061020),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: const Color(0xFF1A56DB).withValues(alpha: 0.3)),
+          ),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const Text('Motor ETL Python v2.0', style: TextStyle(color: Color(0xFF60A5FA), fontSize: 12, fontWeight: FontWeight.w700)),
+            const SizedBox(height: 8),
+            ...[
+              ('1', 'Wikidata SPARQL Query', 'SELECT ?seguradora WHERE { ?s wdt:P31 wd:Q1561556 }'),
+              ('2', 'SUSEP Dados Abertos', 'API dados.gov.br + seed curadoria CNPJ'),
+              ('3', 'EIOPA Register', 'registers.eiopa.europa.eu/api/v1/ins/getAll'),
+              ('4', 'NAIC + Américas', 'naic.org + curadoria reguladores LATAM'),
+              ('5', 'Consolidação SQLite', 'DROP DUPLICATES + INDEX idx_pais, idx_nome'),
+              ('6', 'Export JSON/CSV', 'seguradoras_mundo.json → Flutter assets'),
+            ].map((step) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Container(
+                  width: 20, height: 20,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1A56DB), borderRadius: BorderRadius.circular(10)),
+                  child: Center(child: Text(step.$1, style: const TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.w800))),
+                ),
+                const SizedBox(width: 8),
+                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(step.$2, style: const TextStyle(color: Colors.white70, fontSize: 11, fontWeight: FontWeight.w600)),
+                  Text(step.$3, style: const TextStyle(color: Colors.white38, fontSize: 10, fontFamily: 'monospace')),
+                ])),
+              ]),
+            )),
+          ]),
+        ),
+
+        const SizedBox(height: 16),
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: const Color(0xFF059669).withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: const Color(0xFF059669).withValues(alpha: 0.3)),
+          ),
+          child: Row(children: [
+            const Text('✅', style: TextStyle(fontSize: 18)),
+            const SizedBox(width: 10),
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              const Text('Base Ativa v3.0', style: TextStyle(color: Color(0xFF4ADE80), fontSize: 12, fontWeight: FontWeight.w700)),
+              Text('${_svc.total} seguradoras · ${_svc.totalPaises} países · ${_svc.meta?.dataAtualizacao ?? ""}',
+                  style: const TextStyle(color: Colors.white54, fontSize: 10)),
+            ])),
+          ]),
+        ),
+      ]),
+    );
+  }
+
+  // ─── Helpers ───────────────────────────────────────────────────────────
+  Widget _glHeader(String t) => Text(t,
+      style: const TextStyle(color: Colors.white38, fontSize: 10, fontWeight: FontWeight.w800, letterSpacing: 1.5));
+
+  Widget _glKpi(String icon, String label, String value, Color cor) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0A1628),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: cor.withValues(alpha: 0.25)),
+      ),
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Text(icon, style: const TextStyle(fontSize: 16)),
+        const SizedBox(height: 2),
+        Text(value, style: TextStyle(color: cor, fontSize: 14, fontWeight: FontWeight.w900)),
+        Text(label, style: const TextStyle(color: Colors.white38, fontSize: 9), textAlign: TextAlign.center),
+      ]),
+    );
+  }
+
+  Widget _glChip(String label, bool ativo, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(right: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: ativo ? const Color(0xFF1A56DB) : const Color(0xFF0A1628),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: ativo ? const Color(0xFF1A56DB) : const Color(0xFF1E3A5F)),
+        ),
+        child: Text(label, style: TextStyle(
+          color: ativo ? Colors.white : Colors.white54,
+          fontSize: 11, fontWeight: ativo ? FontWeight.w700 : FontWeight.normal,
+        )),
+      ),
+    );
+  }
+
+  Color _corRegiao(String r) {
+    switch (r) {
+      case 'Américas': return const Color(0xFF1A56DB);
+      case 'Europa':   return const Color(0xFF059669);
+      case 'Ásia-Pacífico': return const Color(0xFFF59E0B);
+      case 'Oriente Médio & África': return const Color(0xFFEC4899);
+      default: return Colors.white38;
+    }
+  }
 }

@@ -1,0 +1,2272 @@
+{
+  "meta": {
+    "versao": "3.0",
+    "data_atualizacao": "2026-08-22 14:17",
+    "total_seguradoras": 239,
+    "total_paises": 42,
+    "fontes": [
+      "Wikidata SPARQL (base global)",
+      "SUSEP - Superintendência de Seguros Privados (Brasil)",
+      "EIOPA - European Insurance and Occupational Pensions Authority",
+      "NAIC - National Association of Insurance Commissioners (EUA)",
+      "IRDAI - Insurance Regulatory and Development Authority (Índia)",
+      "CBIRC - China Banking and Insurance Regulatory Commission",
+      "APRA - Australian Prudential Regulation Authority",
+      "FSB/FSCA - Financial Sector Conduct Authority (África do Sul)",
+      "SAMA - Saudi Arabian Monetary Authority",
+      "BMA - Bermuda Monetary Authority",
+      "InsurTech Global Radar",
+      "Curadoria SADI SafeRouteGo v3.0"
+    ]
+  },
+  "paises": [
+    {
+      "codigo_pais": "BR",
+      "pais": "Brasil",
+      "total_seguradoras": 42,
+      "regulador_principal": "SUSEP",
+      "seguradoras": [
+        {
+          "id_global": "BR_30306294000145",
+          "nome_seguradora": "ACE Seguradora S.A.",
+          "website": "",
+          "ano_fundacao": "",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_08462894000160",
+          "nome_seguradora": "AXA Seguros S.A.",
+          "website": "",
+          "ano_fundacao": "",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_03456210000134",
+          "nome_seguradora": "Alfa Seguradora S.A.",
+          "website": "",
+          "ano_fundacao": "",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_01378407000101",
+          "nome_seguradora": "Allianz Seguros S.A.",
+          "website": "",
+          "ano_fundacao": "",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_11024930000100",
+          "nome_seguradora": "Argo Seguros Brasil S.A.",
+          "website": "",
+          "ano_fundacao": "",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_17344097000103",
+          "nome_seguradora": "BB Seguridade Participações S.A.",
+          "website": "",
+          "ano_fundacao": "",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_51990695000154",
+          "nome_seguradora": "Bradesco Seguros S.A.",
+          "website": "",
+          "ano_fundacao": "",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_08779185000117",
+          "nome_seguradora": "Caixa Seguridade S.A.",
+          "website": "",
+          "ano_fundacao": "",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_09396440000156",
+          "nome_seguradora": "Chubb Seguros Brasil S.A.",
+          "website": "",
+          "ano_fundacao": "",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_08266414000190",
+          "nome_seguradora": "Fator Seguradora S.A.",
+          "website": "",
+          "ano_fundacao": "",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_33072307000179",
+          "nome_seguradora": "Generali Brasil Seguros S.A.",
+          "website": "",
+          "ano_fundacao": "",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_92694284000101",
+          "nome_seguradora": "HDI Seguros S.A.",
+          "website": "",
+          "ano_fundacao": "",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_33376989000191",
+          "nome_seguradora": "IRB Brasil RE S.A.",
+          "website": "",
+          "ano_fundacao": "",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_33453598000149",
+          "nome_seguradora": "Indiana Seguros S.A.",
+          "website": "",
+          "ano_fundacao": "",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_89522695000186",
+          "nome_seguradora": "Itaú Seguros S.A.",
+          "website": "",
+          "ano_fundacao": "",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_61550141000172",
+          "nome_seguradora": "Liberty Seguros S.A.",
+          "website": "",
+          "ano_fundacao": "",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_61074175000138",
+          "nome_seguradora": "Mapfre Seguros Gerais S.A.",
+          "website": "",
+          "ano_fundacao": "",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_18010415000190",
+          "nome_seguradora": "Markel Seguradora do Brasil S.A.",
+          "website": "",
+          "ano_fundacao": "",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_41816398000183",
+          "nome_seguradora": "MetLife Seguros e Previdência Privada S.A.",
+          "website": "",
+          "ano_fundacao": "",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_07476722000111",
+          "nome_seguradora": "Mongeral Aegon Seguros e Previdência S.A.",
+          "website": "",
+          "ano_fundacao": "",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_04480190000104",
+          "nome_seguradora": "Nobre Seguradora do Brasil S.A.",
+          "website": "",
+          "ano_fundacao": "",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_61198164000160",
+          "nome_seguradora": "Porto Seguro S.A.",
+          "website": "",
+          "ano_fundacao": "",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_11699534000174",
+          "nome_seguradora": "Pottencial Seguradora S.A.",
+          "website": "",
+          "ano_fundacao": "",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_36540550000110",
+          "nome_seguradora": "Prudential do Brasil Seguros de Pessoas S.A.",
+          "website": "",
+          "ano_fundacao": "",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_93302625000169",
+          "nome_seguradora": "Sancor Seguros do Brasil",
+          "website": "",
+          "ano_fundacao": "",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_61383493000180",
+          "nome_seguradora": "Sompo Seguros S.A.",
+          "website": "",
+          "ano_fundacao": "",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_01685053000156",
+          "nome_seguradora": "SulAmérica Seguros S.A.",
+          "website": "",
+          "ano_fundacao": "",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_02970842000197",
+          "nome_seguradora": "Swiss Re Corporate Solutions Brasil Seguros S.A.",
+          "website": "",
+          "ano_fundacao": "",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_33164021000108",
+          "nome_seguradora": "Tokio Marine Seguradora S.A.",
+          "website": "",
+          "ano_fundacao": "",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_17197385000121",
+          "nome_seguradora": "Zurich Minas Brasil Seguros S.A.",
+          "website": "",
+          "ano_fundacao": "",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_Wiz_Soluções_e_Corretagem",
+          "nome_seguradora": "Wiz Soluções e Corretagem de Seguros S.A.",
+          "website": "https://wiz.co",
+          "ano_fundacao": "2009",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_Fairfax_Brasil_Seguros_Co",
+          "nome_seguradora": "Fairfax Brasil Seguros Corporativos S.A.",
+          "website": "",
+          "ano_fundacao": "2016",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_XL_Seguros_Brasil_SA",
+          "nome_seguradora": "XL Seguros Brasil S.A.",
+          "website": "",
+          "ano_fundacao": "2000",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_Berkley_International_do_",
+          "nome_seguradora": "Berkley International do Brasil Seguros S.A.",
+          "website": "",
+          "ano_fundacao": "2007",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_Amil_Assistência_Médica_I",
+          "nome_seguradora": "Amil Assistência Médica Internacional S.A.",
+          "website": "https://amil.com.br",
+          "ano_fundacao": "1978",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_Hapvida_Assistência_Médic",
+          "nome_seguradora": "Hapvida Assistência Médica Ltda.",
+          "website": "https://hapvida.com.br",
+          "ano_fundacao": "1979",
+          "ticker_bolsa": "HAPV3.SA",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_Unimed_do_Brasil_Cooperat",
+          "nome_seguradora": "Unimed do Brasil Cooperativa Central",
+          "website": "https://unimed.com.br",
+          "ano_fundacao": "1967",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_NotreDame_Intermédica_Saú",
+          "nome_seguradora": "NotreDame Intermédica Saúde S.A.",
+          "website": "https://notredame.com.br",
+          "ano_fundacao": "1968",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_Qualicorp_Consultoria_e_C",
+          "nome_seguradora": "Qualicorp Consultoria e Corretora de Seguros S.A.",
+          "website": "https://qualicorp.com.br",
+          "ano_fundacao": "1997",
+          "ticker_bolsa": "QUAL3.SA",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_Paraná_Seguros_SA",
+          "nome_seguradora": "Paraná Seguros S.A.",
+          "website": "https://paranaseguros.com.br",
+          "ano_fundacao": "1954",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_Companhia_de_Seguros_Mina",
+          "nome_seguradora": "Companhia de Seguros Minas Brasil",
+          "website": "",
+          "ano_fundacao": "1934",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        },
+        {
+          "id_global": "BR_IATÃ_Companhia_de_Seguros",
+          "nome_seguradora": "IATÃ Companhia de Seguros S.A.",
+          "website": "",
+          "ano_fundacao": "1959",
+          "ticker_bolsa": "",
+          "regulador": "SUSEP"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "US",
+      "pais": "EUA",
+      "total_seguradoras": 42,
+      "regulador_principal": "NAIC",
+      "seguradoras": [
+        {
+          "id_global": "US_Aflac_Incorporated",
+          "nome_seguradora": "Aflac Incorporated",
+          "website": "https://aflac.com",
+          "ano_fundacao": "1955",
+          "ticker_bolsa": "AFL",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_Allstate_Corporation",
+          "nome_seguradora": "Allstate Corporation",
+          "website": "https://allstate.com",
+          "ano_fundacao": "1931",
+          "ticker_bolsa": "ALL",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_American_International_Gr",
+          "nome_seguradora": "American International Group (AIG)",
+          "website": "https://aig.com",
+          "ano_fundacao": "1919",
+          "ticker_bolsa": "AIG",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_Aon_plc",
+          "nome_seguradora": "Aon plc",
+          "website": "https://aon.com",
+          "ano_fundacao": "1919",
+          "ticker_bolsa": "AON",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_Arch_Capital_Group",
+          "nome_seguradora": "Arch Capital Group",
+          "website": "https://archgroup.com",
+          "ano_fundacao": "2001",
+          "ticker_bolsa": "ACGL",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_Berkshire_Hathaway",
+          "nome_seguradora": "Berkshire Hathaway",
+          "website": "https://berkshirehathaway.com",
+          "ano_fundacao": "1889",
+          "ticker_bolsa": "BRK.A",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_Chubb_Limited",
+          "nome_seguradora": "Chubb Limited",
+          "website": "https://chubb.com",
+          "ano_fundacao": "1882",
+          "ticker_bolsa": "CB",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_Cincinnati_Financial",
+          "nome_seguradora": "Cincinnati Financial",
+          "website": "https://cinfin.com",
+          "ano_fundacao": "1950",
+          "ticker_bolsa": "CINF",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_Erie_Indemnity_Company",
+          "nome_seguradora": "Erie Indemnity Company",
+          "website": "https://erieinsurance.com",
+          "ano_fundacao": "1925",
+          "ticker_bolsa": "ERIE",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_Hartford_Financial_Servic",
+          "nome_seguradora": "Hartford Financial Services",
+          "website": "https://thehartford.com",
+          "ano_fundacao": "1810",
+          "ticker_bolsa": "HIG",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_Liberty_Mutual_Insurance",
+          "nome_seguradora": "Liberty Mutual Insurance",
+          "website": "https://libertymutual.com",
+          "ano_fundacao": "1912",
+          "ticker_bolsa": "",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_Lincoln_National_Corporat",
+          "nome_seguradora": "Lincoln National Corporation",
+          "website": "https://lfg.com",
+          "ano_fundacao": "1905",
+          "ticker_bolsa": "LNC",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_Markel_Corporation",
+          "nome_seguradora": "Markel Corporation",
+          "website": "https://markel.com",
+          "ano_fundacao": "1930",
+          "ticker_bolsa": "MKL",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_Marsh_&_McLennan_Companie",
+          "nome_seguradora": "Marsh & McLennan Companies",
+          "website": "https://mmc.com",
+          "ano_fundacao": "1871",
+          "ticker_bolsa": "MMC",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_MetLife_Inc",
+          "nome_seguradora": "MetLife Inc",
+          "website": "https://metlife.com",
+          "ano_fundacao": "1868",
+          "ticker_bolsa": "MET",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_New_York_Life_Insurance",
+          "nome_seguradora": "New York Life Insurance",
+          "website": "https://newyorklife.com",
+          "ano_fundacao": "1845",
+          "ticker_bolsa": "",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_Progressive_Corporation",
+          "nome_seguradora": "Progressive Corporation",
+          "website": "https://progressive.com",
+          "ano_fundacao": "1937",
+          "ticker_bolsa": "PGR",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_Prudential_Financial",
+          "nome_seguradora": "Prudential Financial",
+          "website": "https://prudential.com",
+          "ano_fundacao": "1875",
+          "ticker_bolsa": "PRU",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_RenaissanceRe_Holdings",
+          "nome_seguradora": "RenaissanceRe Holdings",
+          "website": "https://renre.com",
+          "ano_fundacao": "1993",
+          "ticker_bolsa": "RNR",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_State_Farm",
+          "nome_seguradora": "State Farm",
+          "website": "https://statefarm.com",
+          "ano_fundacao": "1922",
+          "ticker_bolsa": "",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_Travelers_Companies_Inc",
+          "nome_seguradora": "Travelers Companies Inc",
+          "website": "https://travelers.com",
+          "ano_fundacao": "1853",
+          "ticker_bolsa": "TRV",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_USAA",
+          "nome_seguradora": "USAA",
+          "website": "https://usaa.com",
+          "ano_fundacao": "1922",
+          "ticker_bolsa": "",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_Unum_Group",
+          "nome_seguradora": "Unum Group",
+          "website": "https://unum.com",
+          "ano_fundacao": "1848",
+          "ticker_bolsa": "UNM",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_WR_Berkley_Corporation",
+          "nome_seguradora": "W.R. Berkley Corporation",
+          "website": "https://berkley.com",
+          "ano_fundacao": "1967",
+          "ticker_bolsa": "WRB",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_Willis_Towers_Watson",
+          "nome_seguradora": "Willis Towers Watson",
+          "website": "https://wtwco.com",
+          "ano_fundacao": "1828",
+          "ticker_bolsa": "WTW",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_Lemonade_Inc",
+          "nome_seguradora": "Lemonade Inc",
+          "website": "https://lemonade.com",
+          "ano_fundacao": "2015",
+          "ticker_bolsa": "LMND",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_Root_Insurance_Company",
+          "nome_seguradora": "Root Insurance Company",
+          "website": "https://joinroot.com",
+          "ano_fundacao": "2015",
+          "ticker_bolsa": "ROOT",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_Oscar_Health_Inc",
+          "nome_seguradora": "Oscar Health Inc",
+          "website": "https://hioscar.com",
+          "ano_fundacao": "2012",
+          "ticker_bolsa": "OSCR",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_Hippo_Holdings_Inc",
+          "nome_seguradora": "Hippo Holdings Inc",
+          "website": "https://hippo.com",
+          "ano_fundacao": "2015",
+          "ticker_bolsa": "HIPO",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_Sure_Holdings_Inc",
+          "nome_seguradora": "Sure Holdings Inc",
+          "website": "https://sureapp.com",
+          "ano_fundacao": "2015",
+          "ticker_bolsa": "",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_Next_Insurance_Inc",
+          "nome_seguradora": "Next Insurance Inc",
+          "website": "https://nextinsurance.com",
+          "ano_fundacao": "2016",
+          "ticker_bolsa": "",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_Policygenius_Inc",
+          "nome_seguradora": "Policygenius Inc",
+          "website": "https://policygenius.com",
+          "ano_fundacao": "2014",
+          "ticker_bolsa": "",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_Kin_Insurance",
+          "nome_seguradora": "Kin Insurance",
+          "website": "https://kin.com",
+          "ano_fundacao": "2016",
+          "ticker_bolsa": "",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_Clearcover_Inc",
+          "nome_seguradora": "Clearcover Inc",
+          "website": "https://clearcover.com",
+          "ano_fundacao": "2016",
+          "ticker_bolsa": "",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_Branch_Insurance",
+          "nome_seguradora": "Branch Insurance",
+          "website": "https://ourbranch.com",
+          "ano_fundacao": "2017",
+          "ticker_bolsa": "",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_WR_Berkley_Corp",
+          "nome_seguradora": "W.R. Berkley Corp",
+          "website": "https://berkley.com",
+          "ano_fundacao": "1967",
+          "ticker_bolsa": "WRB",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_Everest_Re_Group",
+          "nome_seguradora": "Everest Re Group",
+          "website": "https://everestins.com",
+          "ano_fundacao": "1973",
+          "ticker_bolsa": "EG",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_TransRe_(Transatlantic_Ho",
+          "nome_seguradora": "TransRe (Transatlantic Holdings)",
+          "website": "https://transre.com",
+          "ano_fundacao": "1977",
+          "ticker_bolsa": "",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_Employers_Holdings_Inc",
+          "nome_seguradora": "Employers Holdings Inc",
+          "website": "https://employers.com",
+          "ano_fundacao": "2000",
+          "ticker_bolsa": "EIG",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_General_Re_Corporation",
+          "nome_seguradora": "General Re Corporation",
+          "website": "https://genre.com",
+          "ano_fundacao": "1921",
+          "ticker_bolsa": "",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_Transatlantic_Holdings_In",
+          "nome_seguradora": "Transatlantic Holdings Inc",
+          "website": "https://transre.com",
+          "ano_fundacao": "1977",
+          "ticker_bolsa": "",
+          "regulador": "NAIC"
+        },
+        {
+          "id_global": "US_RGA_Reinsurance_Company",
+          "nome_seguradora": "RGA Reinsurance Company",
+          "website": "https://rgare.com",
+          "ano_fundacao": "1973",
+          "ticker_bolsa": "RGA",
+          "regulador": "NAIC"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "DE",
+      "pais": "Alemanha",
+      "total_seguradoras": 11,
+      "regulador_principal": "EIOPA",
+      "seguradoras": [
+        {
+          "id_global": "EU_DE_Allianz_SE",
+          "nome_seguradora": "Allianz SE",
+          "website": "https://allianz.com",
+          "ano_fundacao": "1890",
+          "ticker_bolsa": "ALV.DE",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "EU_DE_Generali_Deutschland",
+          "nome_seguradora": "Generali Deutschland",
+          "website": "https://generali.de",
+          "ano_fundacao": "1938",
+          "ticker_bolsa": "",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "EU_DE_Hannover_Rück_SE",
+          "nome_seguradora": "Hannover Rück SE",
+          "website": "https://hannover-re.com",
+          "ano_fundacao": "1966",
+          "ticker_bolsa": "HNR1.DE",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "EU_DE_Munich_Re",
+          "nome_seguradora": "Munich Re",
+          "website": "https://munichre.com",
+          "ano_fundacao": "1880",
+          "ticker_bolsa": "MUV2.DE",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "EU_DE_Talanx_AG",
+          "nome_seguradora": "Talanx AG",
+          "website": "https://talanx.com",
+          "ano_fundacao": "1903",
+          "ticker_bolsa": "TLX.DE",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "DE_Ergo_Group_AG",
+          "nome_seguradora": "Ergo Group AG",
+          "website": "https://ergo.com",
+          "ano_fundacao": "1997",
+          "ticker_bolsa": "",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "DE_Wüstenrot_&_Württembergis",
+          "nome_seguradora": "Wüstenrot & Württembergische AG",
+          "website": "https://ww-ag.com",
+          "ano_fundacao": "1828",
+          "ticker_bolsa": "WUW.DE",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "DE_Gothaer_Versicherung",
+          "nome_seguradora": "Gothaer Versicherung",
+          "website": "https://gothaer.de",
+          "ano_fundacao": "1820",
+          "ticker_bolsa": "",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "DE_R+V_Versicherung",
+          "nome_seguradora": "R+V Versicherung",
+          "website": "https://ruv.de",
+          "ano_fundacao": "1922",
+          "ticker_bolsa": "",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "DE_Signal_Iduna",
+          "nome_seguradora": "Signal Iduna",
+          "website": "https://signal-iduna.de",
+          "ano_fundacao": "1905",
+          "ticker_bolsa": "",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "DE_Wefox_Group",
+          "nome_seguradora": "Wefox Group",
+          "website": "https://wefox.com",
+          "ano_fundacao": "2015",
+          "ticker_bolsa": "",
+          "regulador": "BaFin"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "GB",
+      "pais": "Reino Unido",
+      "total_seguradoras": 10,
+      "regulador_principal": "EIOPA",
+      "seguradoras": [
+        {
+          "id_global": "EU_GB_Admiral_Group_plc",
+          "nome_seguradora": "Admiral Group plc",
+          "website": "https://admiralgroup.co.uk",
+          "ano_fundacao": "1993",
+          "ticker_bolsa": "ADM.L",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "EU_GB_Aviva_plc",
+          "nome_seguradora": "Aviva plc",
+          "website": "https://aviva.com",
+          "ano_fundacao": "1696",
+          "ticker_bolsa": "AV.L",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "EU_GB_Direct_Line_Insuranc",
+          "nome_seguradora": "Direct Line Insurance Group",
+          "website": "https://directlinegroup.co.uk",
+          "ano_fundacao": "1985",
+          "ticker_bolsa": "DLG.L",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "EU_GB_Legal_&_General_Grou",
+          "nome_seguradora": "Legal & General Group",
+          "website": "https://legalandgeneral.com",
+          "ano_fundacao": "1836",
+          "ticker_bolsa": "LGEN.L",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "EU_GB_Lloyd's_of_London",
+          "nome_seguradora": "Lloyd's of London",
+          "website": "https://lloyds.com",
+          "ano_fundacao": "1686",
+          "ticker_bolsa": "",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "EU_GB_Prudential_plc",
+          "nome_seguradora": "Prudential plc",
+          "website": "https://prudential.co.uk",
+          "ano_fundacao": "1848",
+          "ticker_bolsa": "PRU.L",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "EU_GB_RSA_Insurance_Group",
+          "nome_seguradora": "RSA Insurance Group",
+          "website": "https://rsagroup.com",
+          "ano_fundacao": "1710",
+          "ticker_bolsa": "",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "GB_Laka_(ciclistas)",
+          "nome_seguradora": "Laka (ciclistas)",
+          "website": "https://laka.co.uk",
+          "ano_fundacao": "2017",
+          "ticker_bolsa": "",
+          "regulador": "FCA"
+        },
+        {
+          "id_global": "GB_Tractable_(IA_sinistros)",
+          "nome_seguradora": "Tractable (IA sinistros)",
+          "website": "https://tractable.ai",
+          "ano_fundacao": "2014",
+          "ticker_bolsa": "",
+          "regulador": "FCA"
+        },
+        {
+          "id_global": "GB_Wrisk",
+          "nome_seguradora": "Wrisk",
+          "website": "https://wrisk.co",
+          "ano_fundacao": "2016",
+          "ticker_bolsa": "",
+          "regulador": "FCA"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "CN",
+      "pais": "China",
+      "total_seguradoras": 9,
+      "regulador_principal": "Regulador Local",
+      "seguradoras": [
+        {
+          "id_global": "CN_China_Life_Insurance_Co",
+          "nome_seguradora": "China Life Insurance Co",
+          "website": "https://chinalife.com.cn",
+          "ano_fundacao": "1949",
+          "ticker_bolsa": "2628.HK",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "CN_China_Pacific_Insurance",
+          "nome_seguradora": "China Pacific Insurance",
+          "website": "https://cpic.com.cn",
+          "ano_fundacao": "1991",
+          "ticker_bolsa": "2601.HK",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "CN_New_China_Life_Insurance",
+          "nome_seguradora": "New China Life Insurance",
+          "website": "https://newchinalife.com",
+          "ano_fundacao": "1996",
+          "ticker_bolsa": "1336.HK",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "CN_PICC_Property_and_Casualt",
+          "nome_seguradora": "PICC Property and Casualty",
+          "website": "https://piccnet.com.cn",
+          "ano_fundacao": "1949",
+          "ticker_bolsa": "2328.HK",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "CN_Ping_An_Insurance_Group",
+          "nome_seguradora": "Ping An Insurance Group",
+          "website": "https://pingan.com",
+          "ano_fundacao": "1988",
+          "ticker_bolsa": "2318.HK",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "CN_Hua_Xia_Insurance",
+          "nome_seguradora": "Hua Xia Insurance",
+          "website": "https://huaxia.com",
+          "ano_fundacao": "1995",
+          "ticker_bolsa": "",
+          "regulador": "CBIRC"
+        },
+        {
+          "id_global": "CN_Taikang_Insurance_Group",
+          "nome_seguradora": "Taikang Insurance Group",
+          "website": "https://taikang.com",
+          "ano_fundacao": "1996",
+          "ticker_bolsa": "",
+          "regulador": "CBIRC"
+        },
+        {
+          "id_global": "CN_Sunshine_Insurance_Group",
+          "nome_seguradora": "Sunshine Insurance Group",
+          "website": "https://sunshineinsurance.com.cn",
+          "ano_fundacao": "2005",
+          "ticker_bolsa": "6963.HK",
+          "regulador": "CBIRC"
+        },
+        {
+          "id_global": "CN_ZhongAn_Online_P&C_Insura",
+          "nome_seguradora": "ZhongAn Online P&C Insurance",
+          "website": "https://zhongan.com",
+          "ano_fundacao": "2013",
+          "ticker_bolsa": "6060.HK",
+          "regulador": "CBIRC"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "IN",
+      "pais": "Índia",
+      "total_seguradoras": 9,
+      "regulador_principal": "IRDAI",
+      "seguradoras": [
+        {
+          "id_global": "IN_HDFC_Life_Insurance",
+          "nome_seguradora": "HDFC Life Insurance",
+          "website": "https://hdfclife.com",
+          "ano_fundacao": "2000",
+          "ticker_bolsa": "HDFCLIFE.NS",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "IN_ICICI_Lombard_General_Ins",
+          "nome_seguradora": "ICICI Lombard General Insurance",
+          "website": "https://icicilombard.com",
+          "ano_fundacao": "2001",
+          "ticker_bolsa": "ICICIGI.NS",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "IN_Life_Insurance_Corporatio",
+          "nome_seguradora": "Life Insurance Corporation of India (LIC)",
+          "website": "https://licindia.in",
+          "ano_fundacao": "1956",
+          "ticker_bolsa": "LICI.NS",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "IN_New_India_Assurance_Compa",
+          "nome_seguradora": "New India Assurance Company",
+          "website": "https://newindia.co.in",
+          "ano_fundacao": "1919",
+          "ticker_bolsa": "540769.NS",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "IN_Bajaj_Allianz_General_Ins",
+          "nome_seguradora": "Bajaj Allianz General Insurance",
+          "website": "https://bajajallianz.com",
+          "ano_fundacao": "2001",
+          "ticker_bolsa": "",
+          "regulador": "IRDAI"
+        },
+        {
+          "id_global": "IN_Tata_AIG_General_Insuranc",
+          "nome_seguradora": "Tata AIG General Insurance",
+          "website": "https://tataaig.com",
+          "ano_fundacao": "2001",
+          "ticker_bolsa": "",
+          "regulador": "IRDAI"
+        },
+        {
+          "id_global": "IN_Star_Health_and_Allied_In",
+          "nome_seguradora": "Star Health and Allied Insurance",
+          "website": "https://starhealth.in",
+          "ano_fundacao": "2006",
+          "ticker_bolsa": "STARHEALTH.NS",
+          "regulador": "IRDAI"
+        },
+        {
+          "id_global": "IN_Max_Life_Insurance_Compan",
+          "nome_seguradora": "Max Life Insurance Company",
+          "website": "https://maxlifeinsurance.com",
+          "ano_fundacao": "2000",
+          "ticker_bolsa": "",
+          "regulador": "IRDAI"
+        },
+        {
+          "id_global": "IN_Kotak_Mahindra_Life_Insur",
+          "nome_seguradora": "Kotak Mahindra Life Insurance",
+          "website": "https://kotaklife.com",
+          "ano_fundacao": "2001",
+          "ticker_bolsa": "",
+          "regulador": "IRDAI"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "MX",
+      "pais": "México",
+      "total_seguradoras": 9,
+      "regulador_principal": "Regulador Local",
+      "seguradoras": [
+        {
+          "id_global": "MX_AXA_Seguros_México",
+          "nome_seguradora": "AXA Seguros México",
+          "website": "https://axa.com.mx",
+          "ano_fundacao": "1860",
+          "ticker_bolsa": "",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "MX_El_Aguila_Cía_de_Seguros",
+          "nome_seguradora": "El Aguila Cía de Seguros",
+          "website": "https://elaguila.com.mx",
+          "ano_fundacao": "1901",
+          "ticker_bolsa": "",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "MX_GNP_Seguros",
+          "nome_seguradora": "GNP Seguros",
+          "website": "https://gnp.com.mx",
+          "ano_fundacao": "1901",
+          "ticker_bolsa": "",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "MX_Grupo_Nacional_Provincial",
+          "nome_seguradora": "Grupo Nacional Provincial (GNP)",
+          "website": "https://gnp.com.mx",
+          "ano_fundacao": "1901",
+          "ticker_bolsa": "",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "MX_MetLife_México",
+          "nome_seguradora": "MetLife México",
+          "website": "https://metlife.com.mx",
+          "ano_fundacao": "1941",
+          "ticker_bolsa": "",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "MX_Qualitas_Controladora_SA",
+          "nome_seguradora": "Qualitas Controladora S.A.B",
+          "website": "https://qualitas.com.mx",
+          "ano_fundacao": "1993",
+          "ticker_bolsa": "Q.MX",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "MX_Quálitas_Controladora_SA",
+          "nome_seguradora": "Quálitas Controladora S.A.B.",
+          "website": "https://qualitas.com.mx",
+          "ano_fundacao": "1993",
+          "ticker_bolsa": "Q.MX",
+          "regulador": "CNSF"
+        },
+        {
+          "id_global": "MX_BBVA_Seguros_México",
+          "nome_seguradora": "BBVA Seguros México",
+          "website": "https://bbvaseguros.com.mx",
+          "ano_fundacao": "1970",
+          "ticker_bolsa": "",
+          "regulador": "CNSF"
+        },
+        {
+          "id_global": "MX_Zurich_Seguros_México",
+          "nome_seguradora": "Zurich Seguros México",
+          "website": "https://zurich.com.mx",
+          "ano_fundacao": "1980",
+          "ticker_bolsa": "",
+          "regulador": "CNSF"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "FR",
+      "pais": "França",
+      "total_seguradoras": 8,
+      "regulador_principal": "EIOPA",
+      "seguradoras": [
+        {
+          "id_global": "EU_FR_AXA_SA",
+          "nome_seguradora": "AXA SA",
+          "website": "https://axa.com",
+          "ano_fundacao": "1816",
+          "ticker_bolsa": "CS.PA",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "EU_FR_CNP_Assurances",
+          "nome_seguradora": "CNP Assurances",
+          "website": "https://cnp.fr",
+          "ano_fundacao": "1959",
+          "ticker_bolsa": "CNP.PA",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "EU_FR_Covéa",
+          "nome_seguradora": "Covéa",
+          "website": "https://covea.eu",
+          "ano_fundacao": "2005",
+          "ticker_bolsa": "",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "EU_FR_Crédit_Agricole_Assu",
+          "nome_seguradora": "Crédit Agricole Assurances",
+          "website": "https://ca-assurances.fr",
+          "ano_fundacao": "2010",
+          "ticker_bolsa": "",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "EU_FR_MACIF",
+          "nome_seguradora": "MACIF",
+          "website": "https://macif.fr",
+          "ano_fundacao": "1960",
+          "ticker_bolsa": "",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "FR_Alan_(saúde_França)",
+          "nome_seguradora": "Alan (saúde França)",
+          "website": "https://alan.com",
+          "ano_fundacao": "2016",
+          "ticker_bolsa": "",
+          "regulador": "ACPR"
+        },
+        {
+          "id_global": "FR_Shift_Technology_(fraud_I",
+          "nome_seguradora": "Shift Technology (fraud IA)",
+          "website": "https://shift-technology.com",
+          "ano_fundacao": "2014",
+          "ticker_bolsa": "",
+          "regulador": "ACPR"
+        },
+        {
+          "id_global": "FR_SCOR_SE",
+          "nome_seguradora": "SCOR SE",
+          "website": "https://scor.com",
+          "ano_fundacao": "1970",
+          "ticker_bolsa": "SCR.PA",
+          "regulador": "ACPR"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "AU",
+      "pais": "Austrália",
+      "total_seguradoras": 7,
+      "regulador_principal": "Regulador Local",
+      "seguradoras": [
+        {
+          "id_global": "AU_Insurance_Australia_Group",
+          "nome_seguradora": "Insurance Australia Group (IAG)",
+          "website": "https://iag.com.au",
+          "ano_fundacao": "1851",
+          "ticker_bolsa": "IAG.AX",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "AU_Medibank_Private_Limited",
+          "nome_seguradora": "Medibank Private Limited",
+          "website": "https://medibank.com.au",
+          "ano_fundacao": "1976",
+          "ticker_bolsa": "MPL.AX",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "AU_QBE_Insurance_Group",
+          "nome_seguradora": "QBE Insurance Group",
+          "website": "https://qbe.com",
+          "ano_fundacao": "1886",
+          "ticker_bolsa": "QBE.AX",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "AU_Suncorp_Group_Limited",
+          "nome_seguradora": "Suncorp Group Limited",
+          "website": "https://suncorp.com.au",
+          "ano_fundacao": "1902",
+          "ticker_bolsa": "SUN.AX",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "AU_NIB_Holdings_Limited",
+          "nome_seguradora": "NIB Holdings Limited",
+          "website": "https://nib.com.au",
+          "ano_fundacao": "1952",
+          "ticker_bolsa": "NHF.AX",
+          "regulador": "APRA"
+        },
+        {
+          "id_global": "AU_BUPA_Australia",
+          "nome_seguradora": "BUPA Australia",
+          "website": "https://bupa.com.au",
+          "ano_fundacao": "1976",
+          "ticker_bolsa": "",
+          "regulador": "APRA"
+        },
+        {
+          "id_global": "AU_Cover_Genius",
+          "nome_seguradora": "Cover Genius",
+          "website": "https://covergenius.com",
+          "ano_fundacao": "2014",
+          "ticker_bolsa": "",
+          "regulador": "APRA"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "CA",
+      "pais": "Canadá",
+      "total_seguradoras": 6,
+      "regulador_principal": "Regulador Local",
+      "seguradoras": [
+        {
+          "id_global": "CA_Definity_Financial",
+          "nome_seguradora": "Definity Financial",
+          "website": "https://definityfinancial.com",
+          "ano_fundacao": "1871",
+          "ticker_bolsa": "DFY.TO",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "CA_Fairfax_Financial_Holding",
+          "nome_seguradora": "Fairfax Financial Holdings",
+          "website": "https://fairfax.ca",
+          "ano_fundacao": "1985",
+          "ticker_bolsa": "FFH.TO",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "CA_Great-West_Lifeco",
+          "nome_seguradora": "Great-West Lifeco",
+          "website": "https://greatwestlifeco.com",
+          "ano_fundacao": "1891",
+          "ticker_bolsa": "GWO.TO",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "CA_Intact_Financial_Corporat",
+          "nome_seguradora": "Intact Financial Corporation",
+          "website": "https://intact.ca",
+          "ano_fundacao": "1809",
+          "ticker_bolsa": "IFC.TO",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "CA_Manulife_Financial",
+          "nome_seguradora": "Manulife Financial",
+          "website": "https://manulife.com",
+          "ano_fundacao": "1887",
+          "ticker_bolsa": "MFC.TO",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "CA_Sun_Life_Financial",
+          "nome_seguradora": "Sun Life Financial",
+          "website": "https://sunlife.com",
+          "ano_fundacao": "1865",
+          "ticker_bolsa": "SLF.TO",
+          "regulador": "Regulador Local"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "JP",
+      "pais": "Japão",
+      "total_seguradoras": 6,
+      "regulador_principal": "Regulador Local",
+      "seguradoras": [
+        {
+          "id_global": "JP_Dai-ichi_Life_Holdings",
+          "nome_seguradora": "Dai-ichi Life Holdings",
+          "website": "https://dai-ichi-life.co.jp",
+          "ano_fundacao": "1902",
+          "ticker_bolsa": "8750.T",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "JP_MS&AD_Insurance_Group_Hol",
+          "nome_seguradora": "MS&AD Insurance Group Holdings",
+          "website": "https://msad.com",
+          "ano_fundacao": "2010",
+          "ticker_bolsa": "8725.T",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "JP_Meiji_Yasuda_Life_Insuran",
+          "nome_seguradora": "Meiji Yasuda Life Insurance",
+          "website": "https://meijiyasuda.co.jp",
+          "ano_fundacao": "1881",
+          "ticker_bolsa": "",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "JP_Nippon_Life_Insurance",
+          "nome_seguradora": "Nippon Life Insurance",
+          "website": "https://nissay.co.jp",
+          "ano_fundacao": "1889",
+          "ticker_bolsa": "",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "JP_Sompo_Holdings_Inc",
+          "nome_seguradora": "Sompo Holdings Inc",
+          "website": "https://sompo-hd.com",
+          "ano_fundacao": "1888",
+          "ticker_bolsa": "8630.T",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "JP_Tokio_Marine_Holdings",
+          "nome_seguradora": "Tokio Marine Holdings",
+          "website": "https://tokiomarine-hd.co.jp",
+          "ano_fundacao": "1879",
+          "ticker_bolsa": "8766.T",
+          "regulador": "Regulador Local"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "ZA",
+      "pais": "África do Sul",
+      "total_seguradoras": 6,
+      "regulador_principal": "Regulador Local",
+      "seguradoras": [
+        {
+          "id_global": "ZA_Discovery_Limited",
+          "nome_seguradora": "Discovery Limited",
+          "website": "https://discovery.co.za",
+          "ano_fundacao": "1992",
+          "ticker_bolsa": "DSY.JO",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "ZA_Momentum_Metropolitan_Hol",
+          "nome_seguradora": "Momentum Metropolitan Holdings",
+          "website": "https://momentummetropolitan.co.za",
+          "ano_fundacao": "1966",
+          "ticker_bolsa": "MTM.JO",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "ZA_Old_Mutual_Limited",
+          "nome_seguradora": "Old Mutual Limited",
+          "website": "https://oldmutual.com",
+          "ano_fundacao": "1845",
+          "ticker_bolsa": "OMU.JO",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "ZA_Sanlam_Limited",
+          "nome_seguradora": "Sanlam Limited",
+          "website": "https://sanlam.com",
+          "ano_fundacao": "1918",
+          "ticker_bolsa": "SLM.JO",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "ZA_Liberty_Holdings_Limited",
+          "nome_seguradora": "Liberty Holdings Limited",
+          "website": "https://libertyholdings.co.za",
+          "ano_fundacao": "1957",
+          "ticker_bolsa": "LBH.JO",
+          "regulador": "FSB"
+        },
+        {
+          "id_global": "ZA_African_Life_Assurance_Co",
+          "nome_seguradora": "African Life Assurance Company",
+          "website": "https://africanlife.co.za",
+          "ano_fundacao": "1921",
+          "ticker_bolsa": "",
+          "regulador": "FSB"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "CO",
+      "pais": "Colômbia",
+      "total_seguradoras": 5,
+      "regulador_principal": "Regulador Local",
+      "seguradoras": [
+        {
+          "id_global": "CO_Allianz_Colombia_SA",
+          "nome_seguradora": "Allianz Colombia S.A.",
+          "website": "https://allianz.com.co",
+          "ano_fundacao": "1947",
+          "ticker_bolsa": "",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "CO_Seguros_Bolívar",
+          "nome_seguradora": "Seguros Bolívar",
+          "website": "https://segurosbolivar.com",
+          "ano_fundacao": "1939",
+          "ticker_bolsa": "",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "CO_Suramericana_SA",
+          "nome_seguradora": "Suramericana S.A.",
+          "website": "https://suramericana.com",
+          "ano_fundacao": "1944",
+          "ticker_bolsa": "SURA.BG",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "CO_Royal_&_Sun_Alliance_Colo",
+          "nome_seguradora": "Royal & Sun Alliance Colombia",
+          "website": "https://rsagroup.com",
+          "ano_fundacao": "1990",
+          "ticker_bolsa": "",
+          "regulador": "SFC"
+        },
+        {
+          "id_global": "CO_Mapfre_Colombia_Seguros_S",
+          "nome_seguradora": "Mapfre Colombia Seguros S.A.",
+          "website": "https://mapfre.com.co",
+          "ano_fundacao": "1997",
+          "ticker_bolsa": "",
+          "regulador": "SFC"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "AR",
+      "pais": "Argentina",
+      "total_seguradoras": 4,
+      "regulador_principal": "Regulador Local",
+      "seguradoras": [
+        {
+          "id_global": "AR_Federación_Patronal_Segur",
+          "nome_seguradora": "Federación Patronal Seguros",
+          "website": "https://fedpat.com.ar",
+          "ano_fundacao": "1921",
+          "ticker_bolsa": "",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "AR_La_Segunda_Seguros",
+          "nome_seguradora": "La Segunda Seguros",
+          "website": "https://lasegunda.com.ar",
+          "ano_fundacao": "1905",
+          "ticker_bolsa": "",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "AR_MAPFRE_Argentina",
+          "nome_seguradora": "MAPFRE Argentina",
+          "website": "https://mapfre.com.ar",
+          "ano_fundacao": "1988",
+          "ticker_bolsa": "",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "AR_Sancor_Seguros",
+          "nome_seguradora": "Sancor Seguros",
+          "website": "https://sancorseguros.com.ar",
+          "ano_fundacao": "1945",
+          "ticker_bolsa": "",
+          "regulador": "Regulador Local"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "BM",
+      "pais": "Bermudas",
+      "total_seguradoras": 4,
+      "regulador_principal": "BMA",
+      "seguradoras": [
+        {
+          "id_global": "BM_PartnerRe_Ltd",
+          "nome_seguradora": "PartnerRe Ltd",
+          "website": "https://partnerre.com",
+          "ano_fundacao": "1993",
+          "ticker_bolsa": "",
+          "regulador": "BMA"
+        },
+        {
+          "id_global": "BM_Everest_Re_Group_Ltd",
+          "nome_seguradora": "Everest Re Group Ltd",
+          "website": "https://everestins.com",
+          "ano_fundacao": "1973",
+          "ticker_bolsa": "EG",
+          "regulador": "BMA"
+        },
+        {
+          "id_global": "BM_Axis_Capital_Holdings",
+          "nome_seguradora": "Axis Capital Holdings",
+          "website": "https://axiscapital.com",
+          "ano_fundacao": "2001",
+          "ticker_bolsa": "AXS",
+          "regulador": "BMA"
+        },
+        {
+          "id_global": "BM_Aspen_Insurance_Holdings",
+          "nome_seguradora": "Aspen Insurance Holdings",
+          "website": "https://aspen.co",
+          "ano_fundacao": "2002",
+          "ticker_bolsa": "AHL",
+          "regulador": "BMA"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "CH",
+      "pais": "Suíça",
+      "total_seguradoras": 4,
+      "regulador_principal": "EIOPA",
+      "seguradoras": [
+        {
+          "id_global": "EU_CH_Baloise_Holding_AG",
+          "nome_seguradora": "Baloise Holding AG",
+          "website": "https://baloise.com",
+          "ano_fundacao": "1863",
+          "ticker_bolsa": "BALN.SW",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "EU_CH_Helvetia_Group",
+          "nome_seguradora": "Helvetia Group",
+          "website": "https://helvetia.com",
+          "ano_fundacao": "1858",
+          "ticker_bolsa": "HELN.SW",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "EU_CH_Swiss_Re_AG",
+          "nome_seguradora": "Swiss Re AG",
+          "website": "https://swissre.com",
+          "ano_fundacao": "1863",
+          "ticker_bolsa": "SREN.SW",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "EU_CH_Zurich_Insurance_Gro",
+          "nome_seguradora": "Zurich Insurance Group",
+          "website": "https://zurich.com",
+          "ano_fundacao": "1872",
+          "ticker_bolsa": "ZURN.SW",
+          "regulador": "EIOPA"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "IT",
+      "pais": "Itália",
+      "total_seguradoras": 4,
+      "regulador_principal": "EIOPA",
+      "seguradoras": [
+        {
+          "id_global": "EU_IT_Assicurazioni_Genera",
+          "nome_seguradora": "Assicurazioni Generali SpA",
+          "website": "https://generali.com",
+          "ano_fundacao": "1831",
+          "ticker_bolsa": "G.MI",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "EU_IT_Cattolica_Assicurazi",
+          "nome_seguradora": "Cattolica Assicurazioni",
+          "website": "https://cattolica.it",
+          "ano_fundacao": "1896",
+          "ticker_bolsa": "CASS.MI",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "EU_IT_Poste_Vita_SpA",
+          "nome_seguradora": "Poste Vita SpA",
+          "website": "https://postevita.it",
+          "ano_fundacao": "1999",
+          "ticker_bolsa": "",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "EU_IT_Unipol_Gruppo_SpA",
+          "nome_seguradora": "Unipol Gruppo SpA",
+          "website": "https://unipol.it",
+          "ano_fundacao": "1961",
+          "ticker_bolsa": "UNI.MI",
+          "regulador": "EIOPA"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "PT",
+      "pais": "Portugal",
+      "total_seguradoras": 4,
+      "regulador_principal": "ASF",
+      "seguradoras": [
+        {
+          "id_global": "PT_Fidelidade_-_Companhia_de",
+          "nome_seguradora": "Fidelidade - Companhia de Seguros S.A.",
+          "website": "https://fidelidade.pt",
+          "ano_fundacao": "1835",
+          "ticker_bolsa": "",
+          "regulador": "ASF"
+        },
+        {
+          "id_global": "PT_Tranquilidade_SA",
+          "nome_seguradora": "Tranquilidade S.A.",
+          "website": "https://tranquilidade.pt",
+          "ano_fundacao": "1871",
+          "ticker_bolsa": "",
+          "regulador": "ASF"
+        },
+        {
+          "id_global": "PT_Ocidental_-_Companhia_Por",
+          "nome_seguradora": "Ocidental - Companhia Portuguesa de Seguros de Vida S.A.",
+          "website": "https://ocidental.pt",
+          "ano_fundacao": "1990",
+          "ticker_bolsa": "",
+          "regulador": "ASF"
+        },
+        {
+          "id_global": "PT_Ageas_Portugal",
+          "nome_seguradora": "Ageas Portugal",
+          "website": "https://ageas.pt",
+          "ano_fundacao": "1835",
+          "ticker_bolsa": "",
+          "regulador": "ASF"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "SE",
+      "pais": "Suécia",
+      "total_seguradoras": 4,
+      "regulador_principal": "EIOPA",
+      "seguradoras": [
+        {
+          "id_global": "EU_SE_Länsförsäkringar",
+          "nome_seguradora": "Länsförsäkringar",
+          "website": "https://lansforsakringar.se",
+          "ano_fundacao": "1801",
+          "ticker_bolsa": "",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "EU_SE_Skandia",
+          "nome_seguradora": "Skandia",
+          "website": "https://skandia.se",
+          "ano_fundacao": "1855",
+          "ticker_bolsa": "",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "SE_If_P&C_Insurance",
+          "nome_seguradora": "If P&C Insurance",
+          "website": "https://if.se",
+          "ano_fundacao": "1999",
+          "ticker_bolsa": "",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "SE_Folksam_Group",
+          "nome_seguradora": "Folksam Group",
+          "website": "https://folksam.se",
+          "ano_fundacao": "1908",
+          "ticker_bolsa": "",
+          "regulador": "EIOPA"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "BE",
+      "pais": "Bélgica",
+      "total_seguradoras": 3,
+      "regulador_principal": "EIOPA",
+      "seguradoras": [
+        {
+          "id_global": "BE_Ageas_SA/NV",
+          "nome_seguradora": "Ageas SA/NV",
+          "website": "https://ageas.com",
+          "ano_fundacao": "1824",
+          "ticker_bolsa": "AGS.BR",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "BE_KBC_Insurance",
+          "nome_seguradora": "KBC Insurance",
+          "website": "https://kbc.be",
+          "ano_fundacao": "1935",
+          "ticker_bolsa": "KBC.BR",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "BE_Qover_(embarcado)",
+          "nome_seguradora": "Qover (embarcado)",
+          "website": "https://qover.com",
+          "ano_fundacao": "2016",
+          "ticker_bolsa": "",
+          "regulador": "EIOPA"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "CL",
+      "pais": "Chile",
+      "total_seguradoras": 3,
+      "regulador_principal": "Regulador Local",
+      "seguradoras": [
+        {
+          "id_global": "CL_Banco_Estado_Seguros",
+          "nome_seguradora": "Banco Estado Seguros",
+          "website": "https://bancestadoseguros.cl",
+          "ano_fundacao": "2000",
+          "ticker_bolsa": "",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "CL_Bice_Vida_Compañía_de_Seg",
+          "nome_seguradora": "Bice Vida Compañía de Seguros",
+          "website": "https://bicevida.cl",
+          "ano_fundacao": "1988",
+          "ticker_bolsa": "",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "CL_Consorcio_Nacional_de_Seg",
+          "nome_seguradora": "Consorcio Nacional de Seguros",
+          "website": "https://consorcio.cl",
+          "ano_fundacao": "1916",
+          "ticker_bolsa": "",
+          "regulador": "Regulador Local"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "KR",
+      "pais": "Coreia do Sul",
+      "total_seguradoras": 3,
+      "regulador_principal": "Regulador Local",
+      "seguradoras": [
+        {
+          "id_global": "KR_Hyundai_Marine_&_Fire_Ins",
+          "nome_seguradora": "Hyundai Marine & Fire Insurance",
+          "website": "https://hi.co.kr",
+          "ano_fundacao": "1955",
+          "ticker_bolsa": "001450.KS",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "KR_Korea_Life_Insurance",
+          "nome_seguradora": "Korea Life Insurance",
+          "website": "https://korealife.com",
+          "ano_fundacao": "1946",
+          "ticker_bolsa": "088350.KS",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "KR_Samsung_Life_Insurance",
+          "nome_seguradora": "Samsung Life Insurance",
+          "website": "https://samsunglife.com",
+          "ano_fundacao": "1957",
+          "ticker_bolsa": "032830.KS",
+          "regulador": "Regulador Local"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "NL",
+      "pais": "Holanda",
+      "total_seguradoras": 3,
+      "regulador_principal": "EIOPA",
+      "seguradoras": [
+        {
+          "id_global": "EU_NL_ASR_Nederland",
+          "nome_seguradora": "ASR Nederland",
+          "website": "https://asr.nl",
+          "ano_fundacao": "1720",
+          "ticker_bolsa": "ASRNL.AS",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "EU_NL_Achmea",
+          "nome_seguradora": "Achmea",
+          "website": "https://achmea.nl",
+          "ano_fundacao": "1811",
+          "ticker_bolsa": "",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "EU_NL_NN_Group_N.V.",
+          "nome_seguradora": "NN Group N.V.",
+          "website": "https://nn-group.com",
+          "ano_fundacao": "1845",
+          "ticker_bolsa": "NN.AS",
+          "regulador": "EIOPA"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "PE",
+      "pais": "Peru",
+      "total_seguradoras": 3,
+      "regulador_principal": "SBS",
+      "seguradoras": [
+        {
+          "id_global": "PE_Rimac_Seguros_y_Reaseguro",
+          "nome_seguradora": "Rimac Seguros y Reaseguros",
+          "website": "https://rimac.com.pe",
+          "ano_fundacao": "1896",
+          "ticker_bolsa": "",
+          "regulador": "SBS"
+        },
+        {
+          "id_global": "PE_Pacífico_Seguros",
+          "nome_seguradora": "Pacífico Seguros",
+          "website": "https://pacifico.com.pe",
+          "ano_fundacao": "1997",
+          "ticker_bolsa": "",
+          "regulador": "SBS"
+        },
+        {
+          "id_global": "PE_MAPFRE_Peru_Compañía_de_S",
+          "nome_seguradora": "MAPFRE Peru Compañía de Seguros S.A.",
+          "website": "https://mapfre.com.pe",
+          "ano_fundacao": "1990",
+          "ticker_bolsa": "",
+          "regulador": "SBS"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "SA",
+      "pais": "Arábia Saudita",
+      "total_seguradoras": 3,
+      "regulador_principal": "SAMA",
+      "seguradoras": [
+        {
+          "id_global": "SA_Arabian_Shield_Cooperativ",
+          "nome_seguradora": "Arabian Shield Cooperative Insurance",
+          "website": "https://arabianshield.com",
+          "ano_fundacao": "1996",
+          "ticker_bolsa": "8040.SR",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "SA_Tawuniya_-_The_Company_fo",
+          "nome_seguradora": "Tawuniya - The Company for Cooperative Insurance",
+          "website": "https://tawuniya.com",
+          "ano_fundacao": "1979",
+          "ticker_bolsa": "8010.SR",
+          "regulador": "SAMA"
+        },
+        {
+          "id_global": "SA_Bupa_Arabia_for_Cooperati",
+          "nome_seguradora": "Bupa Arabia for Cooperative Insurance",
+          "website": "https://bupa.com.sa",
+          "ano_fundacao": "1997",
+          "ticker_bolsa": "8210.SR",
+          "regulador": "SAMA"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "AE",
+      "pais": "Emirados Árabes",
+      "total_seguradoras": 2,
+      "regulador_principal": "IA",
+      "seguradoras": [
+        {
+          "id_global": "AE_Emirates_Insurance_Compan",
+          "nome_seguradora": "Emirates Insurance Company",
+          "website": "https://emirates-insurance.ae",
+          "ano_fundacao": "1982",
+          "ticker_bolsa": "EIC.AD",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "AE_Abu_Dhabi_National_Insura",
+          "nome_seguradora": "Abu Dhabi National Insurance Company (ADNIC)",
+          "website": "https://adnic.ae",
+          "ano_fundacao": "1972",
+          "ticker_bolsa": "ADNIC.AD",
+          "regulador": "IA"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "AT",
+      "pais": "Áustria",
+      "total_seguradoras": 2,
+      "regulador_principal": "EIOPA",
+      "seguradoras": [
+        {
+          "id_global": "AT_VIG_(Vienna_Insurance_Gro",
+          "nome_seguradora": "VIG (Vienna Insurance Group)",
+          "website": "https://vig.com",
+          "ano_fundacao": "1824",
+          "ticker_bolsa": "VIG.VI",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "AT_Uniqa_Insurance_Group_AG",
+          "nome_seguradora": "Uniqa Insurance Group AG",
+          "website": "https://uniqa.at",
+          "ano_fundacao": "1811",
+          "ticker_bolsa": "UNIQA.VI",
+          "regulador": "EIOPA"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "DK",
+      "pais": "Dinamarca",
+      "total_seguradoras": 2,
+      "regulador_principal": "EIOPA",
+      "seguradoras": [
+        {
+          "id_global": "EU_DK_Topdanmark_A/S",
+          "nome_seguradora": "Topdanmark A/S",
+          "website": "https://topdanmark.dk",
+          "ano_fundacao": "1898",
+          "ticker_bolsa": "TOP.CO",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "EU_DK_Tryg_A/S",
+          "nome_seguradora": "Tryg A/S",
+          "website": "https://tryg.dk",
+          "ano_fundacao": "1731",
+          "ticker_bolsa": "TRYG.CO",
+          "regulador": "EIOPA"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "ES",
+      "pais": "Espanha",
+      "total_seguradoras": 2,
+      "regulador_principal": "EIOPA",
+      "seguradoras": [
+        {
+          "id_global": "EU_ES_Línea_Directa_Asegur",
+          "nome_seguradora": "Línea Directa Aseguradora",
+          "website": "https://lineadirecta.com",
+          "ano_fundacao": "1995",
+          "ticker_bolsa": "LDA.MC",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "EU_ES_MAPFRE_S.A.",
+          "nome_seguradora": "MAPFRE S.A.",
+          "website": "https://mapfre.com",
+          "ano_fundacao": "1933",
+          "ticker_bolsa": "MAP.MC",
+          "regulador": "EIOPA"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "FI",
+      "pais": "Finlândia",
+      "total_seguradoras": 2,
+      "regulador_principal": "EIOPA",
+      "seguradoras": [
+        {
+          "id_global": "FI_If_Skadeförsäkring_AB",
+          "nome_seguradora": "If Skadeförsäkring AB",
+          "website": "https://if.fi",
+          "ano_fundacao": "2001",
+          "ticker_bolsa": "",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "FI_LocalTapiola_Group",
+          "nome_seguradora": "LocalTapiola Group",
+          "website": "https://lahitapiola.fi",
+          "ano_fundacao": "1857",
+          "ticker_bolsa": "",
+          "regulador": "EIOPA"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "HK",
+      "pais": "Hong Kong",
+      "total_seguradoras": 2,
+      "regulador_principal": "Regulador Local",
+      "seguradoras": [
+        {
+          "id_global": "HK_AIA_Group_Limited",
+          "nome_seguradora": "AIA Group Limited",
+          "website": "https://aia.com",
+          "ano_fundacao": "1919",
+          "ticker_bolsa": "1299.HK",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "HK_Manulife_Hong_Kong",
+          "nome_seguradora": "Manulife Hong Kong",
+          "website": "https://manulife.com.hk",
+          "ano_fundacao": "1897",
+          "ticker_bolsa": "",
+          "regulador": "Regulador Local"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "NG",
+      "pais": "Nigéria",
+      "total_seguradoras": 2,
+      "regulador_principal": "NAICOM",
+      "seguradoras": [
+        {
+          "id_global": "NG_AXA_Mansard_Insurance_Plc",
+          "nome_seguradora": "AXA Mansard Insurance Plc",
+          "website": "https://axamansard.com",
+          "ano_fundacao": "1989",
+          "ticker_bolsa": "MANSARD.LG",
+          "regulador": "NAICOM"
+        },
+        {
+          "id_global": "NG_Leadway_Assurance_Company",
+          "nome_seguradora": "Leadway Assurance Company Ltd",
+          "website": "https://leadway.com",
+          "ano_fundacao": "1969",
+          "ticker_bolsa": "",
+          "regulador": "NAICOM"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "NO",
+      "pais": "Noruega",
+      "total_seguradoras": 2,
+      "regulador_principal": "EIOPA",
+      "seguradoras": [
+        {
+          "id_global": "NO_Gjensidige_Forsikring_ASA",
+          "nome_seguradora": "Gjensidige Forsikring ASA",
+          "website": "https://gjensidige.no",
+          "ano_fundacao": "1816",
+          "ticker_bolsa": "GJF.OL",
+          "regulador": "EIOPA"
+        },
+        {
+          "id_global": "NO_Storebrand_ASA",
+          "nome_seguradora": "Storebrand ASA",
+          "website": "https://storebrand.no",
+          "ano_fundacao": "1767",
+          "ticker_bolsa": "STB.OL",
+          "regulador": "EIOPA"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "RU",
+      "pais": "Rússia",
+      "total_seguradoras": 2,
+      "regulador_principal": "Regulador Local",
+      "seguradoras": [
+        {
+          "id_global": "RU_Rosgosstrakh",
+          "nome_seguradora": "Rosgosstrakh",
+          "website": "https://rgs.ru",
+          "ano_fundacao": "1921",
+          "ticker_bolsa": "",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "RU_Sberbank_Insurance",
+          "nome_seguradora": "Sberbank Insurance",
+          "website": "https://sberinsur.ru",
+          "ano_fundacao": "2012",
+          "ticker_bolsa": "",
+          "regulador": "Regulador Local"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "SG",
+      "pais": "Cingapura",
+      "total_seguradoras": 2,
+      "regulador_principal": "MAS",
+      "seguradoras": [
+        {
+          "id_global": "SG_Great_Eastern_Holdings",
+          "nome_seguradora": "Great Eastern Holdings",
+          "website": "https://greateasternlife.com",
+          "ano_fundacao": "1908",
+          "ticker_bolsa": "G07.SI",
+          "regulador": "Regulador Local"
+        },
+        {
+          "id_global": "SG_bolttech_(InsurTech)",
+          "nome_seguradora": "bolttech (InsurTech)",
+          "website": "https://bolttech.io",
+          "ano_fundacao": "2018",
+          "ticker_bolsa": "",
+          "regulador": "MAS"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "EC",
+      "pais": "Equador",
+      "total_seguradoras": 1,
+      "regulador_principal": "SBS-EC",
+      "seguradoras": [
+        {
+          "id_global": "EC_BSE_Seguros_del_Ecuador",
+          "nome_seguradora": "BSE Seguros del Ecuador",
+          "website": "https://bseseguros.com",
+          "ano_fundacao": "1943",
+          "ticker_bolsa": "",
+          "regulador": "SBS-EC"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "IL",
+      "pais": "Israel",
+      "total_seguradoras": 1,
+      "regulador_principal": "ISA",
+      "seguradoras": [
+        {
+          "id_global": "IL_Mondaycom_InsurTech",
+          "nome_seguradora": "Monday.com InsurTech",
+          "website": "",
+          "ano_fundacao": "2019",
+          "ticker_bolsa": "",
+          "regulador": "ISA"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "KE",
+      "pais": "Quênia",
+      "total_seguradoras": 1,
+      "regulador_principal": "IRA",
+      "seguradoras": [
+        {
+          "id_global": "KE_Jubilee_Holdings_Limited",
+          "nome_seguradora": "Jubilee Holdings Limited",
+          "website": "https://jubileekenya.com",
+          "ano_fundacao": "1937",
+          "ticker_bolsa": "JUB.NR",
+          "regulador": "IRA"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "KW",
+      "pais": "Kuwait",
+      "total_seguradoras": 1,
+      "regulador_principal": "MOC",
+      "seguradoras": [
+        {
+          "id_global": "KW_GIG_Gulf_(Gulf_Insurance_",
+          "nome_seguradora": "GIG Gulf (Gulf Insurance Group)",
+          "website": "https://giggulf.com",
+          "ano_fundacao": "1962",
+          "ticker_bolsa": "GIG.KW",
+          "regulador": "MOC"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "PL",
+      "pais": "Polônia",
+      "total_seguradoras": 1,
+      "regulador_principal": "Regulador Local",
+      "seguradoras": [
+        {
+          "id_global": "PL_PZU_Group",
+          "nome_seguradora": "PZU Group",
+          "website": "https://pzu.pl",
+          "ano_fundacao": "1803",
+          "ticker_bolsa": "PZU.WA",
+          "regulador": "Regulador Local"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "QA",
+      "pais": "Qatar",
+      "total_seguradoras": 1,
+      "regulador_principal": "Regulador Local",
+      "seguradoras": [
+        {
+          "id_global": "QA_Qatar_Insurance_Company",
+          "nome_seguradora": "Qatar Insurance Company",
+          "website": "https://qic.com",
+          "ano_fundacao": "1964",
+          "ticker_bolsa": "QATI.QA",
+          "regulador": "Regulador Local"
+        }
+      ]
+    },
+    {
+      "codigo_pais": "UY",
+      "pais": "Uruguai",
+      "total_seguradoras": 1,
+      "regulador_principal": "BCU",
+      "seguradoras": [
+        {
+          "id_global": "UY_Porto_Seguro_Uruguay_SA",
+          "nome_seguradora": "Porto Seguro Uruguay S.A.",
+          "website": "https://portoseguro.com.uy",
+          "ano_fundacao": "2010",
+          "ticker_bolsa": "",
+          "regulador": "BCU"
+        }
+      ]
+    }
+  ]
+}
