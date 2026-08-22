@@ -49,7 +49,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
     [1, 2, 3, 4, 5, 6], // Analytics (Risk, Viagens, Usuários, Preços, Simulador, Inteligência)
     [8, 9],       // Atuário IA + Subscritor
     [7],          // Seguradora
-    [10, 11],     // Intel Global + AI Labs
+    [10, 11, 12, 13], // Intel Global + AI Labs + Produtos + Compliance
   ];
 
   // Sub-índice dentro do grupo Analytics
@@ -59,7 +59,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
   @override
   void initState() {
     super.initState();
-    _tab = TabController(length: 12, vsync: this);
+    _tab = TabController(length: 14, vsync: this);
     _tab.addListener(() => setState(() => _tabIndex = _tab.index));
   }
 
@@ -98,6 +98,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
       case 9: return 'Subscritor IA';
       case 10: return 'Intel Global';
       case 11: return '🧠 AI Labs';
+      case 12: return '🏪 Produtos';
+      case 13: return '⚖️ Compliance';
       default: return 'Admin';
     }
   }
@@ -149,7 +151,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
       );
     }
     if (_bottomIndex == 4) {
-      final labels = ['🌍 Intel Global', '🧠 AI Labs'];
+      final labels = ['🌍 Intel', '🧠 AI Labs', '🏪 Produtos', '⚖️ SUSEP'];
       return Container(
         height: 40,
         color: const Color(0xFF0D1628),
@@ -177,7 +179,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                     child: Text(
                       labels[i],
                       style: TextStyle(
-                        fontSize: 11,
+                        fontSize: 10,
                         fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
                         color: selected ? AppTheme.accent : Colors.white38,
                       ),
@@ -295,6 +297,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                   _SubscritorIATab(),
                   _IntelGlobalTab(),
                   _AILabsTab(),
+                  _ProdutosTab(),
+                  _ComplianceTab(),
                 ],
               ),
             ),
@@ -366,12 +370,15 @@ class _AdminDrawer extends StatelessWidget {
     (9, Icons.shield_rounded, 'Subscritor IA', 'Underwriting automático'),
     (10, Icons.public_rounded, 'Intel Global', '239 seguradoras, 42 países'),
     (11, Icons.psychology_alt_rounded, 'AI Labs', 'HF + Kaggle + D1 + R2'),
+    (12, Icons.store_rounded, 'Produtos', '9 ramos — roadmap SafeRoute Go'),
+    (13, Icons.gavel_rounded, 'Compliance SUSEP', 'Capital S1-S4 + LGPD + Antifraude'),
   ];
 
   static const _colors = [
     Color(0xFF60A5FA), Color(0xFF34D399), Color(0xFF60A5FA), Color(0xFFA78BFA),
     Color(0xFFF59E0B), Color(0xFF60A5FA), Color(0xFF34D399), Color(0xFFF97316),
     Color(0xFFA78BFA), Color(0xFF34D399), Color(0xFF60A5FA), Color(0xFFE879F9),
+    Color(0xFF34D399), Color(0xFFF97316),
   ];
 
   @override
@@ -1054,6 +1061,13 @@ class _OverviewTabState extends State<_OverviewTab> {
             ],
           );
           }),
+
+          const SizedBox(height: 16),
+
+          // ── Unit Economics — Mercado Segurador Brasil ─────
+          _sectionTitle('Unit Economics — Mercado Segurador Brasil 2025', Icons.show_chart_rounded),
+          const SizedBox(height: 12),
+          _UnitEconomicsSection(),
 
           const SizedBox(height: 16),
 
@@ -8381,5 +8395,1258 @@ class _LLMCard extends StatelessWidget {
         Text(value, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: Colors.white54)),
       ]),
     ]);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// UNIT ECONOMICS — SEÇÃO DASHBOARD
+// Mercado Segurador Brasil 2025 — SUSEP + Dossiê SafeRoute Go
+// ═══════════════════════════════════════════════════════════════
+
+class _UnitEconomicsSection extends StatelessWidget {
+  const _UnitEconomicsSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      // ── Market Size Banner ─────────────────────────────────
+      Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFF0D2137), Color(0xFF0A1628)],
+          ),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xFF60A5FA).withValues(alpha: 0.3)),
+        ),
+        child: Row(children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: const Color(0xFF60A5FA).withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Icon(Icons.bar_chart_rounded, color: Color(0xFF60A5FA), size: 22),
+          ),
+          const SizedBox(width: 12),
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const Text('Mercado Segurador Brasil', style: TextStyle(fontSize: 10, color: Colors.white38)),
+            const Text('R\$ 415 bilhões', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Color(0xFF60A5FA))),
+            const Text('Arrecadação SUSEP 2025 — Fonte: SUSEP/CNSP', style: TextStyle(fontSize: 9, color: Colors.white24)),
+          ])),
+          Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+            _ueTag('+8.3%', const Color(0xFF34D399)),
+            const SizedBox(height: 4),
+            const Text('vs. 2024', style: TextStyle(fontSize: 9, color: Colors.white38)),
+          ]),
+        ]),
+      ),
+
+      const SizedBox(height: 10),
+
+      // ── Combined Ratio Benchmarks ──────────────────────────
+      Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: const Color(0xFF0D1628),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xFF1E3A5F)),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [
+            const Icon(Icons.compare_arrows_rounded, color: Color(0xFFF59E0B), size: 16),
+            const SizedBox(width: 6),
+            const Text('Combined Ratio — Benchmark de Mercado', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: Colors.white70)),
+          ]),
+          const SizedBox(height: 12),
+          _crBenchmarkBar('Root Insurance (EUA)', 96.0, const Color(0xFF34D399)),
+          const SizedBox(height: 6),
+          _crBenchmarkBar('ZhongAn (China)', 95.6, const Color(0xFF60A5FA)),
+          const SizedBox(height: 6),
+          _crBenchmarkBar('IRB Brasil Re', 96.0, const Color(0xFFA78BFA)),
+          const SizedBox(height: 6),
+          _crBenchmarkBar('Mercado BR Médio', 98.2, const Color(0xFFF97316)),
+          const SizedBox(height: 6),
+          _crBenchmarkBar('SafeRoute Go Meta', 90.0, AppTheme.green, isMeta: true),
+          const SizedBox(height: 10),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            decoration: BoxDecoration(
+              color: AppTheme.green.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(color: AppTheme.green.withValues(alpha: 0.25)),
+            ),
+            child: Row(children: [
+              Icon(Icons.info_outline_rounded, color: AppTheme.green, size: 12),
+              const SizedBox(width: 6),
+              Expanded(child: Text(
+                'CR = Sinistralidade + Despesas Admin + Comissão + Margem Lucro. Meta <95% para sustentabilidade.',
+                style: TextStyle(fontSize: 9, color: AppTheme.green.withValues(alpha: 0.8)),
+              )),
+            ]),
+          ),
+        ]),
+      ),
+
+      const SizedBox(height: 10),
+
+      // ── Sinistralidade por Ramo ────────────────────────────
+      Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: const Color(0xFF0D1628),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xFF1E3A5F)),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [
+            const Icon(Icons.car_crash_rounded, color: Color(0xFFF97316), size: 16),
+            const SizedBox(width: 6),
+            const Text('Sinistralidade Setorial — Brasil 2025', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: Colors.white70)),
+          ]),
+          const SizedBox(height: 12),
+          _sinistralidadeBar('Auto PHYD', 59.8, const Color(0xFF60A5FA), 'Setor: 59.8%'),
+          const SizedBox(height: 6),
+          _sinistralidadeBar('Vida Individual', 38.2, const Color(0xFF34D399), 'SUSEP 2024'),
+          const SizedBox(height: 6),
+          _sinistralidadeBar('Residencial', 44.1, const Color(0xFFA78BFA), 'SUSEP 2024'),
+          const SizedBox(height: 6),
+          _sinistralidadeBar('Prestamista', 31.5, const Color(0xFFF59E0B), 'CNSP Res. 432'),
+          const SizedBox(height: 6),
+          _sinistralidadeBar('Cyber PME', 52.0, const Color(0xFFE879F9), 'Estimativa 2025'),
+          const SizedBox(height: 6),
+          _sinistralidadeBar('Paramétrico', 28.0, AppTheme.green, 'Estimativa gatilho'),
+        ]),
+      ),
+
+      const SizedBox(height: 10),
+
+      // ── PIB Penetração do Seguro ───────────────────────────
+      Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: const Color(0xFF0D1628),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xFF1E3A5F)),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [
+            const Icon(Icons.trending_up_rounded, color: Color(0xFF34D399), size: 16),
+            const SizedBox(width: 6),
+            const Text('Penetração do Seguro / PIB', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: Colors.white70)),
+            const Spacer(),
+            _ueTag('Meta 2030', const Color(0xFF34D399)),
+          ]),
+          const SizedBox(height: 14),
+          _pibPenetracaoMeter(6.0, 10.0),
+          const SizedBox(height: 10),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              const Text('Atual', style: TextStyle(fontSize: 9, color: Colors.white38)),
+              const Text('6.0% PIB', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: Color(0xFF60A5FA))),
+            ]),
+            Column(children: [
+              const Text('Gap', style: TextStyle(fontSize: 9, color: Colors.white38)),
+              const Text('+4 pp', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: Color(0xFFF59E0B))),
+            ]),
+            Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+              const Text('Meta', style: TextStyle(fontSize: 9, color: Colors.white38)),
+              Text('10.0% PIB', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: AppTheme.green)),
+            ]),
+          ]),
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            decoration: BoxDecoration(
+              color: const Color(0xFF60A5FA).withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: const Text(
+              '🌍 Média OCDE: 9.2% do PIB • EUA: 12.1% • UK: 11.8% • BR Sub-segurado: oportunidade de R\$ 660bi',
+              style: TextStyle(fontSize: 9, color: Color(0xFF60A5FA)),
+            ),
+          ),
+        ]),
+      ),
+    ]);
+  }
+
+  Widget _ueTag(String text, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: color.withValues(alpha: 0.4)),
+      ),
+      child: Text(text, style: TextStyle(fontSize: 8, fontWeight: FontWeight.w700, color: color)),
+    );
+  }
+
+  Widget _crBenchmarkBar(String label, double value, Color color, {bool isMeta = false}) {
+    return Row(children: [
+      SizedBox(width: 140, child: Text(label,
+          style: TextStyle(
+            fontSize: 10,
+            color: isMeta ? color : Colors.white60,
+            fontWeight: isMeta ? FontWeight.w700 : FontWeight.w400,
+          ))),
+      Expanded(child: Stack(children: [
+        Container(height: 16, decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.04),
+          borderRadius: BorderRadius.circular(4),
+        )),
+        FractionallySizedBox(
+          widthFactor: (value / 105).clamp(0.0, 1.0),
+          child: Container(
+            height: 16,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: isMeta ? 0.35 : 0.2),
+              borderRadius: BorderRadius.circular(4),
+              border: isMeta ? Border.all(color: color.withValues(alpha: 0.7), width: 1) : null,
+            ),
+          ),
+        ),
+        Positioned.fill(child: Center(child: Text(
+          '${value.toStringAsFixed(1)}%',
+          style: TextStyle(fontSize: 9, fontWeight: FontWeight.w700, color: color),
+        ))),
+      ])),
+    ]);
+  }
+
+  Widget _sinistralidadeBar(String label, double value, Color color, String fonte) {
+    return Row(children: [
+      SizedBox(width: 110, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(label, style: const TextStyle(fontSize: 10, color: Colors.white70)),
+        Text(fonte, style: const TextStyle(fontSize: 8, color: Colors.white24)),
+      ])),
+      Expanded(child: Stack(children: [
+        Container(height: 18, decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.04),
+          borderRadius: BorderRadius.circular(4),
+        )),
+        FractionallySizedBox(
+          widthFactor: (value / 80).clamp(0.0, 1.0),
+          child: Container(
+            height: 18,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [
+                color.withValues(alpha: 0.5),
+                color.withValues(alpha: 0.2),
+              ]),
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+        ),
+        Positioned.fill(child: Align(
+          alignment: Alignment.centerRight,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 6),
+            child: Text('${value.toStringAsFixed(1)}%',
+                style: TextStyle(fontSize: 9, fontWeight: FontWeight.w700, color: color)),
+          ),
+        )),
+      ])),
+    ]);
+  }
+
+  Widget _pibPenetracaoMeter(double atual, double meta) {
+    final pct = atual / meta;
+    return Column(children: [
+      ClipRRect(
+        borderRadius: BorderRadius.circular(6),
+        child: Stack(children: [
+          Container(height: 24, color: Colors.white.withValues(alpha: 0.05)),
+          FractionallySizedBox(
+            widthFactor: pct,
+            child: Container(
+              height: 24,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(colors: [Color(0xFF1D4ED8), Color(0xFF60A5FA)]),
+              ),
+            ),
+          ),
+          // Meta marker
+          Positioned(
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+            child: FractionallySizedBox(
+              alignment: Alignment.centerLeft,
+              widthFactor: pct,
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                  width: 2,
+                  height: 24,
+                  color: Colors.white.withValues(alpha: 0.9),
+                ),
+              ),
+            ),
+          ),
+          Positioned.fill(child: Center(child: Text(
+            '${(pct * 100).toStringAsFixed(0)}% do caminho até a meta OCDE',
+            style: const TextStyle(fontSize: 9, fontWeight: FontWeight.w700, color: Colors.white),
+          ))),
+        ]),
+      ),
+    ]);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TAB 12 — 🏪 PRODUTOS — 9 Ramos SafeRoute Go Dossiê 2026
+// ═══════════════════════════════════════════════════════════════
+
+class _ProdutosTab extends StatefulWidget {
+  @override
+  State<_ProdutosTab> createState() => _ProdutosTabState();
+}
+
+class _ProdutosTabState extends State<_ProdutosTab> {
+  // Produto selecionado para mini-app (null = lista)
+  int? _selectedProduto;
+
+  static const _produtos = [
+    {
+      'id': 0,
+      'icon': '🚗',
+      'nome': 'Auto PHYD',
+      'subtitulo': 'Pay-How-You-Drive',
+      'status': 'ATIVO',
+      'statusColor': 0xFF34D399,
+      'fase': 'Fase 1 — Fundação',
+      'descricao': 'Seguro auto dinâmico baseado em telemetria de condução. Prêmio calculado por km rodado, horário e score de direção.',
+      'kpis': ['Telemetria GPS em tempo real', 'FIPE + CEP + Bônus SUSEP', 'Score de condução 0–1000', 'IOF Patrimonial 7.38%'],
+      'inputs': ['Capital FIPE (R\$)', 'CEP do veículo', 'Ano do modelo', 'Km/mês estimado', 'Bônus atual (0–10)', 'Perfil condutor principal'],
+      'api': 'Cotar → Decidir → Emitir → Pagar',
+      'color': 0xFF60A5FA,
+    },
+    {
+      'id': 1,
+      'icon': '❤️',
+      'nome': 'Vida Individual',
+      'subtitulo': 'BR-EMS 2021 + SADI v4.0',
+      'status': 'ATIVO',
+      'statusColor': 0xFF34D399,
+      'fase': 'Fase 1 — Fundação',
+      'descricao': 'Seguro de vida com cálculo atuarial baseado na Tábua BR-EMS 2021 (IBGE Tabela 7350), calibração internacional World Bank 30 países.',
+      'kpis': ['Tábua BR-EMS 2021 M/F', 'qx IBGE + fator país', 'IOF Vida: 0%', 'Morte natural + acidental'],
+      'inputs': ['Capital segurado (R\$)', 'Idade', 'Gênero M/F', 'Tabagista Sim/Não', 'Profissão', 'País (ISO2)'],
+      'api': 'Cotar → Decidir → Emitir → Pagar',
+      'color': 0xFF34D399,
+    },
+    {
+      'id': 2,
+      'icon': '💳',
+      'nome': 'Prestamista Embedded',
+      'subtitulo': 'Crédito + Proteção integrados',
+      'status': 'ATIVO',
+      'statusColor': 0xFF34D399,
+      'fase': 'Fase 1 — Fundação',
+      'descricao': 'Seguro prestamista embutido em produtos de crédito. Cobre saldo devedor em caso de morte, invalidez ou desemprego involuntário.',
+      'kpis': ['Saldo devedor × PD/LGD', 'Prazo do contrato', 'Taxa de inadimplência', 'Embedded Finance Kainow'],
+      'inputs': ['Saldo devedor (R\$)', 'Prazo (meses)', 'Taxa de juros (%)', 'Probabilidade default (PD %)', 'Coberturas ativas'],
+      'api': 'Cotar → Decidir → Emitir → Pagar',
+      'color': 0xFFA78BFA,
+    },
+    {
+      'id': 3,
+      'icon': '🏠',
+      'nome': 'Residencial',
+      'subtitulo': 'Risco CEP + clima + construção',
+      'status': 'EM IMPLEMENTAÇÃO',
+      'statusColor': 0xFFF59E0B,
+      'fase': 'Fase 2 — Primeiros Produtos',
+      'descricao': 'Seguro residencial com precificação dinâmica por CEP, tipo de construção, histórico climático e exposição a eventos naturais.',
+      'kpis': ['Risco por CEP IBGE', 'Tipo de construção', 'Histórico climático INMET', 'Cobertura RC Familiar'],
+      'inputs': ['Valor do imóvel (R\$)', 'CEP', 'Tipo construção', 'Cobertura básica/ampla', 'RC Familiar Sim/Não'],
+      'api': 'Cotar → Decidir → Emitir → Pagar',
+      'color': 0xFFF97316,
+    },
+    {
+      'id': 4,
+      'icon': '🔒',
+      'nome': 'Cyber PME',
+      'subtitulo': 'LGPD + CVE Score + Ransomware',
+      'status': 'EM IMPLEMENTAÇÃO',
+      'statusColor': 0xFFF59E0B,
+      'fase': 'Fase 2 — Primeiros Produtos',
+      'descricao': 'Seguro cibernético para PMEs. Cobre incidentes de segurança, ransomware, vazamento LGPD, responsabilidade digital e recuperação de dados.',
+      'kpis': ['CVE Score por setor', 'Exposição LGPD art.46', 'Nº funcionários × risk', 'Histórico de incidentes'],
+      'inputs': ['Receita anual (R\$)', 'Nº funcionários', 'Setor de atividade', 'Maturidade segurança (1–5)', 'Dados pessoais tratados'],
+      'api': 'Cotar → Decidir → Emitir → Pagar',
+      'color': 0xFFE879F9,
+    },
+    {
+      'id': 5,
+      'icon': '🌧️',
+      'nome': 'Paramétrico Climático',
+      'subtitulo': 'Gatilhos INMET + GEV/Pareto',
+      'status': 'EM IMPLEMENTAÇÃO',
+      'statusColor': 0xFFF59E0B,
+      'fase': 'Fase 2 — Primeiros Produtos',
+      'descricao': 'Seguro paramétrico com pagamento automático por gatilhos climáticos objetivos: chuva acima de threshold, temperatura extrema, vento e seca.',
+      'kpis': ['Dados INMET histórico 30a', 'Distribuição GEV/Pareto', 'Gatilho automático SLA 48h', 'Regiões agricultores + varejo'],
+      'inputs': ['Região/UF/CEP', 'Tipo de evento (chuva/seca/vento)', 'Threshold mm/°C', 'Capital de indenização (R\$)', 'Período de cobertura'],
+      'api': 'Cotar → Decidir → Emitir → Pagar (auto)',
+      'color': 0xFF60A5FA,
+    },
+    {
+      'id': 6,
+      'icon': '🛵',
+      'nome': 'Gig Economy',
+      'subtitulo': 'Por hora / por entrega',
+      'status': 'FUTURO',
+      'statusColor': 0xFF94A3B8,
+      'fase': 'Fase 4 — Fronteira',
+      'descricao': 'Microsseguro de acidentes pessoais para trabalhadores de plataformas digitais (delivery, transporte, freelancers). Cobrança por tempo ativo.',
+      'kpis': ['Ativação por turno/hora', 'Plataforma parceira API', 'Score de risco por rota', 'Cobrança micro (R\$ 0,50–5,00)'],
+      'inputs': ['Plataforma (Ifood/Uber/Rappi)', 'Tipo de função', 'UF de operação', 'Horas/dia estimadas', 'Capital AP'],
+      'api': 'Cotar → Ativar → Desativar → Pagar',
+      'color': 0xFF94A3B8,
+    },
+    {
+      'id': 7,
+      'icon': '🧠',
+      'nome': 'Saúde Mental Corp',
+      'subtitulo': 'RH + absenteísmo + burnout',
+      'status': 'FUTURO',
+      'statusColor': 0xFF94A3B8,
+      'fase': 'Fase 4 — Fronteira',
+      'descricao': 'Seguro de saúde mental corporativo com análise preditiva de absenteísmo, burnout e afastamentos. Indicadores RH integrados ao motor SADI.',
+      'kpis': ['Índice absenteísmo RH', 'Diagnóstico CID F (burnout)', 'Prevalência por setor', 'ROI de prevenção'],
+      'inputs': ['Nº funcionários', 'Setor de atividade', 'Taxa de absenteísmo (%)', 'Sinistralidade histórica (%)', 'Programas de prevenção'],
+      'api': 'Diagnóstico → Cotar → Implementar → Monitorar',
+      'color': 0xFF94A3B8,
+    },
+    {
+      'id': 8,
+      'icon': '📋',
+      'nome': 'Garantia',
+      'subtitulo': 'Rating crédito + contrato',
+      'status': 'FUTURO',
+      'statusColor': 0xFF94A3B8,
+      'fase': 'Fase 4 — Fronteira',
+      'descricao': 'Seguro garantia para contratos comerciais e licitações. Cobre inadimplemento contratual com base em rating de crédito e histórico do tomador.',
+      'kpis': ['Rating crédito S&P/Moody equivalente', 'Valor contrato garantido', 'Prazo e tipo contrato', 'Exposure at Default (EAD)'],
+      'inputs': ['Valor do contrato (R\$)', 'Rating do tomador (A/B/C)', 'Prazo (meses)', 'Tipo (performance/licitação)', 'Garantias reais'],
+      'api': 'Análise → Cotar → Emitir → Excutar',
+      'color': 0xFF94A3B8,
+    },
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: _selectedProduto == null
+          ? _buildListaProdutos()
+          : _buildMiniApp(_selectedProduto!),
+    );
+  }
+
+  Widget _buildListaProdutos() {
+    final ativos = _produtos.where((p) => p['status'] == 'ATIVO').toList();
+    final emImpl = _produtos.where((p) => p['status'] == 'EM IMPLEMENTAÇÃO').toList();
+    final futuros = _produtos.where((p) => p['status'] == 'FUTURO').toList();
+
+    return Column(children: [
+      // ── Header ──────────────────────────────────────────────
+      Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft, end: Alignment.bottomRight,
+            colors: [Color(0xFF0D2137), Color(0xFF0A1628)],
+          ),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xFF34D399).withValues(alpha: 0.3)),
+        ),
+        child: Row(children: [
+          const Text('🏪', style: TextStyle(fontSize: 28)),
+          const SizedBox(width: 12),
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const Text('Portfólio de Produtos', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: Colors.white)),
+            const Text('SafeRoute Go — Dossiê Institucional 2026', style: TextStyle(fontSize: 10, color: Colors.white38)),
+          ])),
+          _statusBadge('9 produtos', const Color(0xFF60A5FA)),
+        ]),
+      ),
+
+      const SizedBox(height: 12),
+
+      // ── Fluxo 4 APIs ────────────────────────────────────────
+      _build4ApiFlow(),
+
+      const SizedBox(height: 16),
+
+      // ── Status summary ──────────────────────────────────────
+      Row(children: [
+        Expanded(child: _summaryChip('${ativos.length} Ativos', const Color(0xFF34D399), Icons.check_circle_rounded)),
+        const SizedBox(width: 8),
+        Expanded(child: _summaryChip('${emImpl.length} Em Impl.', const Color(0xFFF59E0B), Icons.build_circle_rounded)),
+        const SizedBox(width: 8),
+        Expanded(child: _summaryChip('${futuros.length} Futuro', const Color(0xFF94A3B8), Icons.schedule_rounded)),
+      ]),
+
+      const SizedBox(height: 16),
+
+      // ── Produtos Ativos ─────────────────────────────────────
+      _groupLabel('✅ FASE 1 — ATIVOS', const Color(0xFF34D399)),
+      const SizedBox(height: 8),
+      ...ativos.map((p) => _produtoCard(p)),
+
+      const SizedBox(height: 12),
+
+      // ── Em Implementação ────────────────────────────────────
+      _groupLabel('🔧 FASE 2 — EM IMPLEMENTAÇÃO', const Color(0xFFF59E0B)),
+      const SizedBox(height: 8),
+      ...emImpl.map((p) => _produtoCard(p)),
+
+      const SizedBox(height: 12),
+
+      // ── Futuro ──────────────────────────────────────────────
+      _groupLabel('🔭 FASE 4 — FRONTEIRA', const Color(0xFF94A3B8)),
+      const SizedBox(height: 8),
+      ...futuros.map((p) => _produtoCard(p)),
+
+      const SizedBox(height: 20),
+    ]);
+  }
+
+  Widget _build4ApiFlow() {
+    const apis = [
+      ('COTAR', Icons.request_quote_rounded, Color(0xFF60A5FA)),
+      ('DECIDIR', Icons.psychology_rounded, Color(0xFFA78BFA)),
+      ('EMITIR', Icons.article_rounded, Color(0xFF34D399)),
+      ('PAGAR', Icons.payment_rounded, Color(0xFFF59E0B)),
+    ];
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0D1628),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: const Color(0xFF1E3A5F)),
+      ),
+      child: Column(children: [
+        const Text('Arquitetura 4 APIs — Jornada Universal por Produto', style: TextStyle(fontSize: 10, color: Colors.white38, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 10),
+        Row(children: apis.map((api) {
+          final (label, icon, color) = api;
+          final isLast = label == 'PAGAR';
+          return Expanded(child: Row(children: [
+            Expanded(child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: color.withValues(alpha: 0.4)),
+              ),
+              child: Column(children: [
+                Icon(icon, color: color, size: 18),
+                const SizedBox(height: 3),
+                Text(label, style: TextStyle(fontSize: 8, fontWeight: FontWeight.w800, color: color)),
+              ]),
+            )),
+            if (!isLast) ...[
+              const SizedBox(width: 2),
+              Icon(Icons.chevron_right_rounded, color: Colors.white24, size: 14),
+              const SizedBox(width: 2),
+            ],
+          ]));
+        }).toList()),
+      ]),
+    );
+  }
+
+  Widget _groupLabel(String text, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
+      ),
+      child: Row(children: [
+        Container(width: 3, height: 14, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(2))),
+        const SizedBox(width: 8),
+        Text(text, style: TextStyle(fontSize: 9, fontWeight: FontWeight.w800, color: color, letterSpacing: 0.8)),
+      ]),
+    );
+  }
+
+  Widget _statusBadge(String text, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: color.withValues(alpha: 0.4)),
+      ),
+      child: Text(text, style: TextStyle(fontSize: 9, fontWeight: FontWeight.w700, color: color)),
+    );
+  }
+
+  Widget _summaryChip(String text, Color color, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
+      ),
+      child: Column(children: [
+        Icon(icon, color: color, size: 18),
+        const SizedBox(height: 3),
+        Text(text, style: TextStyle(fontSize: 9, fontWeight: FontWeight.w700, color: color)),
+      ]),
+    );
+  }
+
+  Widget _produtoCard(Map<String, dynamic> p) {
+    final color = Color(p['color'] as int);
+    final statusColor = Color(p['statusColor'] as int);
+    final isFuturo = p['status'] == 'FUTURO';
+    return GestureDetector(
+      onTap: isFuturo ? null : () => setState(() => _selectedProduto = p['id'] as int),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: const Color(0xFF0D1628),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: isFuturo ? const Color(0xFF1E3A5F) : color.withValues(alpha: 0.35)),
+        ),
+        child: Row(children: [
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: color.withValues(alpha: 0.3)),
+            ),
+            child: Center(child: Text(p['icon'] as String, style: const TextStyle(fontSize: 20))),
+          ),
+          const SizedBox(width: 12),
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Row(children: [
+              Expanded(child: Text(p['nome'] as String, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: isFuturo ? Colors.white38 : Colors.white))),
+              _statusBadge(p['status'] as String, statusColor),
+            ]),
+            const SizedBox(height: 2),
+            Text(p['subtitulo'] as String, style: const TextStyle(fontSize: 9, color: Colors.white38)),
+            const SizedBox(height: 4),
+            Text(p['fase'] as String, style: TextStyle(fontSize: 8, color: color.withValues(alpha: 0.7), fontWeight: FontWeight.w600)),
+          ])),
+          if (!isFuturo) ...[
+            const SizedBox(width: 8),
+            Icon(Icons.arrow_forward_ios_rounded, color: color, size: 14),
+          ],
+        ]),
+      ),
+    );
+  }
+
+  // ── Mini-App por produto ─────────────────────────────────────
+  Widget _buildMiniApp(int id) {
+    final p = _produtos[id];
+    final color = Color(p['color'] as int);
+    return Column(children: [
+      // Back button
+      GestureDetector(
+        onTap: () => setState(() => _selectedProduto = null),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: const Color(0xFF0D1628),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: const Color(0xFF1E3A5F)),
+          ),
+          child: Row(children: [
+            const Icon(Icons.arrow_back_ios_rounded, color: Colors.white54, size: 14),
+            const SizedBox(width: 6),
+            const Text('Voltar aos Produtos', style: TextStyle(fontSize: 11, color: Colors.white54)),
+            const Spacer(),
+            Text('${p['icon']} ${p['nome']}', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: color)),
+          ]),
+        ),
+      ),
+
+      const SizedBox(height: 12),
+
+      // Header do produto
+      Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft, end: Alignment.bottomRight,
+            colors: [color.withValues(alpha: 0.15), color.withValues(alpha: 0.05)],
+          ),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color.withValues(alpha: 0.4)),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [
+            Text(p['icon'] as String, style: const TextStyle(fontSize: 28)),
+            const SizedBox(width: 12),
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(p['nome'] as String, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900, color: Colors.white)),
+              Text(p['subtitulo'] as String, style: TextStyle(fontSize: 10, color: color)),
+            ])),
+            _statusBadge(p['status'] as String, Color(p['statusColor'] as int)),
+          ]),
+          const SizedBox(height: 10),
+          Text(p['descricao'] as String, style: const TextStyle(fontSize: 10, color: Colors.white60, height: 1.4)),
+        ]),
+      ),
+
+      const SizedBox(height: 12),
+
+      // Fluxo API
+      Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          color: const Color(0xFF0D1628),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: const Color(0xFF1E3A5F)),
+        ),
+        child: Row(children: [
+          Icon(Icons.api_rounded, color: color, size: 14),
+          const SizedBox(width: 6),
+          Text('Fluxo: ', style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.w700)),
+          Expanded(child: Text(p['api'] as String, style: const TextStyle(fontSize: 10, color: Colors.white60, fontFamily: 'monospace'))),
+        ]),
+      ),
+
+      const SizedBox(height: 12),
+
+      // KPIs
+      Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: const Color(0xFF0D1628),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: const Color(0xFF1E3A5F)),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [
+            Icon(Icons.analytics_rounded, color: color, size: 14),
+            const SizedBox(width: 6),
+            Text('Drivers de Precificação', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: color)),
+          ]),
+          const SizedBox(height: 8),
+          ...(p['kpis'] as List).map((k) => Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2),
+            child: Row(children: [
+              Container(width: 5, height: 5, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(3))),
+              const SizedBox(width: 8),
+              Expanded(child: Text(k.toString(), style: const TextStyle(fontSize: 10, color: Colors.white70))),
+            ]),
+          )),
+        ]),
+      ),
+
+      const SizedBox(height: 12),
+
+      // Inputs simulados
+      Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: const Color(0xFF0D1628),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: const Color(0xFF1E3A5F)),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [
+            Icon(Icons.input_rounded, color: color, size: 14),
+            const SizedBox(width: 6),
+            Text('Inputs do Motor SADI', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: color)),
+          ]),
+          const SizedBox(height: 8),
+          ...(p['inputs'] as List).map((inp) => Container(
+            margin: const EdgeInsets.symmetric(vertical: 3),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.06),
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(color: color.withValues(alpha: 0.15)),
+            ),
+            child: Row(children: [
+              Icon(Icons.edit_rounded, size: 10, color: color.withValues(alpha: 0.5)),
+              const SizedBox(width: 6),
+              Text(inp.toString(), style: const TextStyle(fontSize: 10, color: Colors.white60)),
+            ]),
+          )),
+          const SizedBox(height: 10),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: color.withValues(alpha: 0.5)),
+            ),
+            child: Center(child: Row(mainAxisSize: MainAxisSize.min, children: [
+              Icon(Icons.calculate_rounded, color: color, size: 14),
+              const SizedBox(width: 6),
+              Text('Calculadora integrada no Motor SADI v4.0', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: color)),
+            ])),
+          ),
+        ]),
+      ),
+
+      const SizedBox(height: 20),
+    ]);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TAB 13 — ⚖️ COMPLIANCE SUSEP — Capital S1-S4 + LGPD + Antifraude
+// ═══════════════════════════════════════════════════════════════
+
+class _ComplianceTab extends StatelessWidget {
+  const _ComplianceTab();
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(children: [
+        // ── Header ──────────────────────────────────────────────
+        Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft, end: Alignment.bottomRight,
+              colors: [Color(0xFF1A1200), Color(0xFF0A0F1E)],
+            ),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: const Color(0xFFF59E0B).withValues(alpha: 0.5)),
+          ),
+          child: Row(children: [
+            const Text('⚖️', style: TextStyle(fontSize: 28)),
+            const SizedBox(width: 12),
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              const Text('Compliance SUSEP', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: Colors.white)),
+              const Text('Capital Regulatório • LGPD • Antifraude • Roadmap', style: TextStyle(fontSize: 9, color: Colors.white38)),
+              const SizedBox(height: 4),
+              const Text('Fonte: CNSP Res. 432/2021 • 422/2021 • 409/2021 • 494/2026', style: TextStyle(fontSize: 8, color: Color(0xFFF59E0B))),
+            ])),
+          ]),
+        ),
+
+        const SizedBox(height: 16),
+
+        // ── Capital Regulatório ──────────────────────────────────
+        _sectionHeader('💰 Capital Regulatório Mínimo', const Color(0xFF60A5FA), Icons.account_balance_rounded),
+        const SizedBox(height: 10),
+        _buildCapitalTable(),
+
+        const SizedBox(height: 16),
+
+        // ── Sandbox Regulatório ──────────────────────────────────
+        _sectionHeader('🧪 Sandbox Regulatório SUSEP', const Color(0xFF34D399), Icons.science_rounded),
+        const SizedBox(height: 10),
+        _buildSandboxCard(),
+
+        const SizedBox(height: 16),
+
+        // ── Roadmap Regulatório ──────────────────────────────────
+        _sectionHeader('🗺️ Roadmap Regulatório', const Color(0xFFA78BFA), Icons.timeline_rounded),
+        const SizedBox(height: 10),
+        _buildRegulatoryRoadmap(),
+
+        const SizedBox(height: 16),
+
+        // ── LGPD 4 Condições ────────────────────────────────────
+        _sectionHeader('🔒 LGPD — 4 Condições Não-Negociáveis', const Color(0xFFE879F9), Icons.privacy_tip_rounded),
+        const SizedBox(height: 10),
+        _buildLgpdConditions(),
+
+        const SizedBox(height: 16),
+
+        // ── Motor Antifraude ─────────────────────────────────────
+        _sectionHeader('🛡️ Motor Antifraude — Consultas Ativas', const Color(0xFFF97316), Icons.security_rounded),
+        const SizedBox(height: 10),
+        _buildAntifraude(),
+
+        const SizedBox(height: 16),
+
+        // ── Principais Resoluções ────────────────────────────────
+        _sectionHeader('📋 Resoluções CNSP Aplicáveis', const Color(0xFFF59E0B), Icons.gavel_rounded),
+        const SizedBox(height: 10),
+        _buildResolucoes(),
+
+        const SizedBox(height: 20),
+      ]),
+    );
+  }
+
+  static Widget _sectionHeader(String title, Color color, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
+      ),
+      child: Row(children: [
+        Icon(icon, color: color, size: 16),
+        const SizedBox(width: 8),
+        Expanded(child: Text(title, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: color))),
+      ]),
+    );
+  }
+
+  static Widget _buildCapitalTable() {
+    const tiers = [
+      ('S1 / S2', 'Grande Porte', 'R\$ 15.000.000', Color(0xFFF97316), 'Todas as coberturas + vida + resseguro'),
+      ('S3', 'Médio Porte', 'R\$ 8.100.000', Color(0xFFF59E0B), 'Seguros gerais sem vida em grupo'),
+      ('S4', 'Pequeno Porte', 'R\$ 3.960.000', Color(0xFF60A5FA), 'Seguros elementares e residencial'),
+      ('Microsseguro', 'Linha popular', 'R\$ 792.000', Color(0xFF34D399), 'Capital abaixo de R\$ 10 mil por produto'),
+    ];
+
+    return Column(children: tiers.map((tier) {
+      final (seg, porte, capital, color, escopo) = tier;
+      return Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: const Color(0xFF0D1628),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: color.withValues(alpha: 0.35)),
+        ),
+        child: Row(children: [
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Center(child: Text(seg, style: TextStyle(fontSize: 9, fontWeight: FontWeight.w900, color: color), textAlign: TextAlign.center)),
+          ),
+          const SizedBox(width: 12),
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Row(children: [
+              Expanded(child: Text(porte, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: Colors.white))),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: color.withValues(alpha: 0.4)),
+                ),
+                child: Text(capital, style: TextStyle(fontSize: 9, fontWeight: FontWeight.w800, color: color)),
+              ),
+            ]),
+            const SizedBox(height: 3),
+            Text(escopo, style: const TextStyle(fontSize: 9, color: Colors.white38)),
+          ])),
+        ]),
+      );
+    }).toList());
+  }
+
+  static Widget _buildSandboxCard() {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0D1628),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFF34D399).withValues(alpha: 0.4)),
+      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+            decoration: BoxDecoration(
+              color: const Color(0xFF34D399).withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: const Text('Edital 02/2024', style: TextStyle(fontSize: 9, fontWeight: FontWeight.w700, color: Color(0xFF34D399))),
+          ),
+          const SizedBox(width: 8),
+          const Text('Sandbox Regulatório SUSEP', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.white)),
+        ]),
+        const SizedBox(height: 10),
+        _sandboxItem('Seguros Gerais', 'R\$ 120.000', const Color(0xFF60A5FA)),
+        const SizedBox(height: 6),
+        _sandboxItem('Seguro Auto', 'R\$ 180.000', const Color(0xFFF59E0B)),
+        const SizedBox(height: 6),
+        _sandboxItem('Seguro Rural', 'R\$ 200.000', const Color(0xFF34D399)),
+        const SizedBox(height: 10),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          decoration: BoxDecoration(
+            color: const Color(0xFF34D399).withValues(alpha: 0.06),
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: const Text(
+            '⚡ Sandbox permite operar sem autorização plena por até 24 meses. Caminho mais rápido para SafeRoute Go iniciar operação.',
+            style: TextStyle(fontSize: 9, color: Color(0xFF34D399)),
+          ),
+        ),
+      ]),
+    );
+  }
+
+  static Widget _sandboxItem(String label, String capital, Color color) {
+    return Row(children: [
+      Container(width: 3, height: 16, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(2))),
+      const SizedBox(width: 8),
+      Expanded(child: Text(label, style: const TextStyle(fontSize: 10, color: Colors.white60))),
+      Text(capital, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: color)),
+    ]);
+  }
+
+  static Widget _buildRegulatoryRoadmap() {
+    const etapas = [
+      (1, 'Sandbox SUSEP', 'Edital 02/2024', 'Capital mínimo R\$ 120k–200k. Operar sem autorização plena por 24 meses.', Color(0xFF34D399), true),
+      (2, 'Autorização Parcial CNSP', 'Res. 422/2021', 'Autorização para ramos específicos. Capital S4 (R\$ 3.96mi). Plano de negócios aprovado.', Color(0xFF60A5FA), false),
+      (3, 'Autorização Plena', 'Res. 432/2021', 'Operação completa como seguradora autorizada. Capital S3/S2 conforme ramos.', Color(0xFFA78BFA), false),
+      (4, 'Fronteira — Novos Ramos', 'Res. 494/2026', 'Cyber, Paramétrico, Gig Economy. Marcos regulatórios específicos por produto.', Color(0xFFF59E0B), false),
+    ];
+
+    return Column(children: etapas.map((etapa) {
+      final (num, titulo, resolucao, descricao, color, isActive) = etapa;
+      return Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Column(children: [
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: isActive ? 0.25 : 0.1),
+                shape: BoxShape.circle,
+                border: Border.all(color: color.withValues(alpha: isActive ? 1.0 : 0.3), width: isActive ? 2 : 1),
+              ),
+              child: Center(child: Text('$num', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: color))),
+            ),
+            if (num < 4) Container(width: 2, height: 40, color: color.withValues(alpha: 0.2)),
+          ]),
+          const SizedBox(width: 12),
+          Expanded(child: Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: const Color(0xFF0D1628),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: isActive ? color.withValues(alpha: 0.5) : const Color(0xFF1E3A5F)),
+            ),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(children: [
+                Expanded(child: Text(titulo, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: isActive ? color : Colors.white70))),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: color.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(resolucao, style: TextStyle(fontSize: 8, fontWeight: FontWeight.w700, color: color)),
+                ),
+              ]),
+              const SizedBox(height: 4),
+              Text(descricao, style: const TextStyle(fontSize: 9, color: Colors.white38, height: 1.4)),
+            ]),
+          )),
+        ]),
+      );
+    }).toList());
+  }
+
+  static Widget _buildLgpdConditions() {
+    const conditions = [
+      (
+        '1',
+        'Base Legal LGPD Art. 7º IX e §4º',
+        'Toda decisão automatizada de subscrição deve ter base legal explícita no consentimento ou legítimo interesse documentado.',
+        Color(0xFFE879F9),
+        Icons.gavel_rounded,
+      ),
+      (
+        '2',
+        'Direito à Revisão Humana — LGPD Art. 20',
+        'O segurado tem direito garantido de solicitar revisão por pessoa natural de qualquer decisão tomada exclusivamente por algoritmo.',
+        Color(0xFFA78BFA),
+        Icons.person_search_rounded,
+      ),
+      (
+        '3',
+        'Justificativa Auditável',
+        'Todas as recusas e agravamentos devem gerar log auditável com justificativa detalhada acessível ao segurado e à SUSEP.',
+        Color(0xFF60A5FA),
+        Icons.fact_check_rounded,
+      ),
+      (
+        '4',
+        'Transparência Negativa — Lei 15.040/2024',
+        'Obrigatório informar ao consumidor quando a negativa de cobertura foi influenciada por dados pessoais processados automaticamente.',
+        Color(0xFFF59E0B),
+        Icons.visibility_rounded,
+      ),
+    ];
+
+    return Column(children: conditions.map((cond) {
+      final (num, titulo, descricao, color, icon) = cond;
+      return Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: const Color(0xFF0D1628),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: color.withValues(alpha: 0.4)),
+        ),
+        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Center(child: Icon(icon, color: color, size: 18)),
+          ),
+          const SizedBox(width: 10),
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Row(children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text('Cond. $num', style: TextStyle(fontSize: 8, fontWeight: FontWeight.w800, color: color)),
+              ),
+              const SizedBox(width: 6),
+              Expanded(child: Text(titulo, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: color))),
+            ]),
+            const SizedBox(height: 4),
+            Text(descricao, style: const TextStyle(fontSize: 9, color: Colors.white54, height: 1.4)),
+          ])),
+        ]),
+      );
+    }).toList());
+  }
+
+  static Widget _buildAntifraude() {
+    const fontes = [
+      ('CNseg SQF', 'Sinistros fraudulentos — base nacional', Color(0xFFF97316), Icons.shield_rounded),
+      ('Serasa Experian', 'Score crédito + PEP + comportamento', Color(0xFF60A5FA), Icons.credit_score_rounded),
+      ('Boa Vista SCPC', 'Restrições cadastrais + endividamento', Color(0xFFA78BFA), Icons.report_rounded),
+      ('Dataprev', 'Benefícios INSS + afastamentos + óbito', Color(0xFF34D399), Icons.storage_rounded),
+      ('Receita Federal', 'Situação CPF/CNPJ + renda declarada', Color(0xFFF59E0B), Icons.account_balance_rounded),
+      ('PEP / Sanções', 'Pessoa exposta politicamente + OFAC/ONU', Color(0xFFE879F9), Icons.person_off_rounded),
+    ];
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0D1628),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFF1E3A5F)),
+      ),
+      child: Column(children: [
+        Row(children: [
+          const Icon(Icons.security_rounded, color: Color(0xFFF97316), size: 14),
+          const SizedBox(width: 6),
+          const Expanded(child: Text('6 Consultas em Paralelo — SLA < 800ms', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: Colors.white70))),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            decoration: BoxDecoration(
+              color: const Color(0xFF34D399).withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: const Text('ATIVO', style: TextStyle(fontSize: 8, fontWeight: FontWeight.w700, color: Color(0xFF34D399))),
+          ),
+        ]),
+        const SizedBox(height: 10),
+        ...fontes.map((f) {
+          final (nome, descricao, color, icon) = f;
+          return Container(
+            margin: const EdgeInsets.symmetric(vertical: 3),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.06),
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(color: color.withValues(alpha: 0.2)),
+            ),
+            child: Row(children: [
+              Icon(icon, color: color, size: 14),
+              const SizedBox(width: 8),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(nome, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: color)),
+                Text(descricao, style: const TextStyle(fontSize: 8, color: Colors.white38)),
+              ])),
+              Container(
+                width: 6,
+                height: 6,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF34D399),
+                  shape: BoxShape.circle,
+                  boxShadow: [BoxShadow(color: const Color(0xFF34D399).withValues(alpha: 0.5), blurRadius: 4)],
+                ),
+              ),
+            ]),
+          );
+        }),
+        const SizedBox(height: 10),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF97316).withValues(alpha: 0.08),
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: const Text(
+            '⚡ Recusa automática: flag CNseg SQF ativo + score Serasa < 300 + PEP positivo → bloqueia proposta sem intervenção humana',
+            style: TextStyle(fontSize: 9, color: Color(0xFFF97316)),
+          ),
+        ),
+      ]),
+    );
+  }
+
+  static Widget _buildResolucoes() {
+    const resolucoes = [
+      ('CNSP 432/2021', 'Capital regulatório mínimo por segmento S1–S4 e microsseguro', Color(0xFF60A5FA)),
+      ('CNSP 422/2021', 'Autorização e funcionamento de seguradoras — requisitos e prazos', Color(0xFFA78BFA)),
+      ('CNSP 409/2021', 'Nota técnica atuarial — bases técnicas e tábuas de mortalidade', Color(0xFF34D399)),
+      ('CNSP 494/2026', 'Seguros paramétricos e cibernéticos — marco regulatório pioneiro', Color(0xFFF59E0B)),
+      ('Edital 02/2024', 'Sandbox regulatório — admissão de novas insurtechs para testes', Color(0xFFE879F9)),
+      ('Lei 15.040/2024', 'Marco legal dos seguros — modernização e transparência digital', Color(0xFFF97316)),
+    ];
+
+    return Column(children: resolucoes.map((r) {
+      final (codigo, descricao, color) = r;
+      return Container(
+        margin: const EdgeInsets.only(bottom: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: const Color(0xFF0D1628),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: color.withValues(alpha: 0.25)),
+        ),
+        child: Row(children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(codigo, style: TextStyle(fontSize: 8, fontWeight: FontWeight.w800, color: color)),
+          ),
+          const SizedBox(width: 10),
+          Expanded(child: Text(descricao, style: const TextStyle(fontSize: 9, color: Colors.white54))),
+          Icon(Icons.open_in_new_rounded, color: color.withValues(alpha: 0.4), size: 12),
+        ]),
+      );
+    }).toList());
   }
 }
