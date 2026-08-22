@@ -4,6 +4,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 import 'dart:math';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/shared_widgets.dart';
@@ -11,6 +12,7 @@ import '../services/risk_engine.dart';
 import '../services/route_actuarial_service.dart';
 import '../services/territorial_risk_intelligence.dart';
 import '../services/insurance_search_engine.dart';
+import '../services/atuario_ia_engine.dart';
 
 // ─────────────────────────────────────────────────────────────
 // TELA PRINCIPAL DO ADMIN (com tabs)
@@ -35,7 +37,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
   @override
   void initState() {
     super.initState();
-    _tab = TabController(length: 8, vsync: this);
+    _tab = TabController(length: 10, vsync: this);
     _tab.addListener(() => setState(() => _tabIndex = _tab.index));
   }
 
@@ -65,6 +67,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                 _SimulatorTab(),
                 _IntelligenceTab(),
                 _SeguradoraTab(),
+                _AtuarioIATab(),
+                _SubscritorIATab(),
               ],
             ),
           ),
@@ -264,6 +268,8 @@ class _AdminTabBar extends StatelessWidget {
           Tab(text: '  Simulador  '),
           Tab(text: '  🛰 Inteligência  '),
           Tab(text: '  🏦 Seguradora  '),
+          Tab(text: '  🤖 Atuário IA  '),
+          Tab(text: '  🛡️ Subscritor IA  '),
         ],
       ),
     );
@@ -271,7 +277,7 @@ class _AdminTabBar extends StatelessWidget {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// TAB 1 — VISÃO GERAL (KPIs em tempo real)
+// TAB 1 — VISÃO GERAL — KPIs Profissionais + IA Atuarial
 // ═══════════════════════════════════════════════════════════════
 
 class _OverviewTab extends StatefulWidget {
@@ -280,9 +286,52 @@ class _OverviewTab extends StatefulWidget {
 }
 
 class _OverviewTabState extends State<_OverviewTab> {
+  Timer? _timer;
   final _rnd = Random();
 
-  int get _activeTrips => 12 + _rnd.nextInt(5);
+  // ── KPIs dinâmicos ─────────────────────────────────────
+  int _viagensAtivas = 14;
+  double _receitaHoje = 1847.30;
+  double _ticketMedio = 8.34;
+  int _scoreMedio = 782;
+  int _usuariosAtivos = 1203;
+  double _sinistralidade = 42.7;
+  int _propostas = 38;
+  int _recusadas = 3;
+  double _premioMensal = 94800.0;
+  double _reservaTecnica = 284400.0;
+
+  // ── Premissas SADI ──────────────────────────────────────
+  final double _da = AtuarioPremissas.da;
+  final double _cc = AtuarioPremissas.cc;
+  final double _ml = AtuarioPremissas.ml;
+  final double _iof = AtuarioPremissas.iof;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 4), (_) {
+      if (!mounted) return;
+      setState(() {
+        _viagensAtivas = 12 + _rnd.nextInt(6);
+        _receitaHoje += (_rnd.nextDouble() * 40 - 5).clamp(-20, 60);
+        _ticketMedio = 7.80 + _rnd.nextDouble() * 1.20;
+        _scoreMedio = 760 + _rnd.nextInt(60);
+        _usuariosAtivos = 1200 + _rnd.nextInt(15);
+        _sinistralidade = 40.0 + _rnd.nextDouble() * 8.0;
+        _propostas = 35 + _rnd.nextInt(8);
+        _recusadas = 2 + _rnd.nextInt(3);
+        _premioMensal += (_rnd.nextDouble() * 200 - 50);
+        _reservaTecnica = _premioMensal * 3.0;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -291,72 +340,275 @@ class _OverviewTabState extends State<_OverviewTab> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _sectionTitle('KPIs — Hoje', Icons.bar_chart_rounded),
-          const SizedBox(height: 12),
 
-          // KPI Grid
+          // ── Barra de status LIVE ──────────────────────────
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [
+                const Color(0xFF0D1B4B).withValues(alpha: 0.9),
+                const Color(0xFF1A3A7C).withValues(alpha: 0.7),
+              ]),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: AppTheme.green.withValues(alpha: 0.3)),
+            ),
+            child: Row(children: [
+              Container(width: 8, height: 8, decoration: BoxDecoration(color: AppTheme.green, borderRadius: BorderRadius.circular(4), boxShadow: [BoxShadow(color: AppTheme.green.withValues(alpha: 0.6), blurRadius: 6)])),
+              const SizedBox(width: 8),
+              const Text('SISTEMA ATUARIAL DIGITAL INTEGRADO — SADI v3.0', style: TextStyle(color: Colors.white70, fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 1.0)),
+              const Spacer(),
+              Text('LIVE  ${DateTime.now().hour.toString().padLeft(2,'0')}:${DateTime.now().minute.toString().padLeft(2,'0')}', style: TextStyle(color: AppTheme.green, fontSize: 10, fontWeight: FontWeight.bold)),
+            ]),
+          ),
+          const SizedBox(height: 16),
+
+          // ── KPIs Principais ───────────────────────────────
+          _sectionTitle('KPIs Operacionais — Tempo Real', Icons.bar_chart_rounded),
+          const SizedBox(height: 12),
+          GridView.count(
+            crossAxisCount: 3,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            mainAxisSpacing: 8,
+            crossAxisSpacing: 8,
+            childAspectRatio: 1.55,
+            children: [
+              _KpiCard(label: 'Viagens Ativas', value: '$_viagensAtivas', icon: Icons.directions_car_rounded, color: AppTheme.green, delta: '+${_rnd.nextInt(3)+1} última hora'),
+              _KpiCard(label: 'Receita Hoje', value: 'R\$ ${_receitaHoje.toStringAsFixed(0)}', icon: Icons.attach_money_rounded, color: AppTheme.accent, delta: '+12% vs. ontem'),
+              _KpiCard(label: 'Ticket Médio', value: 'R\$ ${_ticketMedio.toStringAsFixed(2)}', icon: Icons.receipt_long_rounded, color: AppTheme.primary, delta: 'Pay-per-km'),
+              _KpiCard(label: 'Score SADI', value: '$_scoreMedio', icon: Icons.psychology_rounded, color: const Color(0xFFF59E0B), delta: 'Tier: Prata'),
+              _KpiCard(label: 'Usuários', value: '${_usuariosAtivos.toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+$)'), (m) => '${m[1]}.')}', icon: Icons.people_rounded, color: AppTheme.purple, delta: '+47 esta semana'),
+              _KpiCard(label: 'Propostas', value: '$_propostas', icon: Icons.description_rounded, color: AppTheme.primary, delta: '$_recusadas recusadas'),
+            ],
+          ),
+
+          const SizedBox(height: 16),
+
+          // ── KPIs Financeiros Atuariais ─────────────────────
+          _sectionTitle('Indicadores Financeiros Atuariais', Icons.account_balance_rounded),
+          const SizedBox(height: 12),
           GridView.count(
             crossAxisCount: 2,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            mainAxisSpacing: 10,
-            crossAxisSpacing: 10,
-            childAspectRatio: 1.6,
+            mainAxisSpacing: 8,
+            crossAxisSpacing: 8,
+            childAspectRatio: 2.0,
             children: [
-              _KpiCard(label: 'Viagens Ativas', value: '14', icon: Icons.play_circle_rounded, color: AppTheme.green, delta: '+3 última hora'),
-              _KpiCard(label: 'Receita Hoje', value: 'R\$ 1.847', icon: Icons.attach_money_rounded, color: AppTheme.accent, delta: '+12% vs. ontem'),
-              _KpiCard(label: 'Ticket Médio', value: 'R\$ 8,34', icon: Icons.receipt_long_rounded, color: AppTheme.primary, delta: '↑ risco noturno'),
-              _KpiCard(label: 'Score Médio', value: '782', icon: Icons.star_rounded, color: const Color(0xFFF59E0B), delta: 'Tier: Prata'),
-              _KpiCard(label: 'Sinistros', value: '0', icon: Icons.car_crash_rounded, color: AppTheme.green, delta: 'Sem ocorrências'),
-              _KpiCard(label: 'Usuários Ativos', value: '1.203', icon: Icons.people_rounded, color: AppTheme.purple, delta: '+47 esta semana'),
+              _FinancialKpiCard(
+                label: 'Prêmio Total/Mês',
+                value: 'R\$ ${(_premioMensal/1000).toStringAsFixed(1)}k',
+                subValue: 'Arrecadação efetiva',
+                color: AppTheme.accent,
+                icon: Icons.trending_up_rounded,
+              ),
+              _FinancialKpiCard(
+                label: 'Reserva Técnica',
+                value: 'R\$ ${(_reservaTecnica/1000).toStringAsFixed(1)}k',
+                subValue: '3× prêmio mensal',
+                color: AppTheme.green,
+                icon: Icons.savings_rounded,
+              ),
+              _FinancialKpiCard(
+                label: 'Sinistralidade',
+                value: '${_sinistralidade.toStringAsFixed(1)}%',
+                subValue: 'Meta: <65%',
+                color: _sinistralidade < 65 ? AppTheme.green : const Color(0xFFF97316),
+                icon: Icons.car_crash_rounded,
+              ),
+              _FinancialKpiCard(
+                label: 'Combined Ratio',
+                value: '${(_sinistralidade + (_da + _cc + _ml) * 100).toStringAsFixed(1)}%',
+                subValue: 'Sin + Desp',
+                color: const Color(0xFFF59E0B),
+                icon: Icons.pie_chart_rounded,
+              ),
             ],
           ),
 
-          const SizedBox(height: 20),
-          _sectionTitle('Mapa de Risco — ES (Tempo Real)', Icons.map_rounded),
+          const SizedBox(height: 16),
+
+          // ── Premissas SADI ─────────────────────────────────
+          _sectionTitle('Premissas SADI — Carregamento Comercial', Icons.settings_rounded),
           const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: const Color(0xFF0D1628),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: const Color(0xFF1E3A5F)),
+            ),
+            child: Column(children: [
+              Row(children: [
+                Expanded(child: _PremissaItem('DA', '${(_da * 100).toStringAsFixed(0)}%', 'Despesas Adm.', const Color(0xFF60A5FA))),
+                Expanded(child: _PremissaItem('CC', '${(_cc * 100).toStringAsFixed(0)}%', 'Corretagem', const Color(0xFFA78BFA))),
+                Expanded(child: _PremissaItem('ML', '${(_ml * 100).toStringAsFixed(0)}%', 'Margem Lucro', AppTheme.green)),
+                Expanded(child: _PremissaItem('IOF', '${(_iof * 100).toStringAsFixed(2)}%', 'Imposto', const Color(0xFFF59E0B))),
+                Expanded(child: _PremissaItem('SEG', '${(AtuarioPremissas.seguranca * 100).toStringAsFixed(0)}%', 'Segurança', const Color(0xFFF97316))),
+              ]),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  color: AppTheme.green.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: AppTheme.green.withValues(alpha: 0.3)),
+                ),
+                child: Row(children: [
+                  Icon(Icons.functions_rounded, color: AppTheme.green, size: 14),
+                  const SizedBox(width: 8),
+                  Text('Prêmio Comercial = (Puro × 1.05) / ${(AtuarioPremissas.carregamento * 100).toStringAsFixed(0)}% × (1 + IOF)', style: TextStyle(color: AppTheme.green, fontSize: 11, fontFamily: 'monospace')),
+                ]),
+              ),
+            ]),
+          ),
 
-          // Risk Zone Summary
-          _RiskZoneSummary(),
+          const SizedBox(height: 16),
 
-          const SizedBox(height: 20),
+          // ── Distribuição de Produtos ───────────────────────
+          _sectionTitle('Portfólio — Distribuição por Ramo', Icons.donut_large_rounded),
+          const SizedBox(height: 12),
+          _PortfolioDistribuicao(),
+
+          const SizedBox(height: 16),
+
+          // ── Alertas do Motor Antifraude ────────────────────
+          _sectionTitle('Alertas — Motor Antifraude IA', Icons.security_rounded),
+          const SizedBox(height: 10),
+          _AlertCard(color: const Color(0xFFEF4444), icon: Icons.gpp_bad_rounded, title: 'Fraude detectada — Proposta #FR-2847', detail: 'CPF com flag ativa em birô de mercado SUSEP. Recusa automática executada. 2 tentativas simultâneas detectadas.'),
+          const SizedBox(height: 6),
+          _AlertCard(color: const Color(0xFFF97316), icon: Icons.balance_rounded, title: 'Litigância predatória — CPF #442', detail: '6 processos sem fundamento detectados nos últimos 24 meses. Compliance bloqueou a proposta automaticamente.'),
+          const SizedBox(height: 6),
+          _AlertCard(color: const Color(0xFFF59E0B), icon: Icons.warning_amber_rounded, title: 'Agravamento aplicado — Proposta #AG-1193', detail: 'Sinistralidade 145% da média do ramo. Prêmio agravado em 25%. Renovação sujeita a revisão atuarial.'),
+          const SizedBox(height: 6),
+          _AlertCard(color: AppTheme.green, icon: Icons.shield_rounded, title: 'Sem sinistros nas últimas 24h', detail: 'Todas as $_viagensAtivas viagens ativas dentro do padrão esperado. Motor de risco estável.'),
+
+          const SizedBox(height: 16),
+
+          // ── Distribuição Horária ───────────────────────────
           _sectionTitle('Distribuição por Horário', Icons.access_time_rounded),
           const SizedBox(height: 12),
           _HourlyChart(),
 
-          const SizedBox(height: 20),
-          _sectionTitle('Clima Atual — Serra/Vitória/ES', Icons.cloud_rounded),
+          const SizedBox(height: 16),
+          _sectionTitle('Condições Climáticas — Serra/Vitória/ES', Icons.cloud_rounded),
           const SizedBox(height: 12),
           _WeatherSummary(),
 
           const SizedBox(height: 20),
-          _sectionTitle('Alertas do Sistema', Icons.warning_amber_rounded),
-          const SizedBox(height: 12),
-          _AlertCard(
-            color: const Color(0xFFF97316),
-            icon: Icons.thunderstorm_rounded,
-            title: 'Previsão de chuva forte',
-            detail: 'Serra/ES → 19h–22h. Fator clima será ×1.5 automaticamente.',
-          ),
-          const SizedBox(height: 8),
-          _AlertCard(
-            color: AppTheme.yellow,
-            icon: Icons.traffic_rounded,
-            title: 'Trânsito intenso detectado',
-            detail: 'BR-101 KM 272 → congestionamento. Fator tráfego ×1.2.',
-          ),
-          const SizedBox(height: 8),
-          _AlertCard(
-            color: AppTheme.green,
-            icon: Icons.shield_rounded,
-            title: 'Sem sinistros nas últimas 24h',
-            detail: 'Todas as 14 viagens ativas dentro do padrão esperado.',
-          ),
         ],
       ),
     );
   }
 }
+
+// ─── FINANCIAL KPI CARD ────────────────────────────────────────
+class _FinancialKpiCard extends StatelessWidget {
+  final String label;
+  final String value;
+  final String subValue;
+  final Color color;
+  final IconData icon;
+  const _FinancialKpiCard({required this.label, required this.value, required this.subValue, required this.color, required this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0D1628),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withValues(alpha: 0.25)),
+      ),
+      child: Row(children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(8)),
+          child: Icon(icon, color: color, size: 18),
+        ),
+        const SizedBox(width: 12),
+        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
+          Text(label, style: const TextStyle(color: Colors.white54, fontSize: 10)),
+          Text(value, style: TextStyle(color: color, fontSize: 15, fontWeight: FontWeight.bold)),
+          Text(subValue, style: const TextStyle(color: Colors.white38, fontSize: 9)),
+        ])),
+      ]),
+    );
+  }
+}
+
+// ─── PREMISSA ITEM ─────────────────────────────────────────────
+class _PremissaItem extends StatelessWidget {
+  final String sigla;
+  final String valor;
+  final String desc;
+  final Color color;
+  const _PremissaItem(this.sigla, this.valor, this.desc, this.color);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      Text(sigla, style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold)),
+      const SizedBox(height: 2),
+      Text(valor, style: TextStyle(color: color, fontSize: 16, fontWeight: FontWeight.w900)),
+      const SizedBox(height: 2),
+      Text(desc, style: const TextStyle(color: Colors.white38, fontSize: 9), textAlign: TextAlign.center),
+    ]);
+  }
+}
+
+// ─── PORTFÓLIO DISTRIBUIÇÃO ────────────────────────────────────
+class _PortfolioDistribuicao extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final categorias = [
+      {'nome': 'Auto / PHYD', 'valor': 42.0, 'color': AppTheme.accent},
+      {'nome': 'Vida', 'valor': 28.0, 'color': AppTheme.green},
+      {'nome': 'Cyber', 'valor': 12.0, 'color': const Color(0xFFA78BFA)},
+      {'nome': 'Paramétrico', 'valor': 8.0, 'color': const Color(0xFFF59E0B)},
+      {'nome': 'Residencial', 'valor': 6.0, 'color': const Color(0xFF60A5FA)},
+      {'nome': 'Outros', 'valor': 4.0, 'color': Colors.white30},
+    ];
+
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0D1628),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFF1E3A5F)),
+      ),
+      child: Column(children: [
+        ...categorias.map((c) {
+          final pct = c['valor'] as double;
+          final cor = c['color'] as Color;
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(children: [
+                Container(width: 8, height: 8, decoration: BoxDecoration(color: cor, borderRadius: BorderRadius.circular(2))),
+                const SizedBox(width: 8),
+                Text(c['nome'] as String, style: const TextStyle(color: Colors.white70, fontSize: 11)),
+                const Spacer(),
+                Text('${pct.toStringAsFixed(1)}%', style: TextStyle(color: cor, fontSize: 11, fontWeight: FontWeight.bold)),
+              ]),
+              const SizedBox(height: 4),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(3),
+                child: LinearProgressIndicator(
+                  value: pct / 100,
+                  backgroundColor: const Color(0xFF1E3A5F),
+                  valueColor: AlwaysStoppedAnimation(cor),
+                  minHeight: 4,
+                ),
+              ),
+            ]),
+          );
+        }),
+      ]),
+    );
+  }
+}
+
 
 // ═══════════════════════════════════════════════════════════════
 // TAB 2 — RISK ENGINE (configuração dos multiplicadores)
@@ -4727,4 +4979,1033 @@ class _SeguradoraTabState extends State<_SeguradoraTab>
 
   String _fmtDt(DateTime dt) =>
       '${dt.day.toString().padLeft(2, '0')}/${dt.month.toString().padLeft(2, '0')}/${dt.year}';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TAB 9 — ATUÁRIO IA — Motor de precificação inteligente
+// ═══════════════════════════════════════════════════════════════
+
+class _AtuarioIATab extends StatefulWidget {
+  @override
+  State<_AtuarioIATab> createState() => _AtuarioIATabState();
+}
+
+class _AtuarioIATabState extends State<_AtuarioIATab> with SingleTickerProviderStateMixin {
+  late TabController _sub;
+  int _subIdx = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _sub = TabController(length: 5, vsync: this);
+    _sub.addListener(() => setState(() => _subIdx = _sub.index));
+  }
+
+  @override
+  void dispose() { _sub.dispose(); super.dispose(); }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      Container(
+        color: const Color(0xFF0A0F1E),
+        child: TabBar(
+          controller: _sub,
+          isScrollable: true,
+          tabAlignment: TabAlignment.start,
+          indicatorColor: const Color(0xFFA78BFA),
+          labelColor: const Color(0xFFA78BFA),
+          unselectedLabelColor: Colors.white38,
+          labelStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
+          tabs: const [
+            Tab(text: '🚗 Auto'),
+            Tab(text: '💙 Vida'),
+            Tab(text: '🛡 Cyber'),
+            Tab(text: '🌧 Paramétrico'),
+            Tab(text: '📊 Matriz'),
+          ],
+        ),
+      ),
+      Expanded(child: TabBarView(
+        controller: _sub,
+        children: [
+          _AutoCalculadorTab(),
+          _VidaCalculadorTab(),
+          _CyberCalculadorTab(),
+          _ParametricoCalculadorTab(),
+          _MatrizAtuarialTab(),
+        ],
+      )),
+    ]);
+  }
+}
+
+// ─── AUTO CALCULADOR ───────────────────────────────────────────
+class _AutoCalculadorTab extends StatefulWidget {
+  @override
+  State<_AutoCalculadorTab> createState() => _AutoCalculadorTabState();
+}
+
+class _AutoCalculadorTabState extends State<_AutoCalculadorTab> {
+  final _fipeCtrl = TextEditingController(text: '85000');
+  final _idadeCtrl = TextEditingController(text: '35');
+  final _cepCtrl = TextEditingController(text: '01310');
+  final _anoCtrl = TextEditingController(text: '2021');
+  int _bonus = 3;
+  String _uso = 'lazer';
+  CalculoAuto? _resultado;
+  bool _calculando = false;
+
+  void _calcular() async {
+    setState(() { _calculando = true; });
+    await Future.delayed(const Duration(milliseconds: 600)); // simula IA processando
+    final c = CalculoAuto(
+      valorFipe: double.tryParse(_fipeCtrl.text.replaceAll('.', '').replaceAll(',', '.')) ?? 85000,
+      idadeMotorista: int.tryParse(_idadeCtrl.text) ?? 35,
+      cepPernoite: _cepCtrl.text,
+      anoVeiculo: int.tryParse(_anoCtrl.text) ?? 2020,
+      classeBonus: _bonus,
+      usoVeiculo: _uso,
+    );
+    setState(() { _resultado = c; _calculando = false; });
+  }
+
+  @override
+  void dispose() { _fipeCtrl.dispose(); _idadeCtrl.dispose(); _cepCtrl.dispose(); _anoCtrl.dispose(); super.dispose(); }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        _aiHeader('Precificação Auto — PHYD', 'Frequência × Gravidade × Fatores Multiplicativos'),
+        const SizedBox(height: 14),
+
+        // Inputs
+        _iaInputGrid([
+          _IaInput('Valor FIPE (R\$)', _fipeCtrl, Icons.directions_car_rounded),
+          _IaInput('Idade Motorista', _idadeCtrl, Icons.person_rounded),
+          _IaInput('CEP Pernoite', _cepCtrl, Icons.location_on_rounded),
+          _IaInput('Ano Veículo', _anoCtrl, Icons.calendar_today_rounded),
+        ]),
+        const SizedBox(height: 12),
+
+        // Classe Bônus
+        Row(children: [
+          const Text('Classe Bônus:', style: TextStyle(color: Colors.white60, fontSize: 12)),
+          const SizedBox(width: 12),
+          ...List.generate(11, (i) => GestureDetector(
+            onTap: () => setState(() => _bonus = i),
+            child: Container(
+              margin: const EdgeInsets.only(right: 6),
+              width: 28, height: 28,
+              decoration: BoxDecoration(
+                color: _bonus == i ? const Color(0xFF1A56DB) : const Color(0xFF0D1628),
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: _bonus == i ? const Color(0xFF1A56DB) : const Color(0xFF1E3A5F)),
+              ),
+              alignment: Alignment.center,
+              child: Text('$i', style: TextStyle(color: _bonus == i ? Colors.white : Colors.white54, fontSize: 10, fontWeight: FontWeight.bold)),
+            ),
+          )),
+        ]),
+        const SizedBox(height: 12),
+
+        // Uso
+        Row(children: [
+          const Text('Uso:', style: TextStyle(color: Colors.white60, fontSize: 12)),
+          const SizedBox(width: 12),
+          ...['lazer', 'trabalho', 'aplicativo', 'frota'].map((u) => GestureDetector(
+            onTap: () => setState(() => _uso = u),
+            child: Container(
+              margin: const EdgeInsets.only(right: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: _uso == u ? const Color(0xFF1A56DB) : const Color(0xFF0D1628),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: _uso == u ? const Color(0xFF1A56DB) : const Color(0xFF1E3A5F)),
+              ),
+              child: Text(u[0].toUpperCase() + u.substring(1), style: TextStyle(color: _uso == u ? Colors.white : Colors.white54, fontSize: 11)),
+            ),
+          )),
+        ]),
+        const SizedBox(height: 16),
+
+        // Botão calcular
+        _calcButton(_calculando ? 'Processando...' : '🤖 Calcular Prêmio Auto', _calcular, _calculando),
+        const SizedBox(height: 16),
+
+        // Resultado
+        if (_resultado != null) _autoResultado(_resultado!),
+      ]),
+    );
+  }
+
+  Widget _autoResultado(CalculoAuto c) {
+    final m = c.toMap();
+    return Column(children: [
+      _resultCard('PRÊMIO COMERCIAL', [
+        _resultRow('Mensal', 'R\$ ${c.premComercialMensal.toStringAsFixed(2)}', AppTheme.accent, big: true),
+        _resultRow('Anual', 'R\$ ${c.premComercialAnual.toStringAsFixed(2)}', AppTheme.green),
+        _resultRow('Diário', 'R\$ ${c.premComercialDiario.toStringAsFixed(4)}', const Color(0xFF60A5FA)),
+      ]),
+      const SizedBox(height: 10),
+      _resultCard('FATORES MULTIPLICATIVOS', [
+        _resultRow('Prêmio Puro Base (4% FIPE)', 'R\$ ${c.premPuroBase.toStringAsFixed(2)}', Colors.white60),
+        _resultRow('Fator Idade (${c.idadeMotorista} anos)', '× ${c.fatId.toStringAsFixed(2)}', _fatorColor(c.fatId)),
+        _resultRow('Fator CEP (${c.cepPernoite})', '× ${c.fatCep.toStringAsFixed(2)}', _fatorColor(c.fatCep)),
+        _resultRow('Fator Ano Veículo', '× ${c.fatAno.toStringAsFixed(2)}', _fatorColor(c.fatAno)),
+        _resultRow('Fator Bônus (Classe $_bonus)', '× ${c.fatBonus.toStringAsFixed(2)}', AppTheme.green),
+        _resultRow('Fator Uso ($_uso)', '× ${c.fatUso.toStringAsFixed(2)}', _fatorColor(c.fatUso)),
+        _resultRow('Prêmio Puro Final', 'R\$ ${c.premPuroFinal.toStringAsFixed(2)}', Colors.white70),
+      ]),
+      const SizedBox(height: 10),
+      _resultCard('CARREGAMENTO SADI', [
+        _resultRow('DA (Desp. Adm.)', '${(AtuarioPremissas.da * 100).toStringAsFixed(0)}%', const Color(0xFF60A5FA)),
+        _resultRow('CC (Corretagem)', '${(AtuarioPremissas.cc * 100).toStringAsFixed(0)}%', const Color(0xFFA78BFA)),
+        _resultRow('ML (Margem Lucro)', '${(AtuarioPremissas.ml * 100).toStringAsFixed(0)}%', AppTheme.green),
+        _resultRow('IOF', '${(AtuarioPremissas.iof * 100).toStringAsFixed(2)}%', const Color(0xFFF59E0B)),
+        _resultRow('Carregamento Total', '${((1 - AtuarioPremissas.carregamento) * 100).toStringAsFixed(0)}%', Colors.white60),
+      ]),
+    ]);
+  }
+
+  Color _fatorColor(double f) {
+    if (f <= 0.95) return AppTheme.green;
+    if (f <= 1.10) return Colors.white60;
+    if (f <= 1.30) return const Color(0xFFF59E0B);
+    return const Color(0xFFF97316);
+  }
+}
+
+// ─── VIDA CALCULADOR ───────────────────────────────────────────
+class _VidaCalculadorTab extends StatefulWidget {
+  @override
+  State<_VidaCalculadorTab> createState() => _VidaCalculadorTabState();
+}
+
+class _VidaCalculadorTabState extends State<_VidaCalculadorTab> {
+  final _isCtrl = TextEditingController(text: '500000');
+  final _idadeCtrl = TextEditingController(text: '35');
+  bool _tabagista = false;
+  String _profissao = 'geral';
+  CalculoVida? _resultado;
+  bool _calculando = false;
+
+  static const _profissoes = ['geral', 'ti', 'professor', 'motorista', 'motoboy', 'policial', 'bombeiro', 'construção', 'aviação', 'escritório'];
+
+  void _calcular() async {
+    setState(() { _calculando = true; });
+    await Future.delayed(const Duration(milliseconds: 700));
+    final c = CalculoVida(
+      capitalSegurado: double.tryParse(_isCtrl.text.replaceAll('.', '').replaceAll(',', '.')) ?? 500000,
+      idade: int.tryParse(_idadeCtrl.text) ?? 35,
+      tabagista: _tabagista,
+      profissao: _profissao,
+    );
+    setState(() { _resultado = c; _calculando = false; });
+  }
+
+  @override
+  void dispose() { _isCtrl.dispose(); _idadeCtrl.dispose(); super.dispose(); }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        _aiHeader('Precificação Vida — Tábua BR-EMS', 'Prêmio Puro = IS × qx  |  Tábua AT-2000 / BR-EMS'),
+        const SizedBox(height: 14),
+        _iaInputGrid([
+          _IaInput('Capital Segurado (R\$)', _isCtrl, Icons.account_balance_rounded),
+          _IaInput('Idade Segurado', _idadeCtrl, Icons.person_rounded),
+        ]),
+        const SizedBox(height: 12),
+        Row(children: [
+          const Text('Tabagista:', style: TextStyle(color: Colors.white60, fontSize: 12)),
+          const SizedBox(width: 12),
+          Switch(value: _tabagista, onChanged: (v) => setState(() => _tabagista = v), activeColor: const Color(0xFFF97316)),
+          const SizedBox(width: 20),
+          const Text('Profissão:', style: TextStyle(color: Colors.white60, fontSize: 12)),
+          const SizedBox(width: 12),
+          Expanded(child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            decoration: BoxDecoration(color: const Color(0xFF0D1628), borderRadius: BorderRadius.circular(8), border: Border.all(color: const Color(0xFF1E3A5F))),
+            child: DropdownButtonHideUnderline(child: DropdownButton<String>(
+              value: _profissao,
+              dropdownColor: const Color(0xFF0D1628),
+              style: const TextStyle(color: Colors.white70, fontSize: 12),
+              items: _profissoes.map((p) => DropdownMenuItem(value: p, child: Text(p[0].toUpperCase() + p.substring(1)))).toList(),
+              onChanged: (v) => setState(() => _profissao = v ?? 'geral'),
+            )),
+          )),
+        ]),
+        const SizedBox(height: 16),
+        _calcButton(_calculando ? 'Processando...' : '🤖 Calcular Prêmio Vida', _calcular, _calculando),
+        const SizedBox(height: 16),
+        if (_resultado != null) _vidaResultado(_resultado!),
+      ]),
+    );
+  }
+
+  Widget _vidaResultado(CalculoVida c) {
+    return Column(children: [
+      _resultCard('PRÊMIO COMERCIAL', [
+        _resultRow('Mensal', 'R\$ ${c.premComercialMensal.toStringAsFixed(2)}', AppTheme.accent, big: true),
+        _resultRow('Anual', 'R\$ ${c.premComercialAnual.toStringAsFixed(2)}', AppTheme.green),
+      ]),
+      const SizedBox(height: 10),
+      _resultCard('DADOS BIOMÉTRICOS (BR-EMS)', [
+        _resultRow('Idade', '${c.idade} anos', Colors.white60),
+        _resultRow('Taxa Mortalidade qx', '${(c.qx * 1000).toStringAsFixed(3)}‰', const Color(0xFFF59E0B)),
+        _resultRow('Capital Segurado (IS)', 'R\$ ${(c.capitalSegurado / 1000).toStringAsFixed(0)}k', AppTheme.accent),
+        _resultRow('Fator Tabagismo', '× ${c.fatorTabagismo.toStringAsFixed(2)}', c.tabagista ? const Color(0xFFF97316) : AppTheme.green),
+        _resultRow('Fator Profissão ($_profissao)', '× ${c.fatorProfissao.toStringAsFixed(2)}', Colors.white60),
+        _resultRow('Prêmio Puro Anual', 'R\$ ${c.premPuroAnual.toStringAsFixed(2)}', Colors.white70),
+        _resultRow('+ Margem Segurança 5%', 'R\$ ${c.carregamentoSeguranca.toStringAsFixed(2)}', const Color(0xFFF59E0B)),
+        _resultRow('Prêmio Puro Total', 'R\$ ${c.premPuroTotal.toStringAsFixed(2)}', Colors.white),
+      ]),
+    ]);
+  }
+}
+
+// ─── CYBER CALCULADOR ──────────────────────────────────────────
+class _CyberCalculadorTab extends StatefulWidget {
+  @override
+  State<_CyberCalculadorTab> createState() => _CyberCalculadorTabState();
+}
+
+class _CyberCalculadorTabState extends State<_CyberCalculadorTab> {
+  final _limiteCtrl = TextEditingController(text: '500000');
+  final _funcCtrl = TextEditingController(text: '50');
+  String _segmento = 'pme';
+  bool _possuiSoc = false;
+  CalculoCyber? _resultado;
+  bool _calculando = false;
+
+  static const _segmentos = ['pessoal', 'pme', 'enterprise', 'saúde', 'financeiro'];
+
+  void _calcular() async {
+    setState(() { _calculando = true; });
+    await Future.delayed(const Duration(milliseconds: 800));
+    final c = CalculoCyber(
+      limiteIndenizacao: double.tryParse(_limiteCtrl.text.replaceAll('.', '').replaceAll(',', '.')) ?? 500000,
+      segmento: _segmento,
+      funcionarios: int.tryParse(_funcCtrl.text) ?? 50,
+      possuiSoc: _possuiSoc,
+    );
+    setState(() { _resultado = c; _calculando = false; });
+  }
+
+  @override
+  void dispose() { _limiteCtrl.dispose(); _funcCtrl.dispose(); super.dispose(); }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        _aiHeader('Precificação Cyber', 'Frequência de Ataques × Vulnerabilidade × Limite de Indenização'),
+        const SizedBox(height: 14),
+        _iaInputGrid([
+          _IaInput('Limite Indenização (R\$)', _limiteCtrl, Icons.security_rounded),
+          _IaInput('Nº Funcionários', _funcCtrl, Icons.group_rounded),
+        ]),
+        const SizedBox(height: 12),
+        Row(children: [
+          const Text('Segmento:', style: TextStyle(color: Colors.white60, fontSize: 12)),
+          const SizedBox(width: 12),
+          Expanded(child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            decoration: BoxDecoration(color: const Color(0xFF0D1628), borderRadius: BorderRadius.circular(8), border: Border.all(color: const Color(0xFF1E3A5F))),
+            child: DropdownButtonHideUnderline(child: DropdownButton<String>(
+              value: _segmento,
+              dropdownColor: const Color(0xFF0D1628),
+              style: const TextStyle(color: Colors.white70, fontSize: 12),
+              items: _segmentos.map((s) => DropdownMenuItem(value: s, child: Text(s[0].toUpperCase() + s.substring(1)))).toList(),
+              onChanged: (v) => setState(() => _segmento = v ?? 'pme'),
+            )),
+          )),
+          const SizedBox(width: 16),
+          const Text('SOC:', style: TextStyle(color: Colors.white60, fontSize: 12)),
+          Switch(value: _possuiSoc, onChanged: (v) => setState(() => _possuiSoc = v), activeColor: AppTheme.green),
+        ]),
+        const SizedBox(height: 16),
+        _calcButton(_calculando ? 'Processando...' : '🤖 Calcular Prêmio Cyber', _calcular, _calculando),
+        const SizedBox(height: 16),
+        if (_resultado != null) _cyberResultado(_resultado!),
+      ]),
+    );
+  }
+
+  Widget _cyberResultado(CalculoCyber c) {
+    return Column(children: [
+      _resultCard('PRÊMIO COMERCIAL', [
+        _resultRow('Mensal', 'R\$ ${c.premComercialMensal.toStringAsFixed(2)}', AppTheme.accent, big: true),
+        _resultRow('Anual', 'R\$ ${c.premComercialAnual.toStringAsFixed(2)}', AppTheme.green),
+      ]),
+      const SizedBox(height: 10),
+      _resultCard('PARÂMETROS CYBER', [
+        _resultRow('Limite Indenização', 'R\$ ${(c.limiteIndenizacao/1000).toStringAsFixed(0)}k', Colors.white60),
+        _resultRow('Segmento', _segmento.toUpperCase(), const Color(0xFFA78BFA)),
+        _resultRow('Taxa Base', '${(c.taxaBase * 100).toStringAsFixed(2)}%', const Color(0xFFF59E0B)),
+        _resultRow('Fator Escala (${c.funcionarios} func.)', '× ${c.fatorEscala.toStringAsFixed(2)}', Colors.white60),
+        _resultRow('Fator SOC', '× ${c.fatorSoc.toStringAsFixed(2)}', c.possuiSoc ? AppTheme.green : const Color(0xFFF97316)),
+        _resultRow('Prêmio Puro Anual', 'R\$ ${c.premPuroAnual.toStringAsFixed(2)}', Colors.white70),
+      ]),
+    ]);
+  }
+}
+
+// ─── PARAMÉTRICO CALCULADOR ────────────────────────────────────
+class _ParametricoCalculadorTab extends StatefulWidget {
+  @override
+  State<_ParametricoCalculadorTab> createState() => _ParametricoCalculadorTabState();
+}
+
+class _ParametricoCalculadorTabState extends State<_ParametricoCalculadorTab> {
+  final _isCtrl = TextEditingController(text: '1200000');
+  final _trigCtrl = TextEditingController(text: '30');
+  final _exitCtrl = TextEditingController(text: '10');
+  String _regiao = 'cerrado';
+  String _cultura = 'soja';
+  CalculoParametrico? _resultado;
+  bool _calculando = false;
+
+  static const _regioes = ['cerrado', 'semi-árido', 'amazônia', 'sul', 'sudeste'];
+  static const _culturas = ['soja', 'milho', 'café', 'cana', 'algodão'];
+
+  void _calcular() async {
+    setState(() { _calculando = true; });
+    await Future.delayed(const Duration(milliseconds: 900));
+    final c = CalculoParametrico(
+      capitalSegurado: double.tryParse(_isCtrl.text.replaceAll('.', '').replaceAll(',', '.')) ?? 1200000,
+      cultura: _cultura,
+      triggerMm: double.tryParse(_trigCtrl.text) ?? 30,
+      exitMm: double.tryParse(_exitCtrl.text) ?? 10,
+      regiao: _regiao,
+    );
+    setState(() { _resultado = c; _calculando = false; });
+  }
+
+  @override
+  void dispose() { _isCtrl.dispose(); _trigCtrl.dispose(); _exitCtrl.dispose(); super.dispose(); }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        _aiHeader('Seguro Paramétrico Climático', 'GEV × Trigger × Exit × IS — Liquidação automática via satélite NASA/NOAA'),
+        const SizedBox(height: 14),
+        _iaInputGrid([
+          _IaInput('Capital Segurado (R\$)', _isCtrl, Icons.agriculture_rounded),
+          _IaInput('Trigger (mm mínimo)', _trigCtrl, Icons.water_drop_rounded),
+          _IaInput('Exit (mm gatilho total)', _exitCtrl, Icons.thunderstorm_rounded),
+        ]),
+        const SizedBox(height: 12),
+        Row(children: [
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const Text('Região:', style: TextStyle(color: Colors.white60, fontSize: 11)),
+            const SizedBox(height: 4),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              decoration: BoxDecoration(color: const Color(0xFF0D1628), borderRadius: BorderRadius.circular(8), border: Border.all(color: const Color(0xFF1E3A5F))),
+              child: DropdownButtonHideUnderline(child: DropdownButton<String>(
+                value: _regiao, isExpanded: true,
+                dropdownColor: const Color(0xFF0D1628),
+                style: const TextStyle(color: Colors.white70, fontSize: 12),
+                items: _regioes.map((r) => DropdownMenuItem(value: r, child: Text(r[0].toUpperCase() + r.substring(1)))).toList(),
+                onChanged: (v) => setState(() => _regiao = v ?? 'cerrado'),
+              )),
+            ),
+          ])),
+          const SizedBox(width: 12),
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const Text('Cultura:', style: TextStyle(color: Colors.white60, fontSize: 11)),
+            const SizedBox(height: 4),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              decoration: BoxDecoration(color: const Color(0xFF0D1628), borderRadius: BorderRadius.circular(8), border: Border.all(color: const Color(0xFF1E3A5F))),
+              child: DropdownButtonHideUnderline(child: DropdownButton<String>(
+                value: _cultura, isExpanded: true,
+                dropdownColor: const Color(0xFF0D1628),
+                style: const TextStyle(color: Colors.white70, fontSize: 12),
+                items: _culturas.map((c) => DropdownMenuItem(value: c, child: Text(c[0].toUpperCase() + c.substring(1)))).toList(),
+                onChanged: (v) => setState(() => _cultura = v ?? 'soja'),
+              )),
+            ),
+          ])),
+        ]),
+        const SizedBox(height: 16),
+        _calcButton(_calculando ? 'Processando...' : '🤖 Calcular Prêmio Paramétrico', _calcular, _calculando),
+        const SizedBox(height: 16),
+        if (_resultado != null) _paramResultado(_resultado!),
+      ]),
+    );
+  }
+
+  Widget _paramResultado(CalculoParametrico c) {
+    return Column(children: [
+      _resultCard('PRÊMIO COMERCIAL', [
+        _resultRow('Mensal', 'R\$ ${c.premComercialMensal.toStringAsFixed(2)}', AppTheme.accent, big: true),
+        _resultRow('Anual', 'R\$ ${c.premComercialAnual.toStringAsFixed(2)}', AppTheme.green),
+      ]),
+      const SizedBox(height: 10),
+      _resultCard('PARÂMETROS CLIMÁTICOS', [
+        _resultRow('Região / Cultura', '${_regiao.toUpperCase()} / ${_cultura.toUpperCase()}', Colors.white60),
+        _resultRow('Freq. Histórica 30a', '${(c.freqHistorica * 100).toStringAsFixed(0)}% prob/ano', const Color(0xFFF59E0B)),
+        _resultRow('Fator Cultura', '× ${c.fatorCultura.toStringAsFixed(2)}', Colors.white60),
+        _resultRow('Perda Esperada (E[Y])', 'R\$ ${c.perdaEsperada.toStringAsFixed(2)}', const Color(0xFFF97316)),
+        _resultRow('Trigger', '${c.triggerMm.toStringAsFixed(0)}mm  →  Exit: ${c.exitMm.toStringAsFixed(0)}mm', Colors.white70),
+      ]),
+      const SizedBox(height: 10),
+      Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: AppTheme.green.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: AppTheme.green.withValues(alpha: 0.25)),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [
+            Icon(Icons.satellite_alt_rounded, color: AppTheme.green, size: 14),
+            const SizedBox(width: 6),
+            const Text('GATILHO AUTOMÁTICO', style: TextStyle(color: Colors.white70, fontSize: 11, fontWeight: FontWeight.bold)),
+          ]),
+          const SizedBox(height: 6),
+          Text('Se chuva < ${c.triggerMm.toStringAsFixed(0)}mm no mês → Smart Contract ativa liquidação proporcional.\nSe chuva < ${c.exitMm.toStringAsFixed(0)}mm → Pagamento total R\$ ${(c.capitalSegurado/1000).toStringAsFixed(0)}k via Pix em até 24h.', style: const TextStyle(color: Colors.white54, fontSize: 10)),
+        ]),
+      ),
+    ]);
+  }
+}
+
+// ─── MATRIZ ATUARIAL ───────────────────────────────────────────
+class _MatrizAtuarialTab extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        _aiHeader('Matriz Atuarial Completa', 'Todos os ramos — variáveis, fórmulas e carregamentos'),
+        const SizedBox(height: 14),
+        ...MatrizAtuarial.ramos.map((r) => _MatrizItem(
+          ramo: r['ramo']!,
+          variavel: r['variavel']!,
+          formula: r['formula']!,
+          carregamento: r['carregamento']!,
+        )),
+        const SizedBox(height: 16),
+        _aiHeader('Portfólio de Produtos', '${PortfolioSeguros.produtos.length} produtos × ${PortfolioSeguros.categorias.length} categorias'),
+        const SizedBox(height: 12),
+        ...PortfolioSeguros.categorias.map((cat) {
+          final prods = PortfolioSeguros.byCategoria(cat);
+          return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Text(cat.toUpperCase(), style: const TextStyle(color: Colors.white38, fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 1.5)),
+            ),
+            ...prods.map((p) => _ProdutoCard(p)),
+          ]);
+        }),
+      ]),
+    );
+  }
+}
+
+class _MatrizItem extends StatelessWidget {
+  final String ramo, variavel, formula, carregamento;
+  const _MatrizItem({required this.ramo, required this.variavel, required this.formula, required this.carregamento});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0D1628),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: const Color(0xFF1E3A5F)),
+      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(children: [
+          Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3), decoration: BoxDecoration(color: const Color(0xFF1A56DB).withValues(alpha: 0.2), borderRadius: BorderRadius.circular(6)), child: Text(ramo, style: const TextStyle(color: Color(0xFF60A5FA), fontSize: 10, fontWeight: FontWeight.bold))),
+          const SizedBox(width: 8),
+          Expanded(child: Text(variavel, style: const TextStyle(color: Colors.white70, fontSize: 11))),
+        ]),
+        const SizedBox(height: 6),
+        Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5), decoration: BoxDecoration(color: const Color(0xFF0A0F1E), borderRadius: BorderRadius.circular(6)), child: Text(formula, style: const TextStyle(color: Color(0xFFA78BFA), fontSize: 10, fontFamily: 'monospace'))),
+        const SizedBox(height: 4),
+        Text('Carregamentos: $carregamento', style: const TextStyle(color: Colors.white38, fontSize: 9)),
+      ]),
+    );
+  }
+}
+
+class _ProdutoCard extends StatelessWidget {
+  final ProdutoSeguro p;
+  const _ProdutoCard(this.p);
+
+  Color get _statusColor {
+    if (p.statusViabilidade.contains('Urgente') || p.statusViabilidade == 'Ativo') return AppTheme.green;
+    if (p.statusViabilidade.contains('Implementação')) return const Color(0xFFF59E0B);
+    return const Color(0xFF60A5FA);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0D1628),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: const Color(0xFF1E3A5F)),
+      ),
+      child: Row(children: [
+        Container(
+          width: 36, height: 36,
+          decoration: BoxDecoration(color: _statusColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(8)),
+          child: Icon(Icons.verified_rounded, color: _statusColor, size: 18),
+        ),
+        const SizedBox(width: 12),
+        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(p.nome, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600)),
+          Text(p.descricao, style: const TextStyle(color: Colors.white54, fontSize: 10), maxLines: 1, overflow: TextOverflow.ellipsis),
+          const SizedBox(height: 4),
+          Text(p.modeloPrecificacao, style: const TextStyle(color: Color(0xFFA78BFA), fontSize: 9), maxLines: 1, overflow: TextOverflow.ellipsis),
+        ])),
+        const SizedBox(width: 8),
+        Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+          Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), decoration: BoxDecoration(color: _statusColor.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(4)), child: Text(p.statusViabilidade, style: TextStyle(color: _statusColor, fontSize: 8, fontWeight: FontWeight.bold))),
+          const SizedBox(height: 4),
+          if (p.escalaGlobal) const Text('🌐 Global', style: TextStyle(color: Colors.white38, fontSize: 8)),
+        ]),
+      ]),
+    );
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TAB 10 — SUBSCRITOR IA — Análise de propostas + Antifraude
+// ═══════════════════════════════════════════════════════════════
+
+class _SubscritorIATab extends StatefulWidget {
+  @override
+  State<_SubscritorIATab> createState() => _SubscritorIATabState();
+}
+
+class _SubscritorIATabState extends State<_SubscritorIATab> {
+  final _cpfCtrl = TextEditingController();
+  final _nomeCtrl = TextEditingController();
+  final _capitalCtrl = TextEditingController(text: '85000');
+  final _sins5aCtrl = TextEditingController(text: '0');
+  final _valSinsCtrl = TextEditingController(text: '0');
+  String _ramo = 'Auto';
+  bool _possuiProcessos = false;
+  bool _analisando = false;
+
+  ScoreFraude? _scoreFraude;
+  ResultadoSubscricao? _subscricao;
+
+  // Base de propostas analisadas (simuladas)
+  final _historico = <Map<String, dynamic>>[
+    {'cpf': '123.456.789-00', 'nome': 'Carlos Silva', 'ramo': 'Auto', 'resultado': 'APROVADO', 'score': 812, 'prem': 287.40, 'ts': '14:22'},
+    {'cpf': '987.654.321-00', 'nome': 'Ana Oliveira', 'ramo': 'Vida', 'resultado': 'APROVADO', 'score': 755, 'prem': 198.60, 'ts': '13:58'},
+    {'cpf': '111.111.111-11', 'nome': 'João Fraudador', 'ramo': 'Auto', 'resultado': 'RECUSADO — FRAUDE', 'score': 120, 'prem': 0.0, 'ts': '13:45'},
+    {'cpf': '333.333.333-33', 'nome': 'Pedro Litigante', 'ramo': 'Residencial', 'resultado': 'RECUSADO — COMPLIANCE', 'score': 250, 'prem': 0.0, 'ts': '13:30'},
+    {'cpf': '555.555.555-55', 'nome': 'Maria Agravada', 'ramo': 'Auto', 'resultado': 'APROVADO — AGRAVADO', 'score': 520, 'prem': 412.80, 'ts': '12:55'},
+  ];
+
+  void _analisar() async {
+    if (_cpfCtrl.text.isEmpty) return;
+    setState(() { _analisando = true; _scoreFraude = null; _subscricao = null; });
+    await Future.delayed(const Duration(milliseconds: 1200)); // simula consulta em tempo real
+
+    final score = MotorAntifraude.analisar(
+      _cpfCtrl.text.trim(),
+      sinistrosUltimos5Anos: int.tryParse(_sins5aCtrl.text) ?? 0,
+      valorSinistros: double.tryParse(_valSinsCtrl.text.replaceAll('.', '').replaceAll(',', '.')) ?? 0,
+      possuiProcessos: _possuiProcessos,
+    );
+
+    final capitalBase = double.tryParse(_capitalCtrl.text.replaceAll('.', '').replaceAll(',', '.')) ?? 85000;
+    final premPuroBase = capitalBase * 0.04;
+
+    final sub = SubscritorIA.analisarProposta(
+      ramo: _ramo,
+      premPuroBase: premPuroBase,
+      scoreFraude: score,
+      dadosAtuariais: {'capital': capitalBase},
+    );
+
+    // Adicionar ao histórico
+    _historico.insert(0, {
+      'cpf': _cpfCtrl.text,
+      'nome': _nomeCtrl.text.isEmpty ? 'Proponente' : _nomeCtrl.text,
+      'ramo': _ramo,
+      'resultado': sub.decisao,
+      'score': score.scoreRisco,
+      'prem': sub.premComercialFinal / 12,
+      'ts': '${DateTime.now().hour.toString().padLeft(2,'0')}:${DateTime.now().minute.toString().padLeft(2,'0')}',
+    });
+
+    setState(() { _scoreFraude = score; _subscricao = sub; _analisando = false; });
+  }
+
+  @override
+  void dispose() {
+    _cpfCtrl.dispose(); _nomeCtrl.dispose(); _capitalCtrl.dispose();
+    _sins5aCtrl.dispose(); _valSinsCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        _aiHeader('Subscritor IA + Antifraude', 'Validação em tempo real — SUSEP / DPVAT / Birôs de Mercado'),
+        const SizedBox(height: 14),
+
+        // KPIs antifraude
+        Row(children: [
+          Expanded(child: _FraudeKpi('Propostas Hoje', '${_historico.length}', Icons.description_rounded, AppTheme.accent)),
+          const SizedBox(width: 8),
+          Expanded(child: _FraudeKpi('Aprovadas', '${_historico.where((h) => h['resultado'].toString().contains('APROVADO')).length}', Icons.check_circle_rounded, AppTheme.green)),
+          const SizedBox(width: 8),
+          Expanded(child: _FraudeKpi('Recusadas', '${_historico.where((h) => h['resultado'].toString().contains('RECUSADO')).length}', Icons.cancel_rounded, const Color(0xFFEF4444))),
+        ]),
+        const SizedBox(height: 16),
+
+        // Formulário de análise
+        Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(color: const Color(0xFF0D1628), borderRadius: BorderRadius.circular(12), border: Border.all(color: const Color(0xFF1E3A5F))),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const Text('NOVA PROPOSTA', style: TextStyle(color: Colors.white60, fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 1.5)),
+            const SizedBox(height: 12),
+            _iaInputGrid([
+              _IaInput('CPF do Proponente', _cpfCtrl, Icons.fingerprint_rounded, hint: '000.000.000-00'),
+              _IaInput('Nome do Proponente', _nomeCtrl, Icons.person_rounded),
+              _IaInput('Capital Segurado (R\$)', _capitalCtrl, Icons.account_balance_rounded),
+              _IaInput('Sinistros últimos 5 anos', _sins5aCtrl, Icons.car_crash_rounded),
+              _IaInput('Valor total sinistros (R\$)', _valSinsCtrl, Icons.monetization_on_rounded),
+            ]),
+            const SizedBox(height: 12),
+            Row(children: [
+              const Text('Ramo:', style: TextStyle(color: Colors.white60, fontSize: 12)),
+              const SizedBox(width: 12),
+              Expanded(child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(color: const Color(0xFF0A0F1E), borderRadius: BorderRadius.circular(8), border: Border.all(color: const Color(0xFF1E3A5F))),
+                child: DropdownButtonHideUnderline(child: DropdownButton<String>(
+                  value: _ramo,
+                  dropdownColor: const Color(0xFF0A0F1E),
+                  style: const TextStyle(color: Colors.white70, fontSize: 12),
+                  items: ['Auto', 'Vida', 'Cyber', 'Paramétrico', 'Residencial', 'Saúde'].map((r) => DropdownMenuItem(value: r, child: Text(r))).toList(),
+                  onChanged: (v) => setState(() => _ramo = v ?? 'Auto'),
+                )),
+              )),
+              const SizedBox(width: 16),
+              const Text('Processos:', style: TextStyle(color: Colors.white60, fontSize: 12)),
+              Switch(value: _possuiProcessos, onChanged: (v) => setState(() => _possuiProcessos = v), activeColor: const Color(0xFFF97316)),
+            ]),
+            const SizedBox(height: 14),
+            _calcButton(_analisando ? '🔍 Consultando birôs...' : '🛡️ Analisar Proposta (IA)', _analisar, _analisando),
+          ]),
+        ),
+
+        const SizedBox(height: 16),
+
+        // Resultado
+        if (_analisando)
+          _loadingIA(),
+
+        if (_scoreFraude != null && _subscricao != null)
+          _resultadoSubscricao(_scoreFraude!, _subscricao!),
+
+        const SizedBox(height: 16),
+
+        // Histórico
+        _aiHeader('Histórico de Análises', 'Últimas propostas analisadas pelo Motor IA'),
+        const SizedBox(height: 12),
+        ..._historico.take(8).map((h) => _HistoricoItem(h)),
+
+        const SizedBox(height: 20),
+      ]),
+    );
+  }
+
+  Widget _loadingIA() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(color: const Color(0xFF0D1628), borderRadius: BorderRadius.circular(12), border: Border.all(color: const Color(0xFF1A56DB).withValues(alpha: 0.4))),
+      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF1A56DB))),
+        const SizedBox(width: 12),
+        const Text('Consultando SUSEP / DPVAT / Birôs de Fraude...', style: TextStyle(color: Colors.white60, fontSize: 12)),
+      ]),
+    );
+  }
+
+  Widget _resultadoSubscricao(ScoreFraude score, ResultadoSubscricao sub) {
+    final isAprovado = sub.aprovado;
+    final cor = isAprovado ? AppTheme.green : const Color(0xFFEF4444);
+
+    return Column(children: [
+      Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: cor.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: cor.withValues(alpha: 0.4), width: 1.5),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [
+            Icon(isAprovado ? Icons.check_circle_rounded : Icons.cancel_rounded, color: cor, size: 24),
+            const SizedBox(width: 10),
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(sub.decisao, style: TextStyle(color: cor, fontSize: 14, fontWeight: FontWeight.bold)),
+              Text(sub.justificativa, style: const TextStyle(color: Colors.white60, fontSize: 11)),
+            ])),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(color: cor.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(8)),
+              child: Column(children: [
+                Text('SCORE', style: TextStyle(color: cor, fontSize: 8)),
+                Text('${score.scoreRisco}', style: TextStyle(color: cor, fontSize: 20, fontWeight: FontWeight.bold)),
+              ]),
+            ),
+          ]),
+          const SizedBox(height: 12),
+          const Divider(color: Color(0xFF1E3A5F), height: 1),
+          const SizedBox(height: 12),
+          if (isAprovado && sub.premComercialFinal > 0) ...[
+            Row(children: [
+              Expanded(child: _resultRow('Prêmio Mensal', 'R\$ ${(sub.premComercialFinal/12).toStringAsFixed(2)}', AppTheme.accent, big: true)),
+              Expanded(child: _resultRow('Prêmio Anual', 'R\$ ${sub.premComercialFinal.toStringAsFixed(2)}', AppTheme.green)),
+              Expanded(child: _resultRow('Fator Aplicado', '× ${sub.fatorFinal.toStringAsFixed(2)}', const Color(0xFFF59E0B))),
+            ]),
+            const SizedBox(height: 10),
+          ],
+          // Flags
+          Wrap(spacing: 6, runSpacing: 4, children: score.flags.map((f) => Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+            decoration: BoxDecoration(
+              color: f.contains('APROVADO') || f.contains('CLEAN') ? AppTheme.green.withValues(alpha: 0.15) : const Color(0xFFF97316).withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Text(f, style: TextStyle(color: f.contains('APROVADO') || f.contains('CLEAN') ? AppTheme.green : const Color(0xFFF97316), fontSize: 9, fontWeight: FontWeight.bold)),
+          )).toList()),
+          const SizedBox(height: 10),
+          // Observações
+          ...sub.observacoes.map((o) => Padding(
+            padding: const EdgeInsets.only(bottom: 4),
+            child: Row(children: [
+              Icon(Icons.chevron_right_rounded, color: cor.withValues(alpha: 0.6), size: 14),
+              const SizedBox(width: 4),
+              Expanded(child: Text(o, style: const TextStyle(color: Colors.white54, fontSize: 10))),
+            ]),
+          )),
+        ]),
+      ),
+    ]);
+  }
+}
+
+// ─── FRAUDE KPI ────────────────────────────────────────────────
+class _FraudeKpi extends StatelessWidget {
+  final String label, value;
+  final IconData icon;
+  final Color color;
+  const _FraudeKpi(this.label, this.value, this.icon, this.color);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(color: const Color(0xFF0D1628), borderRadius: BorderRadius.circular(10), border: Border.all(color: color.withValues(alpha: 0.2))),
+      child: Row(children: [
+        Icon(icon, color: color, size: 18),
+        const SizedBox(width: 8),
+        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(label, style: const TextStyle(color: Colors.white38, fontSize: 9)),
+          Text(value, style: TextStyle(color: color, fontSize: 18, fontWeight: FontWeight.bold)),
+        ]),
+      ]),
+    );
+  }
+}
+
+// ─── HISTÓRICO ITEM ────────────────────────────────────────────
+class _HistoricoItem extends StatelessWidget {
+  final Map<String, dynamic> data;
+  const _HistoricoItem(this.data);
+
+  Color get _cor {
+    final r = data['resultado'].toString();
+    if (r.contains('FRAUDE') || r.contains('COMPLIANCE')) return const Color(0xFFEF4444);
+    if (r.contains('AGRAVADO') || r.contains('ANÁLISE')) return const Color(0xFFF59E0B);
+    return AppTheme.green;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(color: const Color(0xFF0D1628), borderRadius: BorderRadius.circular(8), border: Border.all(color: const Color(0xFF1E3A5F))),
+      child: Row(children: [
+        Container(width: 8, height: 8, decoration: BoxDecoration(color: _cor, borderRadius: BorderRadius.circular(4))),
+        const SizedBox(width: 10),
+        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(data['nome'].toString(), style: const TextStyle(color: Colors.white70, fontSize: 11, fontWeight: FontWeight.w600)),
+          Text('${data['cpf']}  •  ${data['ramo']}', style: const TextStyle(color: Colors.white38, fontSize: 9)),
+        ])),
+        const SizedBox(width: 8),
+        Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+          Text(data['resultado'].toString().split('—').first.trim(), style: TextStyle(color: _cor, fontSize: 9, fontWeight: FontWeight.bold)),
+          if ((data['prem'] as double) > 0)
+            Text('R\$ ${(data['prem'] as double).toStringAsFixed(2)}/mês', style: const TextStyle(color: Colors.white54, fontSize: 9)),
+          Text(data['ts'].toString(), style: const TextStyle(color: Colors.white30, fontSize: 8)),
+        ]),
+        const SizedBox(width: 6),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+          decoration: BoxDecoration(color: _cor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(4)),
+          child: Text('${data['score']}', style: TextStyle(color: _cor, fontSize: 10, fontWeight: FontWeight.bold)),
+        ),
+      ]),
+    );
+  }
+}
+
+// ─── HELPERS COMPARTILHADOS DAS ABAS IA ────────────────────────
+
+Widget _aiHeader(String title, String subtitle) {
+  return Container(
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      gradient: LinearGradient(colors: [
+        const Color(0xFF1A3A7C).withValues(alpha: 0.6),
+        const Color(0xFF0D1B4B).withValues(alpha: 0.4),
+      ]),
+      borderRadius: BorderRadius.circular(10),
+      border: Border.all(color: const Color(0xFFA78BFA).withValues(alpha: 0.25)),
+    ),
+    child: Row(children: [
+      Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(color: const Color(0xFFA78BFA).withValues(alpha: 0.15), borderRadius: BorderRadius.circular(8)),
+        child: const Icon(Icons.psychology_rounded, color: Color(0xFFA78BFA), size: 20),
+      ),
+      const SizedBox(width: 12),
+      Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(title, style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold)),
+        Text(subtitle, style: const TextStyle(color: Colors.white54, fontSize: 10)),
+      ])),
+      Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(color: AppTheme.green.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(6)),
+        child: Row(children: [
+          Container(width: 6, height: 6, decoration: BoxDecoration(color: AppTheme.green, borderRadius: BorderRadius.circular(3))),
+          const SizedBox(width: 4),
+          Text('LIVE', style: TextStyle(color: AppTheme.green, fontSize: 9, fontWeight: FontWeight.bold)),
+        ]),
+      ),
+    ]),
+  );
+}
+
+Widget _iaInputGrid(List<Widget> inputs) {
+  return GridView.count(
+    crossAxisCount: 2,
+    shrinkWrap: true,
+    physics: const NeverScrollableScrollPhysics(),
+    mainAxisSpacing: 8,
+    crossAxisSpacing: 8,
+    childAspectRatio: 3.5,
+    children: inputs,
+  );
+}
+
+class _IaInput extends StatelessWidget {
+  final String label;
+  final TextEditingController controller;
+  final IconData icon;
+  final String? hint;
+  const _IaInput(this.label, this.controller, this.icon, {this.hint});
+
+  @override
+  Widget build(BuildContext context) {
+    return Theme(
+      data: ThemeData.dark().copyWith(
+        inputDecorationTheme: const InputDecorationTheme(filled: true, fillColor: Color(0xFF0A0F1E)),
+      ),
+      child: TextField(
+        controller: controller,
+        style: const TextStyle(color: Colors.white, fontSize: 12),
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: const TextStyle(color: Colors.white54, fontSize: 10),
+          hintText: hint,
+          hintStyle: const TextStyle(color: Colors.white24, fontSize: 10),
+          prefixIcon: Icon(icon, color: Colors.white38, size: 14),
+          filled: true,
+          fillColor: const Color(0xFF0A0F1E),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: Color(0xFF1E3A5F))),
+          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: Color(0xFF1E3A5F))),
+          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: Color(0xFF1A56DB), width: 1.5)),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        ),
+      ),
+    );
+  }
+}
+
+Widget _calcButton(String label, VoidCallback onTap, bool loading) {
+  return SizedBox(
+    width: double.infinity,
+    child: ElevatedButton(
+      onPressed: loading ? null : onTap,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color(0xFF1A56DB),
+        disabledBackgroundColor: const Color(0xFF1A56DB).withValues(alpha: 0.4),
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+      child: loading
+        ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white70))
+        : Text(label, style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold)),
+    ),
+  );
+}
+
+Widget _resultCard(String title, List<Widget> rows) {
+  return Container(
+    padding: const EdgeInsets.all(14),
+    decoration: BoxDecoration(
+      color: const Color(0xFF0D1628),
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: const Color(0xFF1E3A5F)),
+    ),
+    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(title, style: const TextStyle(color: Colors.white38, fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 1.5)),
+      const SizedBox(height: 10),
+      ...rows,
+    ]),
+  );
+}
+
+Widget _resultRow(String label, String value, Color color, {bool big = false}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 3),
+    child: Row(children: [
+      Expanded(child: Text(label, style: const TextStyle(color: Colors.white54, fontSize: 11))),
+      Text(value, style: TextStyle(color: color, fontSize: big ? 16 : 12, fontWeight: big ? FontWeight.bold : FontWeight.w500)),
+    ]),
+  );
 }
