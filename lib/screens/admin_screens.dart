@@ -7801,29 +7801,29 @@ class _AILabsTabState extends State<_AILabsTab> {
             margin: const EdgeInsets.only(bottom: 14),
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [const Color(0xFF0D2137), const Color(0xFF0A1628)],
+              gradient: const LinearGradient(
+                colors: [Color(0xFF0A2010), Color(0xFF0A1628)],
               ),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFF1E3A5F)),
+              border: Border.all(color: const Color(0xFF34D399).withValues(alpha: 0.4)),
             ),
             child: Row(children: [
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 const Text('SafeRouteGo Cloud Infrastructure',
                   style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w700)),
                 const SizedBox(height: 2),
-                const Text('Cloudflare Edge — R2 ✅  D1 ⏳  Workers AI ✅',
-                  style: TextStyle(color: Colors.white54, fontSize: 11)),
+                const Text('Cloudflare Edge — R2 ✅  D1 ✅  Workers AI ✅',
+                  style: TextStyle(color: Color(0xFF34D399), fontSize: 11)),
               ]),
               const Spacer(),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF34D399).withValues(alpha: 0.15),
+                  color: const Color(0xFF34D399).withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: const Color(0xFF34D399).withValues(alpha: 0.4)),
+                  border: Border.all(color: const Color(0xFF34D399).withValues(alpha: 0.6)),
                 ),
-                child: const Text('2/3 ATIVO', style: TextStyle(color: Color(0xFF34D399), fontSize: 10, fontWeight: FontWeight.w700)),
+                child: const Text('3/3 ATIVO', style: TextStyle(color: Color(0xFF34D399), fontSize: 10, fontWeight: FontWeight.w700)),
               ),
             ]),
           ),
@@ -7846,121 +7846,89 @@ class _AILabsTabState extends State<_AILabsTab> {
           ),
           const SizedBox(height: 12),
 
-          // D1 status card — aguardando token
+          // D1 status card — ATIVO ✅
           _cloudCard(
             'Cloudflare D1',
-            'saferoutego  •  ID: 90327172-d7e6-450a-969e-2cfee5af697a',
-            'Serverless SQLite na edge — schema pronto, aguardando execução',
+            'saferoutego  •  54 rows  •  5 tabelas  •  4 índices',
+            'Serverless SQLite na edge — POPULADO ✅  Region: ENAM',
             Icons.table_chart_rounded,
-            const Color(0xFF60A5FA),
+            const Color(0xFF34D399),
             items: const [
-              '⏳ ai_datasets — 14 datasets catalogados',
-              '⏳ modelos_llm — 5 LLMs open-source',
-              '⏳ sinistros_fraude — 500 registros antifraude',
-              '⏳ premios_simulados — 200 cálculos SADI',
-              '⏳ r2_uploads — log de uploads',
+              '✅ ai_datasets — 14 datasets catalogados',
+              '✅ modelos_llm — 5 LLMs open-source',
+              '✅ sinistros_fraude — 20 registros antifraude',
+              '✅ premios_simulados — 10 cálculos SADI',
+              '✅ r2_uploads — 5 arquivos registrados',
             ],
-            status: 'AGUARDANDO SQL',
+            status: 'ATIVO',
           ),
           const SizedBox(height: 14),
 
-          // ── Instrução D1 — 3 opções ────────────────────────────
+          // ── D1 Stats — ATIVO ──────────────────────────────────
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: const Color(0xFF0D1628),
+              color: const Color(0xFF0A2010),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFF60A5FA).withValues(alpha: 0.4)),
+              border: Border.all(color: const Color(0xFF34D399).withValues(alpha: 0.4)),
             ),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Row(children: [
-                const Icon(Icons.info_rounded, color: Color(0xFF60A5FA), size: 16),
+                const Icon(Icons.check_circle_rounded, color: Color(0xFF34D399), size: 16),
                 const SizedBox(width: 8),
-                const Expanded(child: Text('3 formas de popular o D1 agora',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF60A5FA)))),
+                const Expanded(child: Text('D1 saferoutego — Populado com sucesso',
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF34D399)))),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF34D399).withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: const Text('54 ROWS', style: TextStyle(color: Color(0xFF34D399), fontSize: 9, fontWeight: FontWeight.w700)),
+                ),
               ]),
-              const SizedBox(height: 14),
-
-              // Opção A — Dashboard (mais fácil)
-              _d1OptionCard(
-                'A', 'Cloudflare Dashboard Console', const Color(0xFF34D399), true,
-                [
-                  '1. Acesse dash.cloudflare.com',
-                  '2. Workers & Pages → D1 → saferoutego',
-                  '3. Aba "Console" → cole o SQL abaixo',
-                  '4. Clique Execute — pronto em ~3 segundos!',
-                ],
-              ),
-              const SizedBox(height: 10),
-
-              // Opção B — Token API
-              _d1OptionCard(
-                'B', 'Token API com D1:Edit', const Color(0xFF60A5FA), false,
-                [
-                  '1. dash.cloudflare.com/profile/api-tokens',
-                  '2. Create Token → Custom Token',
-                  '3. Account → D1 → Edit',
-                  '4. Forneça o token ao agente → execução automática',
-                ],
-              ),
-              const SizedBox(height: 10),
-
-              // Opção C — Wrangler
-              _d1OptionCard(
-                'C', 'Wrangler CLI (local)', const Color(0xFFE879F9), false,
-                [
-                  'export CLOUDFLARE_API_TOKEN=<token-d1-edit>',
-                  'wrangler d1 execute saferoutego \\',
-                  '  --database-id=90327172-d7e6-450a-969e-2cfee5af697a \\',
-                  '  --file=d1_schema_and_seed.sql --remote',
-                ],
-                isCode: true,
-              ),
               const SizedBox(height: 12),
-
-              // SQL snippet
+              // Stats grid
+              Row(children: [
+                _d1StatChip('14', 'datasets', const Color(0xFF60A5FA)),
+                const SizedBox(width: 8),
+                _d1StatChip('5', 'LLMs', const Color(0xFFE879F9)),
+                const SizedBox(width: 8),
+                _d1StatChip('20', 'sinistros', const Color(0xFFF97316)),
+                const SizedBox(width: 8),
+                _d1StatChip('10', 'prêmios', const Color(0xFFF59E0B)),
+                const SizedBox(width: 8),
+                _d1StatChip('5', 'uploads', const Color(0xFF34D399)),
+              ]),
+              const SizedBox(height: 12),
+              // Métricas técnicas
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.6),
+                  color: Colors.black.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: const Color(0xFF34D399).withValues(alpha: 0.3)),
                 ),
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  const Row(children: [
-                    Icon(Icons.code_rounded, color: Color(0xFF34D399), size: 13),
+                child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Row(children: [
+                    Icon(Icons.storage_rounded, color: Color(0xFF60A5FA), size: 11),
                     SizedBox(width: 6),
-                    Text('SQL pronto — copie e cole no D1 Console:',
-                      style: TextStyle(color: Color(0xFF34D399), fontSize: 10, fontWeight: FontWeight.w600)),
+                    Text('ID: 90327172-d7e6-450a-969e-2cfee5af697a',
+                      style: TextStyle(fontFamily: 'monospace', fontSize: 9.5, color: Colors.white38)),
                   ]),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'CREATE TABLE IF NOT EXISTS ai_datasets (\n'
-                    '  id TEXT PRIMARY KEY, nome TEXT NOT NULL,\n'
-                    '  fonte TEXT NOT NULL, categoria TEXT,\n'
-                    '  tamanho_mb REAL, registros INTEGER,\n'
-                    '  url TEXT, uso_sadi TEXT, qualidade REAL,\n'
-                    '  tags TEXT, status TEXT DEFAULT \'catalogado\'\n'
-                    ');\n'
-                    '-- [+4 tabelas + 6 índices + seed data]\n'
-                    '-- SQL completo em R2: sql/d1_schema_and_seed.sql',
-                    style: TextStyle(fontFamily: 'monospace', fontSize: 9.5, color: Color(0xFF94A3B8)),
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF34D399).withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(6),
-                      border: Border.all(color: const Color(0xFF34D399).withValues(alpha: 0.3)),
-                    ),
-                    child: const Row(mainAxisSize: MainAxisSize.min, children: [
-                      Icon(Icons.cloud_download_rounded, color: Color(0xFF34D399), size: 12),
-                      SizedBox(width: 6),
-                      Text('SQL completo disponível em R2: saferoute-ai-data/sql/d1_schema_and_seed.sql',
-                        style: TextStyle(color: Color(0xFF34D399), fontSize: 9.5)),
-                    ]),
-                  ),
+                  SizedBox(height: 4),
+                  Row(children: [
+                    Icon(Icons.location_on_rounded, color: Color(0xFF60A5FA), size: 11),
+                    SizedBox(width: 6),
+                    Text('Region: ENAM (East North America)  •  SQLite na edge',
+                      style: TextStyle(fontSize: 9.5, color: Colors.white38)),
+                  ]),
+                  SizedBox(height: 4),
+                  Row(children: [
+                    Icon(Icons.schema_rounded, color: Color(0xFF60A5FA), size: 11),
+                    SizedBox(width: 6),
+                    Text('5 tabelas  •  4 índices  •  INSERT OR IGNORE (idempotente)',
+                      style: TextStyle(fontSize: 9.5, color: Colors.white38)),
+                  ]),
                 ]),
               ),
             ]),
@@ -8041,6 +8009,22 @@ class _AILabsTabState extends State<_AILabsTab> {
         Text(label, style: const TextStyle(fontSize: 9, color: Colors.white38)),
       ]),
     );
+  }
+
+  // Chip compacto para estatísticas do D1
+  Widget _d1StatChip(String value, String label, Color color) {
+    return Expanded(child: Container(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
+      ),
+      child: Column(children: [
+        Text(value, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: color)),
+        Text(label, style: const TextStyle(fontSize: 8, color: Colors.white38)),
+      ]),
+    ));
   }
 
   Widget _aiMetricCard(String label, String value, IconData icon, Color color) {
