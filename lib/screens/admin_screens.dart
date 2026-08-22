@@ -32,8 +32,28 @@ class AdminDashboardScreen extends StatefulWidget {
 
 class _AdminDashboardScreenState extends State<AdminDashboardScreen>
     with SingleTickerProviderStateMixin {
+  // BottomNav: 0=Visão Geral 1=Analytics 2=Atuário IA 3=Seguradora 4=Intel
+  int _bottomIndex = 0;
+
+  // Mapeamento: bottomIndex → tabIndex real (para o TabController interno)
+  // 0→0(Geral), 1→1..6(Analytics sub), 2→8..9(Atuário), 3→7(Seguradora), 4→10(Intel)
   late TabController _tab;
+
+  // Índice real da tab ativa (0-10)
   int _tabIndex = 0;
+
+  // Grupos do BottomNav → lista de tabs
+  static const _bottomGroups = [
+    [0],          // Visão Geral
+    [1, 2, 3, 4, 5, 6], // Analytics (Risk, Viagens, Usuários, Preços, Simulador, Inteligência)
+    [8, 9],       // Atuário IA + Subscritor
+    [7],          // Seguradora
+    [10],         // Intel Global
+  ];
+
+  // Sub-índice dentro do grupo Analytics
+  int _analyticsSubIndex = 0;
+  int _atuarioSubIndex = 0;
 
   @override
   void initState() {
@@ -48,29 +68,415 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
     super.dispose();
   }
 
+  void _onBottomTap(int idx) {
+    setState(() {
+      _bottomIndex = idx;
+      final tabs = _bottomGroups[idx];
+      if (idx == 1) {
+        _tab.index = tabs[_analyticsSubIndex.clamp(0, tabs.length - 1)];
+      } else if (idx == 2) {
+        _tab.index = tabs[_atuarioSubIndex.clamp(0, tabs.length - 1)];
+      } else {
+        _tab.index = tabs[0];
+      }
+      _tabIndex = _tab.index;
+    });
+  }
+
+  String get _currentTitle {
+    switch (_tabIndex) {
+      case 0: return 'Visão Geral';
+      case 1: return 'Risk Engine';
+      case 2: return 'Viagens';
+      case 3: return 'Usuários';
+      case 4: return 'Preços & IA';
+      case 5: return 'Simulador';
+      case 6: return 'Inteligência';
+      case 7: return 'Seguradora';
+      case 8: return 'Atuário IA';
+      case 9: return 'Subscritor IA';
+      case 10: return 'Intel Global';
+      default: return 'Admin';
+    }
+  }
+
+  Widget _buildSubTabs() {
+    if (_bottomIndex == 1) {
+      final labels = ['Risk', 'Viagens', 'Usuários', 'Preços', 'Simulador', '🛰 Intel'];
+      return Container(
+        height: 40,
+        color: const Color(0xFF0D1628),
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          itemCount: labels.length,
+          itemBuilder: (_, i) {
+            final selected = _analyticsSubIndex == i;
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  _analyticsSubIndex = i;
+                  _tab.index = _bottomGroups[1][i];
+                  _tabIndex = _tab.index;
+                });
+              },
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                margin: const EdgeInsets.only(right: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                decoration: BoxDecoration(
+                  color: selected ? AppTheme.accent.withValues(alpha: 0.2) : Colors.transparent,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: selected ? AppTheme.accent : Colors.white24,
+                    width: 1,
+                  ),
+                ),
+                child: Text(
+                  labels[i],
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
+                    color: selected ? AppTheme.accent : Colors.white54,
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      );
+    }
+    if (_bottomIndex == 2) {
+      final labels = ['🤖 Atuário IA', '🛡️ Subscritor'];
+      return Container(
+        height: 40,
+        color: const Color(0xFF0D1628),
+        child: Row(
+          children: List.generate(labels.length, (i) {
+            final selected = _atuarioSubIndex == i;
+            return Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _atuarioSubIndex = i;
+                    _tab.index = _bottomGroups[2][i];
+                    _tabIndex = _tab.index;
+                  });
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: selected ? const Color(0xFFA78BFA) : Colors.transparent,
+                        width: 2,
+                      ),
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      labels[i],
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
+                        color: selected ? const Color(0xFFA78BFA) : Colors.white38,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }),
+        ),
+      );
+    }
+    return const SizedBox.shrink();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isWide = MediaQuery.of(context).size.width > 600;
+
     return Scaffold(
       backgroundColor: const Color(0xFF0A0F1E),
-      body: Column(
+      // ── DRAWER (todos os 11 tabs para acesso rápido) ──────────
+      drawer: _AdminDrawer(
+        currentIndex: _tabIndex,
+        onSelect: (i) {
+          Navigator.of(context).pop();
+          setState(() {
+            _tab.index = i;
+            _tabIndex = i;
+            // Atualiza bottomIndex correspondente
+            for (int g = 0; g < _bottomGroups.length; g++) {
+              if (_bottomGroups[g].contains(i)) {
+                _bottomIndex = g;
+                if (g == 1) _analyticsSubIndex = _bottomGroups[g].indexOf(i);
+                if (g == 2) _atuarioSubIndex = _bottomGroups[g].indexOf(i);
+                break;
+              }
+            }
+          });
+        },
+      ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            // ── Header compacto mobile ──
+            _AdminHeaderMobile(
+              title: _currentTitle,
+              onLogout: widget.onLogout,
+              onActuarial: widget.onActuarial,
+              onSafeMap: widget.onSafeMap,
+              onAtuarioIA: widget.onAtuarioIA,
+            ),
+            // ── Sub-tabs (Analytics / Atuário) ──
+            _buildSubTabs(),
+            // ── Conteúdo principal ──
+            Expanded(
+              child: TabBarView(
+                controller: _tab,
+                physics: isWide
+                    ? const AlwaysScrollableScrollPhysics()
+                    : const NeverScrollableScrollPhysics(),
+                children: [
+                  _OverviewTab(),
+                  _RiskEngineTab(),
+                  _TripsTab(),
+                  _UsersTab(),
+                  _PricingTab(),
+                  _SimulatorTab(),
+                  _IntelligenceTab(),
+                  _SeguradoraTab(),
+                  _AtuarioIATab(),
+                  _SubscritorIATab(),
+                  _IntelGlobalTab(),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      // ── Bottom Navigation Bar ────────────────────────────────
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          border: Border(top: BorderSide(color: Color(0xFF1E3A5F), width: 1)),
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _bottomIndex,
+          onTap: _onBottomTap,
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: const Color(0xFF0D1628),
+          selectedItemColor: AppTheme.accent,
+          unselectedItemColor: Colors.white38,
+          selectedFontSize: 10,
+          unselectedFontSize: 9,
+          iconSize: 22,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.dashboard_rounded),
+              label: 'Geral',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.analytics_rounded),
+              label: 'Analytics',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.psychology_rounded),
+              label: 'Atuário IA',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.account_balance_rounded),
+              label: 'Seguradora',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.public_rounded),
+              label: 'Intel Global',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// DRAWER — Navegação completa: todos os 11 módulos
+// ═══════════════════════════════════════════════════════════════
+
+class _AdminDrawer extends StatelessWidget {
+  final int currentIndex;
+  final void Function(int) onSelect;
+  const _AdminDrawer({required this.currentIndex, required this.onSelect});
+
+  static const _items = [
+    (0, Icons.dashboard_rounded, 'Visão Geral', 'KPIs & SADI Live'),
+    (1, Icons.speed_rounded, 'Risk Engine', 'Motor de risco v3'),
+    (2, Icons.directions_car_rounded, 'Viagens', 'Monitoramento real-time'),
+    (3, Icons.people_rounded, 'Usuários', 'Base de clientes'),
+    (4, Icons.price_change_rounded, 'Preços & IA', 'Tarifário dinâmico'),
+    (5, Icons.calculate_rounded, 'Simulador', 'Cálculo interativo'),
+    (6, Icons.satellite_alt_rounded, 'Inteligência', 'Análise territorial'),
+    (7, Icons.account_balance_rounded, 'Seguradora', 'Gestão de sinistros'),
+    (8, Icons.psychology_rounded, 'Atuário IA', 'Motor SADI v3'),
+    (9, Icons.shield_rounded, 'Subscritor IA', 'Underwriting automático'),
+    (10, Icons.public_rounded, 'Intel Global', '239 seguradoras, 42 países'),
+  ];
+
+  static const _colors = [
+    Color(0xFF60A5FA), Color(0xFF34D399), Color(0xFF60A5FA), Color(0xFFA78BFA),
+    Color(0xFFF59E0B), Color(0xFF60A5FA), Color(0xFF34D399), Color(0xFFF97316),
+    Color(0xFFA78BFA), Color(0xFF34D399), Color(0xFF60A5FA),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      backgroundColor: const Color(0xFF0D1628),
+      child: Column(
         children: [
-          _AdminHeader(onLogout: widget.onLogout, onActuarial: widget.onActuarial, onSafeMap: widget.onSafeMap, onAtuarioIA: widget.onAtuarioIA),
-          _AdminTabBar(controller: _tab),
-          Expanded(
-            child: TabBarView(
-              controller: _tab,
+          // ── Header do drawer ──
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.only(
+              top: MediaQuery.of(context).padding.top + 16,
+              bottom: 20,
+              left: 20,
+              right: 20,
+            ),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color(0xFF0D1B4B), Color(0xFF1A3A7C)],
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _OverviewTab(),
-                _RiskEngineTab(),
-                _TripsTab(),
-                _UsersTab(),
-                _PricingTab(),
-                _SimulatorTab(),
-                _IntelligenceTab(),
-                _SeguradoraTab(),
-                _AtuarioIATab(),
-                _SubscritorIATab(),
-                _IntelGlobalTab(),
+                Row(
+                  children: [
+                    Container(
+                      width: 44, height: 44,
+                      decoration: BoxDecoration(
+                        gradient: AppTheme.primaryAccentGradient,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(Icons.admin_panel_settings_rounded,
+                          color: Colors.white, size: 22),
+                    ),
+                    const SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('SafeRouteGo',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: Colors.white)),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: AppTheme.accent.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: const Text('SUPER ADMIN',
+                              style: TextStyle(fontSize: 9, fontWeight: FontWeight.w700,
+                                  color: AppTheme.accent, letterSpacing: 0.8)),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Container(
+                      width: 7, height: 7,
+                      decoration: const BoxDecoration(color: AppTheme.green, shape: BoxShape.circle),
+                    ),
+                    const SizedBox(width: 6),
+                    const Text('SADI v3.0 — LIVE',
+                        style: TextStyle(fontSize: 11, color: AppTheme.green, fontWeight: FontWeight.w600)),
+                    const Spacer(),
+                    Text('Risk Engine ${RiskEngine.version}',
+                        style: const TextStyle(fontSize: 10, color: Colors.white30)),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          // ── Lista de módulos ──
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              itemCount: _items.length,
+              itemBuilder: (_, i) {
+                final (idx, icon, label, sub) = _items[i];
+                final selected = currentIndex == idx;
+                final color = _colors[idx];
+                return InkWell(
+                  onTap: () => onSelect(idx),
+                  borderRadius: BorderRadius.circular(12),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: selected ? color.withValues(alpha: 0.12) : Colors.transparent,
+                      borderRadius: BorderRadius.circular(12),
+                      border: selected
+                          ? Border.all(color: color.withValues(alpha: 0.3))
+                          : Border.all(color: Colors.transparent),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 36, height: 36,
+                          decoration: BoxDecoration(
+                            color: color.withValues(alpha: selected ? 0.2 : 0.08),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Icon(icon, color: selected ? color : Colors.white38, size: 18),
+                        ),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(label,
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                                      color: selected ? color : Colors.white70)),
+                              Text(sub,
+                                  style: const TextStyle(fontSize: 10, color: Colors.white30)),
+                            ],
+                          ),
+                        ),
+                        if (selected)
+                          Container(
+                            width: 4, height: 24,
+                            decoration: BoxDecoration(
+                              color: color,
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          // ── Footer ──
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: const BoxDecoration(
+              border: Border(top: BorderSide(color: Color(0xFF1E3A5F))),
+            ),
+            child: const Row(
+              children: [
+                Icon(Icons.security_rounded, color: Colors.white24, size: 14),
+                SizedBox(width: 8),
+                Text('SafeRouteGo © 2025',
+                    style: TextStyle(fontSize: 10, color: Colors.white24)),
               ],
             ),
           ),
@@ -80,8 +486,177 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
   }
 }
 
+// ═══════════════════════════════════════════════════════════════
+// HEADER MOBILE — Compacto, sem quebra de texto
+// ═══════════════════════════════════════════════════════════════
+
+class _AdminHeaderMobile extends StatelessWidget {
+  final String title;
+  final VoidCallback onLogout;
+  final VoidCallback? onActuarial;
+  final VoidCallback? onSafeMap;
+  final VoidCallback? onAtuarioIA;
+
+  const _AdminHeaderMobile({
+    required this.title,
+    required this.onLogout,
+    this.onActuarial,
+    this.onSafeMap,
+    this.onAtuarioIA,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 56,
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF0D1B4B), Color(0xFF1A3A7C)],
+        ),
+        border: Border(bottom: BorderSide(color: Color(0xFF1E3A5F), width: 1)),
+      ),
+      child: Row(
+        children: [
+          // Menu hamburguer
+          Builder(builder: (ctx) => GestureDetector(
+            onTap: () => Scaffold.of(ctx).openDrawer(),
+            child: Container(
+              width: 36, height: 36,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.07),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Icon(Icons.menu_rounded, color: Colors.white70, size: 20),
+            ),
+          )),
+          const SizedBox(width: 10),
+          // Logo mini
+          Container(
+            width: 28, height: 28,
+            decoration: BoxDecoration(
+              gradient: AppTheme.primaryAccentGradient,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Icon(Icons.admin_panel_settings_rounded, color: Colors.white, size: 15),
+          ),
+          const SizedBox(width: 8),
+          // Título dinâmico da tab atual
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                  decoration: BoxDecoration(
+                    color: AppTheme.accent.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(3),
+                  ),
+                  child: const Text('SUPER ADMIN',
+                      style: TextStyle(fontSize: 8, fontWeight: FontWeight.w700,
+                          color: AppTheme.accent, letterSpacing: 0.5)),
+                ),
+              ],
+            ),
+          ),
+          // Botões de ação rápida (apenas ícones compactos)
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // LIVE indicator
+              Container(
+                margin: const EdgeInsets.only(right: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                decoration: BoxDecoration(
+                  color: AppTheme.green.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppTheme.green.withValues(alpha: 0.3)),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(width: 5, height: 5,
+                        decoration: const BoxDecoration(color: AppTheme.green, shape: BoxShape.circle)),
+                    const SizedBox(width: 3),
+                    const Text('LIVE',
+                        style: TextStyle(fontSize: 8, fontWeight: FontWeight.w700, color: AppTheme.green)),
+                  ],
+                ),
+              ),
+              if (onAtuarioIA != null)
+                _HeaderIconBtn(
+                  icon: Icons.calculate_rounded,
+                  color: const Color(0xFFA78BFA),
+                  onTap: onAtuarioIA!,
+                  tooltip: 'Atuário v3',
+                ),
+              if (onSafeMap != null)
+                _HeaderIconBtn(
+                  icon: Icons.map_rounded,
+                  color: const Color(0xFF00C2A8),
+                  onTap: onSafeMap!,
+                  tooltip: 'Mapa',
+                ),
+              const SizedBox(width: 4),
+              GestureDetector(
+                onTap: onLogout,
+                child: Container(
+                  width: 32, height: 32,
+                  decoration: BoxDecoration(
+                    color: Colors.red.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(Icons.logout_rounded, color: Colors.white38, size: 16),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _HeaderIconBtn extends StatelessWidget {
+  final IconData icon;
+  final Color color;
+  final VoidCallback onTap;
+  final String tooltip;
+  const _HeaderIconBtn({required this.icon, required this.color, required this.onTap, required this.tooltip});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 32, height: 32,
+        margin: const EdgeInsets.only(right: 4),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.12),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: color.withValues(alpha: 0.3)),
+        ),
+        child: Icon(icon, color: color, size: 15),
+      ),
+    );
+  }
+}
+
 // ─────────────────────────────────────────────────────────────
-// HEADER ADMIN
+// HEADER ADMIN (legado — mantido para compatibilidade interna)
 // ─────────────────────────────────────────────────────────────
 
 class _AdminHeader extends StatelessWidget {
@@ -368,36 +943,40 @@ class _OverviewTabState extends State<_OverviewTab> {
           // ── KPIs Principais ───────────────────────────────
           _sectionTitle('KPIs Operacionais — Tempo Real', Icons.bar_chart_rounded),
           const SizedBox(height: 12),
-          GridView.count(
-            crossAxisCount: 3,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            mainAxisSpacing: 8,
-            crossAxisSpacing: 8,
-            childAspectRatio: 1.55,
-            children: [
-              _KpiCard(label: 'Viagens Ativas', value: '$_viagensAtivas', icon: Icons.directions_car_rounded, color: AppTheme.green, delta: '+${_rnd.nextInt(3)+1} última hora'),
-              _KpiCard(label: 'Receita Hoje', value: 'R\$ ${_receitaHoje.toStringAsFixed(0)}', icon: Icons.attach_money_rounded, color: AppTheme.accent, delta: '+12% vs. ontem'),
-              _KpiCard(label: 'Ticket Médio', value: 'R\$ ${_ticketMedio.toStringAsFixed(2)}', icon: Icons.receipt_long_rounded, color: AppTheme.primary, delta: 'Pay-per-km'),
-              _KpiCard(label: 'Score SADI', value: '$_scoreMedio', icon: Icons.psychology_rounded, color: const Color(0xFFF59E0B), delta: 'Tier: Prata'),
-              _KpiCard(label: 'Usuários', value: '${_usuariosAtivos.toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+$)'), (m) => '${m[1]}.')}', icon: Icons.people_rounded, color: AppTheme.purple, delta: '+47 esta semana'),
-              _KpiCard(label: 'Propostas', value: '$_propostas', icon: Icons.description_rounded, color: AppTheme.primary, delta: '$_recusadas recusadas'),
-            ],
-          ),
+          LayoutBuilder(builder: (context, constraints) {
+            final cols = constraints.maxWidth > 500 ? 3 : 2;
+            return GridView.count(
+              crossAxisCount: cols,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+              childAspectRatio: constraints.maxWidth > 500 ? 1.4 : 1.3,
+              children: [
+                _KpiCard(label: 'Viagens Ativas', value: '$_viagensAtivas', icon: Icons.directions_car_rounded, color: AppTheme.green, delta: '+${_rnd.nextInt(3)+1} última hora'),
+                _KpiCard(label: 'Receita Hoje', value: 'R\$ ${_receitaHoje.toStringAsFixed(0)}', icon: Icons.attach_money_rounded, color: AppTheme.accent, delta: '+12% vs. ontem'),
+                _KpiCard(label: 'Ticket Médio', value: 'R\$ ${_ticketMedio.toStringAsFixed(2)}', icon: Icons.receipt_long_rounded, color: AppTheme.primary, delta: 'Pay-per-km'),
+                _KpiCard(label: 'Score SADI', value: '$_scoreMedio', icon: Icons.psychology_rounded, color: const Color(0xFFF59E0B), delta: 'Tier: Prata'),
+                _KpiCard(label: 'Usuários', value: '${_usuariosAtivos.toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+$)'), (m) => '${m[1]}.')}', icon: Icons.people_rounded, color: AppTheme.purple, delta: '+47 esta semana'),
+                _KpiCard(label: 'Propostas', value: '$_propostas', icon: Icons.description_rounded, color: AppTheme.primary, delta: '$_recusadas recusadas'),
+              ],
+            );
+          }),
 
           const SizedBox(height: 16),
 
           // ── KPIs Financeiros Atuariais ─────────────────────
           _sectionTitle('Indicadores Financeiros Atuariais', Icons.account_balance_rounded),
           const SizedBox(height: 12),
-          GridView.count(
-            crossAxisCount: 2,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            mainAxisSpacing: 8,
-            crossAxisSpacing: 8,
-            childAspectRatio: 2.0,
-            children: [
+          LayoutBuilder(builder: (context, constraints) {
+            return GridView.count(
+              crossAxisCount: 2,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+              childAspectRatio: constraints.maxWidth > 400 ? 2.0 : 1.7,
+              children: [
               _FinancialKpiCard(
                 label: 'Prêmio Total/Mês',
                 value: 'R\$ ${(_premioMensal/1000).toStringAsFixed(1)}k',
@@ -427,7 +1006,8 @@ class _OverviewTabState extends State<_OverviewTab> {
                 icon: Icons.pie_chart_rounded,
               ),
             ],
-          ),
+          );
+          }),
 
           const SizedBox(height: 16),
 
@@ -2094,30 +2674,52 @@ class _KpiCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isSmall = MediaQuery.of(context).size.width < 420;
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+      constraints: const BoxConstraints(minHeight: 80),
       decoration: BoxDecoration(
         color: const Color(0xFF0D1628),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E3A5F)),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
+        boxShadow: [BoxShadow(color: color.withValues(alpha: 0.06), blurRadius: 8, offset: const Offset(0, 2))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             children: [
               Container(
-                width: 28, height: 28,
-                decoration: BoxDecoration(color: color.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(8)),
-                child: Icon(icon, color: color, size: 14),
+                width: 32, height: 32,
+                decoration: BoxDecoration(color: color.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(9)),
+                child: Icon(icon, color: color, size: 16),
               ),
               const Spacer(),
-              Text(delta, style: const TextStyle(fontSize: 8, color: Colors.white24)),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(delta,
+                    style: TextStyle(fontSize: isSmall ? 7 : 8, color: color.withValues(alpha: 0.7))),
+              ),
             ],
           ),
-          const Spacer(),
-          Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Colors.white)),
-          Text(label, style: const TextStyle(fontSize: 9, color: Colors.white38)),
+          const SizedBox(height: 10),
+          Text(value,
+              style: TextStyle(
+                  fontSize: isSmall ? 17 : 20,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.white,
+                  letterSpacing: -0.5)),
+          const SizedBox(height: 2),
+          Text(label,
+              style: TextStyle(
+                  fontSize: isSmall ? 9 : 10,
+                  color: Colors.white54,
+                  fontWeight: FontWeight.w500)),
         ],
       ),
     );
