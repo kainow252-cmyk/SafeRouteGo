@@ -1,0 +1,3 @@
+# SafeRouteGo Cloudflare Pages Routing
+# SPA fallback: tudo que não é arquivo estático vai para index.html
+/*    /index.html    200

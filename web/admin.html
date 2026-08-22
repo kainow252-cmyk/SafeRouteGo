@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base href="/">
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <title>SafeRouteGo Admin</title>
+  <link rel="icon" type="image/png" href="favicon.png"/>
+  <meta http-equiv="Permissions-Policy" content="geolocation=*">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:#070D1A; display:flex; align-items:center; justify-content:center; height:100vh; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; }
+    .loader { text-align:center; color:#fff; }
+    .loader h2 { font-size:18px; color:#22C55E; margin-bottom:8px; letter-spacing:0.3px; font-weight:700; }
+    .loader p { font-size:13px; color:#6B7280; }
+    .spinner { width:44px; height:44px; border:3px solid #1a2540; border-top:3px solid #22C55E; border-radius:50%; animation:spin 0.7s linear infinite; margin:0 auto 20px; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .badge { display:inline-block; margin-top:14px; padding:4px 12px; background:rgba(34,197,94,0.1); border:1px solid rgba(34,197,94,0.3); border-radius:20px; font-size:11px; color:#22C55E; letter-spacing:0.5px; }
+  </style>
+  <script>
+    // Marcar ANTES de qualquer coisa que este é acesso admin
+    try {
+      sessionStorage.setItem('saferoutego_start_route', 'admin');
+      localStorage.setItem('saferoutego_start_route', 'admin');
+    } catch(e) {}
+    window.__SAFEROUTE_ADMIN__ = true;
+    window.__SAFEROUTE_ROUTE__ = 'admin';
+  </script>
+</head>
+<body>
+  <div class="loader">
+    <div class="spinner"></div>
+    <h2>🏦 SafeRouteGo Admin</h2>
+    <p>Carregando painel administrativo...</p>
+    <div class="badge">ACESSO RESTRITO</div>
+  </div>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>
